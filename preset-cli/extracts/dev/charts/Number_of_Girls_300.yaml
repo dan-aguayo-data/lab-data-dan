@@ -1,0 +1,28 @@
+slice_name: Number of Girls
+description: null
+certified_by: null
+certification_details: null
+viz_type: big_number_total
+params:
+  adhoc_filters:
+  - clause: WHERE
+    comparator: girl
+    expressionType: SIMPLE
+    operator: ==
+    subject: gender
+  compare_lag: '10'
+  compare_suffix: o10Y
+  granularity_sqla: ds
+  groupby: []
+  limit: '25'
+  markup_type: markdown
+  metric: sum__num
+  row_limit: 50000
+  subheader: total female participants
+  time_range: '100 years ago : now'
+  viz_type: big_number_total
+query_context: null
+cache_timeout: null
+uuid: 0e61a7a1-2efc-4a74-b2da-8ae8b438164d
+version: 1.0.0
+dataset_uuid: ed07ccba-faf1-4d89-8e1e-11ac77e48eb8

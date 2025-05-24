@@ -1,0 +1,97 @@
+slice_name: test
+description: null
+certified_by: null
+certification_details: null
+viz_type: table
+params:
+  datasource: 11__table
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - color
+  time_grain_sqla: P1D
+  temporal_columns_lookup:
+    updated: true
+  metrics:
+  - expressionType: SIMPLE
+    column:
+      advanced_data_type: null
+      certification_details: null
+      certified_by: null
+      column_name: real_name
+      description: null
+      expression: null
+      filterable: true
+      groupby: true
+      id: 436
+      is_certified: false
+      is_dttm: false
+      python_date_format: null
+      type: VARCHAR
+      type_generic: 1
+      verbose_name: null
+      warning_markdown: null
+    aggregate: COUNT
+    sqlExpression: null
+    datasourceWarning: false
+    hasCustomLabel: false
+    label: COUNT(real_name)
+    optionName: metric_ii803wuj2jr_dbcij4nqxap
+  all_columns: []
+  percent_metrics: []
+  adhoc_filters:
+  - clause: WHERE
+    subject: updated
+    operator: TEMPORAL_RANGE
+    comparator: No filter
+    expressionType: SIMPLE
+  order_by_cols: []
+  row_limit: 1000
+  server_page_length: 10
+  order_desc: true
+  table_timestamp_format: smart_date
+  allow_render_html: true
+  show_cell_bars: true
+  color_pn: true
+  comparison_color_scheme: Green
+  comparison_type: values
+  extra_form_data: {}
+  dashboards: []
+query_context: '{"datasource": {"id": 11, "type": "table"}, "force": false, "queries":
+  [{"filters": [{"col": "updated", "op": "TEMPORAL_RANGE", "val": "No filter"}], "extras":
+  {"having": "", "where": ""}, "applied_time_extras": {}, "columns": ["color"], "metrics":
+  [{"expressionType": "SIMPLE", "column": {"advanced_data_type": null, "certification_details":
+  null, "certified_by": null, "column_name": "real_name", "description": null, "expression":
+  null, "filterable": true, "groupby": true, "id": 436, "is_certified": false, "is_dttm":
+  false, "python_date_format": null, "type": "VARCHAR", "type_generic": 1, "verbose_name":
+  null, "warning_markdown": null}, "aggregate": "COUNT", "sqlExpression": null, "datasourceWarning":
+  false, "hasCustomLabel": false, "label": "COUNT(real_name)", "optionName": "metric_ii803wuj2jr_dbcij4nqxap"}],
+  "orderby": [[{"expressionType": "SIMPLE", "column": {"advanced_data_type": null,
+  "certification_details": null, "certified_by": null, "column_name": "real_name",
+  "description": null, "expression": null, "filterable": true, "groupby": true, "id":
+  436, "is_certified": false, "is_dttm": false, "python_date_format": null, "type":
+  "VARCHAR", "type_generic": 1, "verbose_name": null, "warning_markdown": null}, "aggregate":
+  "COUNT", "sqlExpression": null, "datasourceWarning": false, "hasCustomLabel": false,
+  "label": "COUNT(real_name)", "optionName": "metric_ii803wuj2jr_dbcij4nqxap"}, false]],
+  "annotation_layers": [], "row_limit": 1000, "series_limit": 0, "order_desc": true,
+  "url_params": {}, "custom_params": {}, "custom_form_data": {}, "post_processing":
+  [], "time_offsets": []}], "form_data": {"datasource": "11__table", "viz_type": "table",
+  "query_mode": "aggregate", "groupby": ["color"], "time_grain_sqla": "P1D", "temporal_columns_lookup":
+  {"updated": true}, "metrics": [{"expressionType": "SIMPLE", "column": {"advanced_data_type":
+  null, "certification_details": null, "certified_by": null, "column_name": "real_name",
+  "description": null, "expression": null, "filterable": true, "groupby": true, "id":
+  436, "is_certified": false, "is_dttm": false, "python_date_format": null, "type":
+  "VARCHAR", "type_generic": 1, "verbose_name": null, "warning_markdown": null}, "aggregate":
+  "COUNT", "sqlExpression": null, "datasourceWarning": false, "hasCustomLabel": false,
+  "label": "COUNT(real_name)", "optionName": "metric_ii803wuj2jr_dbcij4nqxap"}], "all_columns":
+  [], "percent_metrics": [], "adhoc_filters": [{"clause": "WHERE", "subject": "updated",
+  "operator": "TEMPORAL_RANGE", "comparator": "No filter", "expressionType": "SIMPLE"}],
+  "order_by_cols": [], "row_limit": 1000, "server_page_length": 10, "order_desc":
+  true, "table_timestamp_format": "smart_date", "allow_render_html": true, "show_cell_bars":
+  true, "color_pn": true, "comparison_color_scheme": "Green", "comparison_type": "values",
+  "extra_form_data": {}, "dashboards": [], "force": false, "result_format": "json",
+  "result_type": "full"}, "result_format": "json", "result_type": "full"}'
+cache_timeout: null
+uuid: c377d659-fcb9-4b10-8378-7f80f3fed616
+version: 1.0.0
+dataset_uuid: 7195db6b-2d17-7619-b7c7-26b15378df8c

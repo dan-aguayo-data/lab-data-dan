@@ -1,0 +1,80 @@
+redis:
+  enabled: true
+  master:
+    persistence:
+      enabled: true
+      storageClass: gp2
+      accessModes:
+        - ReadWriteOnce
+
+postgresql:
+  enabled: true
+  primary:
+    persistence:
+      enabled: true
+      storageClass: gp2
+      accessModes:
+        - ReadWriteOnce
+      size: 10Gi
+
+bootstrapScript: |
+  #!/bin/bash
+  pip install --upgrade pip
+  pip install Pillow
+  pip install sqlalchemy-drill psycopg2-binary
+  pip install mysqlclient
+  pip install sqlalchemy
+  pip install snowflake-sqlalchemy
+  pip install clickhouse-connect
+  pip install "apache-superset[cors]"
+  pip install "apache-superset[databricks]"
+  pip install authlib
+  apt-get update && apt-get install -y pkg-config libmysqlclient-dev
+  if [ ! -f ~/bootstrap ]; then echo "Running Superset with uid {{ .Values.runAsUser }}" > ~/bootstrap; fi
+
+init:
+  loadExamples: true
+
+configOverrides:
+  feature_flags: |
+    FEATURE_FLAGS = {
+        "EMBEDDED_SUPERSET": True,
+        "TAGGING_SYSTEM": True,
+        "DASHBOARD_RBAC": True,
+    }
+
+  embedded: |
+    CORS_OPTIONS = {
+        "supports_credentials": True,
+        "allow_headers": "*",
+        "expose_headers": "*",
+        "resources": "*",
+        "origins": "*",
+    }
+    SESSION_COOKIE_SECURE = False
+    WTF_CSRF_ENABLED = False
+    ENABLE_CORS = True
+    TALISMAN_ENABLED = False
+    HTTP_HEADERS = {
+        "X-Frame-Options": "ALLOWALL"
+    }
+    GUEST_TOKEN_JWT_SECRET = os.getenv("GUEST_TOKEN_JWT_SECRET", "fallback-jwt-secret")
+    GUEST_TOKEN_JWT_ALGO = "HS256"
+    GUEST_TOKEN_HEADER_NAME = "X-GuestToken"
+    GUEST_TOKEN_JWT_EXP_SECONDS = 300
+
+  secret: |
+    SECRET_KEY = os.getenv("SUPERSET_SECRET_KEY", "fallback-secret")
+
+extraSecretEnv:
+  - name: SUPERSET_SECRET_KEY
+    valueFrom:
+      secretKeyRef:
+        name: superset-secret
+        key: SUPERSET_SECRET_KEY
+  - name: GUEST_TOKEN_JWT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: superset-secret
+        key: GUEST_TOKEN_JWT_SECRET
+

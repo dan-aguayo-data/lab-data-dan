@@ -1,0 +1,392 @@
+- name: Admin
+  permissions:
+  - can read on SavedQuery
+  - can write on SavedQuery
+  - can read on CssTemplate
+  - can write on CssTemplate
+  - can read on ReportSchedule
+  - can write on ReportSchedule
+  - can read on Chart
+  - can write on Chart
+  - can read on Annotation
+  - can write on Annotation
+  - can read on Dataset
+  - can write on Dataset
+  - can read on Log
+  - can write on Log
+  - can read on Dashboard
+  - can write on Dashboard
+  - can read on Database
+  - can write on Database
+  - can read on Query
+  - can csv upload on Database
+  - can excel upload on Database
+  - can columnar upload on Database
+  - can this form post on ResetPasswordView
+  - can this form get on ResetPasswordView
+  - can this form post on ResetMyPasswordView
+  - can this form get on ResetMyPasswordView
+  - can this form post on UserInfoEditView
+  - can this form get on UserInfoEditView
+  - can add on UserDBModelView
+  - can show on UserDBModelView
+  - can userinfo on UserDBModelView
+  - can delete on UserDBModelView
+  - can list on UserDBModelView
+  - can edit on UserDBModelView
+  - resetmypassword on UserDBModelView
+  - resetpasswords on UserDBModelView
+  - userinfoedit on UserDBModelView
+  - can add on RoleModelView
+  - can show on RoleModelView
+  - can delete on RoleModelView
+  - can list on RoleModelView
+  - can edit on RoleModelView
+  - copyrole on RoleModelView
+  - can get on OpenApi
+  - can show on SwaggerView
+  - can get on MenuApi
+  - can list on AsyncEventsRestApi
+  - can read on AdvancedDataType
+  - can read on AvailableDomains
+  - can invalidate on CacheRestApi
+  - can warm up cache on Chart
+  - can export on Chart
+  - can write on DashboardFilterStateRestApi
+  - can read on DashboardFilterStateRestApi
+  - can write on DashboardPermalinkRestApi
+  - can read on DashboardPermalinkRestApi
+  - can cache dashboard screenshot on Dashboard
+  - can delete embedded on Dashboard
+  - can get embedded on Dashboard
+  - can export on Dashboard
+  - can set embedded on Dashboard
+  - can export on Database
+  - can get or create dataset on Dataset
+  - can duplicate on Dataset
+  - can export on Dataset
+  - can warm up cache on Dataset
+  - can get column values on Datasource
+  - can read on EmbeddedDashboard
+  - can read on Explore
+  - can write on ExploreFormDataRestApi
+  - can read on ExploreFormDataRestApi
+  - can write on ExplorePermalinkRestApi
+  - can read on ExplorePermalinkRestApi
+  - can import  on ImportExportRestApi
+  - can export on ImportExportRestApi
+  - can write on Row Level Security
+  - can read on Row Level Security
+  - can export on SavedQuery
+  - can bulk create on Tag
+  - can write on Tag
+  - can read on Tag
+  - can execute sql query on SQLLab
+  - can get results on SQLLab
+  - can read on SQLLab
+  - can export csv on SQLLab
+  - can format sql on SQLLab
+  - can estimate query cost on SQLLab
+  - can add on DynamicPlugin
+  - can show on DynamicPlugin
+  - can delete on DynamicPlugin
+  - can list on DynamicPlugin
+  - can edit on DynamicPlugin
+  - can download on DynamicPlugin
+  - can write on DynamicPlugin
+  - can time range on Api
+  - can query on Api
+  - can query form data on Api
+  - can external metadata on Datasource
+  - can save on Datasource
+  - can get on Datasource
+  - can samples on Datasource
+  - can external metadata by name on Datasource
+  - can store on KV
+  - can get value on KV
+  - can add on SavedQuery
+  - can show on SavedQuery
+  - can delete on SavedQuery
+  - can list on SavedQuery
+  - can edit on SavedQuery
+  - can log on Superset
+  - can sqllab history on Superset
+  - can explore json on Superset
+  - can warm up cache on Superset
+  - can fetch datasource metadata on Superset
+  - can explore on Superset
+  - can dashboard on Superset
+  - can slice on Superset
+  - can dashboard permalink on Superset
+  - can expanded on TableSchemaView
+  - can delete on TableSchemaView
+  - can post on TableSchemaView
+  - can delete on TabStateView
+  - can post on TabStateView
+  - can migrate query on TabStateView
+  - can put on TabStateView
+  - can get on TabStateView
+  - can activate on TabStateView
+  - can delete query on TabStateView
+  - can list on Tags
+  - can tags on TagView
+  - can recent activity on Log
+  - can read on SecurityRestApi
+  - can grant guest token on SecurityRestApi
+  - can read on RowLevelSecurity
+  - menu access on Security
+  - menu access on List Users
+  - menu access on List Roles
+  - menu access on Action Log
+  - menu access on Row Level Security
+  - menu access on Home
+  - menu access on Data
+  - menu access on Databases
+  - menu access on Dashboards
+  - menu access on Charts
+  - menu access on Datasets
+  - menu access on Manage
+  - menu access on Plugins
+  - menu access on CSS Templates
+  - menu access on Tags
+  - menu access on Alerts & Report
+  - menu access on Annotation Layers
+  - menu access on SQL Lab
+  - menu access on SQL Editor
+  - menu access on Saved Queries
+  - menu access on Query Search
+  - all datasource access on all_datasource_access
+  - all database access on all_database_access
+  - all query access on all_query_access
+  - can csv on Superset
+  - can share dashboard on Superset
+  - can share chart on Superset
+  - can sqllab on Superset
+  - can view query on Dashboard
+  - can view chart as table on Dashboard
+  - can drill on Dashboard
+  - can tag on Chart
+  - can tag on Dashboard
+  users:
+  - admin@superset.com
+- name: Public
+  permissions: []
+  users: []
+- name: Alpha
+  permissions:
+  - can read on CssTemplate
+  - can write on CssTemplate
+  - can read on ReportSchedule
+  - can write on ReportSchedule
+  - can read on Chart
+  - can write on Chart
+  - can read on Annotation
+  - can write on Annotation
+  - can read on Dataset
+  - can write on Dataset
+  - can read on Dashboard
+  - can write on Dashboard
+  - can read on Database
+  - can csv upload on Database
+  - can excel upload on Database
+  - can this form post on ResetMyPasswordView
+  - can this form get on ResetMyPasswordView
+  - can userinfo on UserDBModelView
+  - resetmypassword on UserDBModelView
+  - can get on OpenApi
+  - can show on SwaggerView
+  - can get on MenuApi
+  - can list on AsyncEventsRestApi
+  - can read on AdvancedDataType
+  - can read on AvailableDomains
+  - can invalidate on CacheRestApi
+  - can export on Chart
+  - can write on DashboardFilterStateRestApi
+  - can read on DashboardFilterStateRestApi
+  - can write on DashboardPermalinkRestApi
+  - can read on DashboardPermalinkRestApi
+  - can cache dashboard screenshot on Dashboard
+  - can delete embedded on Dashboard
+  - can get embedded on Dashboard
+  - can export on Dashboard
+  - can get or create dataset on Dataset
+  - can duplicate on Dataset
+  - can export on Dataset
+  - can get column values on Datasource
+  - can read on EmbeddedDashboard
+  - can read on Explore
+  - can write on ExploreFormDataRestApi
+  - can read on ExploreFormDataRestApi
+  - can write on ExplorePermalinkRestApi
+  - can read on ExplorePermalinkRestApi
+  - can import  on ImportExportRestApi
+  - can export on ImportExportRestApi
+  - can bulk create on Tag
+  - can write on Tag
+  - can read on Tag
+  - can format sql on SQLLab
+  - can estimate query cost on SQLLab
+  - can show on DynamicPlugin
+  - can list on DynamicPlugin
+  - can time range on Api
+  - can query on Api
+  - can query form data on Api
+  - can external metadata on Datasource
+  - can save on Datasource
+  - can get on Datasource
+  - can samples on Datasource
+  - can external metadata by name on Datasource
+  - can store on KV
+  - can get value on KV
+  - can add on SavedQuery
+  - can show on SavedQuery
+  - can delete on SavedQuery
+  - can list on SavedQuery
+  - can edit on SavedQuery
+  - can log on Superset
+  - can explore json on Superset
+  - can fetch datasource metadata on Superset
+  - can explore on Superset
+  - can dashboard on Superset
+  - can slice on Superset
+  - can dashboard permalink on Superset
+  - can expanded on TableSchemaView
+  - can delete on TableSchemaView
+  - can post on TableSchemaView
+  - can list on Tags
+  - can tags on TagView
+  - can recent activity on Log
+  - can read on SecurityRestApi
+  - can read on RowLevelSecurity
+  - menu access on Home
+  - menu access on Data
+  - menu access on Databases
+  - menu access on Dashboards
+  - menu access on Charts
+  - menu access on Datasets
+  - menu access on Manage
+  - menu access on Plugins
+  - menu access on CSS Templates
+  - menu access on Tags
+  - menu access on Alerts & Report
+  - menu access on Annotation Layers
+  - all datasource access on all_datasource_access
+  - all database access on all_database_access
+  - can csv on Superset
+  - can share dashboard on Superset
+  - can share chart on Superset
+  - can view query on Dashboard
+  - can view chart as table on Dashboard
+  - can drill on Dashboard
+  - can tag on Chart
+  - can tag on Dashboard
+  users: []
+- name: Gamma
+  permissions:
+  - can read on Chart
+  - can write on Chart
+  - can read on Dataset
+  - can read on Dashboard
+  - can write on Dashboard
+  - can read on Database
+  - can this form post on ResetMyPasswordView
+  - can this form get on ResetMyPasswordView
+  - can userinfo on UserDBModelView
+  - resetmypassword on UserDBModelView
+  - can get on OpenApi
+  - can show on SwaggerView
+  - can get on MenuApi
+  - can list on AsyncEventsRestApi
+  - can read on AdvancedDataType
+  - can read on AvailableDomains
+  - can invalidate on CacheRestApi
+  - can export on Chart
+  - can write on DashboardFilterStateRestApi
+  - can read on DashboardFilterStateRestApi
+  - can write on DashboardPermalinkRestApi
+  - can read on DashboardPermalinkRestApi
+  - can cache dashboard screenshot on Dashboard
+  - can delete embedded on Dashboard
+  - can get embedded on Dashboard
+  - can export on Dashboard
+  - can read on EmbeddedDashboard
+  - can read on Explore
+  - can write on ExploreFormDataRestApi
+  - can read on ExploreFormDataRestApi
+  - can write on ExplorePermalinkRestApi
+  - can read on ExplorePermalinkRestApi
+  - can bulk create on Tag
+  - can write on Tag
+  - can read on Tag
+  - can format sql on SQLLab
+  - can estimate query cost on SQLLab
+  - can show on DynamicPlugin
+  - can list on DynamicPlugin
+  - can time range on Api
+  - can query on Api
+  - can query form data on Api
+  - can external metadata on Datasource
+  - can get on Datasource
+  - can external metadata by name on Datasource
+  - can store on KV
+  - can get value on KV
+  - can add on SavedQuery
+  - can show on SavedQuery
+  - can delete on SavedQuery
+  - can list on SavedQuery
+  - can edit on SavedQuery
+  - can log on Superset
+  - can explore json on Superset
+  - can fetch datasource metadata on Superset
+  - can explore on Superset
+  - can dashboard on Superset
+  - can slice on Superset
+  - can dashboard permalink on Superset
+  - can list on Tags
+  - can tags on TagView
+  - can recent activity on Log
+  - can read on SecurityRestApi
+  - can read on RowLevelSecurity
+  - menu access on Home
+  - menu access on Data
+  - menu access on Databases
+  - menu access on Dashboards
+  - menu access on Charts
+  - menu access on Datasets
+  - menu access on Plugins
+  - menu access on Tags
+  - can csv on Superset
+  - can share dashboard on Superset
+  - can share chart on Superset
+  - can view query on Dashboard
+  - can view chart as table on Dashboard
+  - can drill on Dashboard
+  - can tag on Chart
+  - can tag on Dashboard
+  users: []
+- name: sql_lab
+  permissions:
+  - can read on SavedQuery
+  - can write on SavedQuery
+  - can read on Database
+  - can read on Query
+  - can export on SavedQuery
+  - can execute sql query on SQLLab
+  - can get results on SQLLab
+  - can read on SQLLab
+  - can export csv on SQLLab
+  - can sqllab history on Superset
+  - can delete on TabStateView
+  - can post on TabStateView
+  - can migrate query on TabStateView
+  - can put on TabStateView
+  - can get on TabStateView
+  - can activate on TabStateView
+  - can delete query on TabStateView
+  - menu access on SQL Lab
+  - menu access on SQL Editor
+  - menu access on Saved Queries
+  - menu access on Query Search
+  - can csv on Superset
+  - can sqllab on Superset
+  users: []

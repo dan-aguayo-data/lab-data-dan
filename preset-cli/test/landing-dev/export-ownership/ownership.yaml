@@ -1,0 +1,468 @@
+chart:
+- name: Vaccine Candidates per Approach & Stage
+  owners: []
+  uuid: 0c953c84-0c9a-418d-be9f-2894d2a2cee0
+- name: Vaccine Candidates per Country
+  owners: []
+  uuid: e2f5a8a7-feb0-4f79-bc6b-01fe55b98b3c
+- name: Vaccine Candidates per Country
+  owners: []
+  uuid: ddc91df6-fb40-4826-bdca-16b85af1c024
+- name: Vaccine Candidates per Country & Stage
+  owners: []
+  uuid: f69c556f-15fe-4a82-a8bb-69d5b6954123
+- name: Vaccine Candidates per Country & Stage
+  owners: []
+  uuid: cd111331-d286-4258-9020-c7949a109ed2
+- name: Vaccine Candidates per Phase
+  owners: []
+  uuid: 30b73c65-85e7-455f-bb24-801bb0cdc670
+- name: Vaccine Candidates per Phase
+  owners: []
+  uuid: 392f293e-0892-4316-bd41-c927b65606a4
+- name: Age distribution of respondents
+  owners: []
+  uuid: 5f1ea868-604e-f69d-a241-5daa83ff33be
+- name: Are you an ethnic minority in your city?
+  owners: []
+  uuid: def07750-b5c0-0b69-6228-cb2330916166
+- name: Breakdown of Developer Type
+  owners: []
+  uuid: b8386be8-f44e-6535-378c-2aa2ba461286
+- name: Commute Time
+  owners: []
+  uuid: 097c05c9-2dd2-481d-813d-d6c0c12b4a3d
+- name: Country of Citizenship
+  owners: []
+  uuid: 2ba66056-a756-d6a3-aaec-0c243fb7062e
+- name: 'Current Developers: Is this your first development job?'
+  owners: []
+  uuid: bfe5a8e6-146f-ef59-5e6c-13d519b236a8
+- name: Degrees vs Income
+  owners: []
+  uuid: 02f546ae-1bf4-bd26-8bc2-14b9279c8a62
+- name: Ethnic Minority & Gender
+  owners: []
+  uuid: 4880e4f4-b701-4be0-86f3-e7e89432e83b
+- name: First Time Developer?
+  owners: []
+  uuid: edc75073-8f33-4123-a28d-cd6dfb33cade
+- name: First Time Developer & Commute Time
+  owners: []
+  uuid: 067c4a1e-ae03-4c0c-8e2a-d2c0f4bf43c3
+- name: Gender
+  owners: []
+  uuid: 0f6b447c-828c-e71c-87ac-211bc412b214
+- name: Highest degree held
+  owners: []
+  uuid: 9f7d2b9c-6b3a-69f9-f03e-d3a141514639
+- name: How do you prefer to work?
+  owners: []
+  uuid: cb8998ab-9f93-4f0f-4e4b-3bfe4b0dea9d
+- name: How much do you expect to earn? ($0 - 100k)
+  owners: []
+  uuid: 6d0ceb30-2008-d19c-d285-cf77dc764433
+- name: Last Year Income Distribution
+  owners: []
+  uuid: a2ec5256-94b4-43c4-b8c7-b83f70c5d4df
+- name: Location of Current Developers
+  owners: []
+  uuid: 5596e0f6-78a9-465d-8325-7139c794a06a
+- name: Number of Aspiring Developers
+  owners: []
+  uuid: a0e5329f-224e-6fc8-efd2-d37d0f546ee8
+- name: Preferred Employment Style
+  owners: []
+  uuid: bff88053-ccc4-92f2-d6f5-de83e950e8cd
+- name: "\u2708\uFE0F Relocation ability"
+  owners: []
+  uuid: a6dd2d5a-2cdc-c8ec-f30c-85920f4f8a65
+- name: Top 15 Languages Spoken at Home
+  owners: []
+  uuid: 03a74c97-52fc-cf87-233c-d4275f8c550c
+- name: Work Location Preference
+  owners: []
+  uuid: e6b09c28-98cf-785f-4caf-320fd4fca802
+- name: Area
+  owners: []
+  uuid: 946cccb5-2101-44f5-98f8-501789a333cd
+- name: Bar
+  owners: []
+  uuid: 7a37f7d8-6deb-4fd3-a150-01b0ff532dbd
+- name: Big Number
+  owners: []
+  uuid: 5adc2abe-bfa3-4091-9838-4a470031208c
+- name: Big Number with Trendline
+  owners: []
+  uuid: 281656a3-3d8d-4423-8b58-b050d59fadd9
+- name: Box Plot
+  owners: []
+  uuid: cc8eea37-f890-4816-8df0-b1354d7cd553
+- name: Bubble
+  owners: []
+  uuid: c2014499-6800-43f0-908f-a2633db3ade7
+- name: Funnel
+  owners: []
+  uuid: 7b90545c-1aac-447d-9175-a49f508f699d
+- name: Gauge
+  owners: []
+  uuid: 57ccf0f1-d28a-4127-9581-7153c5a15b62
+- name: Graph
+  owners: []
+  uuid: be39bc2e-00c0-498b-96bf-858fe2361a89
+- name: Heatmap
+  owners: []
+  uuid: c99dbe37-50da-4067-837c-3a8e5b68aafd
+- name: Histogram
+  owners: []
+  uuid: 2a89c19d-d0d2-4f5e-9007-e0fb65440e80
+- name: Line
+  owners: []
+  uuid: 79567e46-97f6-4cd2-8e98-4cd211389743
+- name: Mixed
+  owners: []
+  uuid: bb394e7b-0cfc-47ba-b067-541964545752
+- name: Pie
+  owners: []
+  uuid: 02ed54c5-dc22-468c-9edf-729b5401b182
+- name: Pivot Table
+  owners: []
+  uuid: fcf2a0cf-0079-4f59-854f-d28297b07bf0
+- name: Radar
+  owners: []
+  uuid: 1be00870-89b8-4ba0-a451-1fe56ef89581
+- name: Sankey
+  owners: []
+  uuid: fead4d46-ecb9-4fd9-8b9c-420629269c02
+- name: Scatter Plot
+  owners: []
+  uuid: 5b629855-f912-4e28-8444-56b9db83e5b3
+- name: Sunburst
+  owners: []
+  uuid: 47b26af7-19e0-4ca1-9cf6-b74b2f1f7e3c
+- name: Table
+  owners: []
+  uuid: d0e7b367-f16f-4d7a-adde-7c7f455fa9bc
+- name: Tree
+  owners: []
+  uuid: 57e7f05e-0c9a-4313-8a33-e6d0999824af
+- name: TreeMap
+  owners: []
+  uuid: 36367ecc-e09a-4c9f-80df-5dbaf97f741f
+- name: Waterfall
+  owners: []
+  uuid: 97c77c60-0613-4066-aec7-a9c6a75ad8d8
+- name: Word Cloud
+  owners: []
+  uuid: d3967f7d-58ea-43fe-9961-7e061affdb1c
+- name: Cross Channel Relationship
+  owners: []
+  uuid: f2a8731b-3d8c-4d86-9d33-7c0a3e64d21c
+- name: Cross Channel Relationship heatmap
+  owners: []
+  uuid: 6cb43397-5c62-4f32-bde2-95344c412b5a
+- name: Members per Channel
+  owners: []
+  uuid: d44e416d-1647-44e4-b442-6da34b44adc4
+- name: Messages per Channel
+  owners: []
+  uuid: b0f11bdf-793f-473f-b7d5-b9265e657896
+- name: New Members per Month
+  owners: []
+  uuid: 92e1d712-bcf9-4d7e-9b94-26cffe502908
+- name: Number of Members
+  owners: []
+  uuid: 7dad983b-e9f6-d2e8-91da-c2262d4e84e8
+- name: Top Timezones
+  owners: []
+  uuid: 62b7242e-decc-2d1b-7f80-c62776939d1e
+- name: Weekly Messages
+  owners: []
+  uuid: abe2c022-ceee-a60a-e601-ab93f7ee52b1
+- name: Weekly Threads
+  owners: []
+  uuid: 9f742bdd-cac1-468c-3a37-35c9b3cfd5bb
+- name: Unicode Cloud
+  owners: []
+  uuid: 609e26d8-8e1e-4097-9751-931708e24ee4
+- name: Number of Deals (for each Combination)
+  owners: []
+  uuid: bd20fc69-dd51-46c1-99b5-09e37a434bf1
+- name: Overall Sales (By Product Line)
+  owners: []
+  uuid: 09c497e0-f442-1121-c9e7-671e37750424
+- name: Proportion of Revenue by Product Line
+  owners: []
+  uuid: 08aff161-f60c-4cb3-a225-dc9b1140d2e3
+- name: Quarterly Sales
+  owners: []
+  uuid: 692aca26-a526-85db-c94c-411c91cc1077
+- name: Quarterly Sales (By Product Line)
+  owners: []
+  uuid: db9609e4-9b78-4a32-87a7-4d9e19d51cd8
+- name: Revenue by Deal Size
+  owners: []
+  uuid: f065a533-2e13-42b9-bd19-801a21700dff
+- name: Seasonality of Revenue (per Product Line)
+  owners: []
+  uuid: cf0da099-b3ab-4d94-ab62-cf353ac3c611
+- name: Total Items Sold
+  owners: []
+  uuid: c3d643cd-fd6f-4659-a5b7-59402487a8d0
+- name: Total Items Sold (By Product Line)
+  owners: []
+  uuid: b8b7ca30-6291-44b0-bc64-ba42e2892b86
+- name: Total Revenue
+  owners: []
+  uuid: 7b12a243-88e0-4dc5-ac33-9a840bb0ac5a
+- name: Games
+  owners: []
+  uuid: 2a5e562b-ab37-1b9b-1de3-1be4335c8e83
+- name: Games per Genre
+  owners: []
+  uuid: 0499bdec-0837-44f3-ae8a-8c670de81afd
+- name: Games per Genre over time
+  owners: []
+  uuid: 0f8976aa-7bb4-40c7-860b-64445a51aaaf
+- name: Most Dominant Platforms
+  owners: []
+  uuid: 1810975a-f6d4-07c3-495c-c3b535d01f21
+- name: '# of Games That Hit 100k in Sales By Release Year'
+  owners: []
+  uuid: 2b69887b-23e3-b46d-d38c-8ea11856c555
+- name: Popular Genres Across Platforms
+  owners: []
+  uuid: 326fc7e5-b7f1-448e-8a6f-80d0e7ce0b64
+- name: Publishers With Most Titles
+  owners: []
+  uuid: d20b7324-3b80-24d4-37e2-3bd583b66713
+- name: Rise & Fall of Video Game Consoles
+  owners: []
+  uuid: 83b0e2d0-d38b-d980-ed8e-e1c9846361b6
+- name: 'Top 10 Games: Proportion of Sales in Markets'
+  owners: []
+  uuid: a40879d5-653a-42fe-9314-bbe88ad26e92
+- name: Total Sales per Market (Grouped by Genre)
+  owners: []
+  uuid: d8bf948e-46fd-4380-9f9c-a950c34bcc92
+- name: Deck.gl Path
+  owners: []
+  uuid: ca6a22ac-d643-4488-85da-b090e7d8eaa0
+- name: Deck.gl Arcs
+  owners: []
+  uuid: 05eab1c4-9bdd-4b49-b363-6186d31377c9
+- name: Deck.gl Polygons
+  owners: []
+  uuid: 399401fc-333e-4c67-9592-d3aae64541b6
+- name: Deck.gl Grid
+  owners: []
+  uuid: 7196c205-1c93-4351-9e9a-2131a92fe7b6
+- name: Deck.gl Hexagons
+  owners: []
+  uuid: a6b76dd1-0c35-48ef-9bed-07acf52322dc
+- name: Deck.gl Screen grid
+  owners: []
+  uuid: bb6c4416-c733-46ca-9165-bdb68a79ae39
+- name: Deck.gl Scatterplot
+  owners: []
+  uuid: 57a55c73-b808-433e-baed-9435c26fee1e
+- name: Birth in France by department in 2016
+  owners: []
+  uuid: f2a262a9-959c-4420-8e96-601ebd411090
+- name: Mapbox Long/Lat
+  owners: []
+  uuid: 44f40057-e7e8-42dd-aa31-db3dfec6b355
+- name: Pivot Table
+  owners: []
+  uuid: c71dccf3-906b-4fc2-a3bb-6a538da941c2
+- name: Number of Girls
+  owners: []
+  uuid: 0e61a7a1-2efc-4a74-b2da-8ae8b438164d
+- name: Names Sorted by Num in California
+  owners: []
+  uuid: 6f5360ce-fd03-49bb-9c9f-052cebd02724
+- name: Top 10 California Names Timeseries
+  owners: []
+  uuid: f2d3ca42-f4d0-4521-88ea-e546ce02558c
+- name: Number of California Births
+  owners: []
+  uuid: 61124208-1e58-4d93-b58a-e67b5566c219
+- name: Daily Totals
+  owners: []
+  uuid: 53671274-307b-4ae2-bfcd-f69a01e59a01
+- name: Num Births Trend
+  owners: []
+  uuid: 28107696-8c70-4f03-8260-eb8f84816dc3
+- name: Average and Sum Trends
+  owners: []
+  uuid: f6a6013a-a957-4666-919f-be03ed337253
+- name: Pivot Table v2
+  owners: []
+  uuid: af08a7d0-5798-4914-9853-7ca5085376b5
+- name: Top 10 Boy Name Share
+  owners: []
+  uuid: 3d7fe4d9-5305-4fb0-a219-c3a7731f13df
+- name: Top 10 Girl Name Share
+  owners: []
+  uuid: b9569699-d3a9-4343-9940-94cb7576bd0d
+- name: Boy Name Cloud
+  owners: []
+  uuid: cda4eb97-3173-4050-b36d-108a2d2bc6ed
+- name: Boys
+  owners: []
+  uuid: c2ad525d-d7c4-44f4-ac88-406f7a327666
+- name: Girl Name Cloud
+  owners: []
+  uuid: c0d66d7d-915b-4fd9-b10b-6ba5ec8a4083
+- name: Girls
+  owners: []
+  uuid: 3540d48b-0ac9-47d2-937e-cea127b3f87f
+- name: Genders by State
+  owners: []
+  uuid: 7801faff-c841-4529-858f-decdb3c92dc4
+- name: Trends
+  owners: []
+  uuid: 3b33e31f-9647-4a2d-946d-32ba972041be
+- name: Genders
+  owners: []
+  uuid: cf3528a3-01be-46fb-9136-145722c3aa44
+- name: Participants
+  owners: []
+  uuid: 621399c0-7861-4918-8726-e7eec69dcd3e
+- name: Parallel Coordinates
+  owners: []
+  uuid: 5177f1e1-581d-4a27-a8e2-51ecbb651f72
+- name: Treemap
+  owners: []
+  uuid: a19f3e86-94dc-4cf4-965b-b39694df260b
+- name: Box plot
+  owners: []
+  uuid: ffe4376a-cdf7-4f0c-af9b-3dfba8e53269
+- name: World's Pop Growth
+  owners: []
+  uuid: bdeeeaec-8455-469e-a388-eb53e1f73e33
+- name: Rural Breakdown
+  owners: []
+  uuid: 6812b9ca-abfd-48f4-b294-8bc6ddd927be
+- name: Life Expectancy VS Rural %
+  owners: []
+  uuid: f66d20b1-5e6f-4b89-a551-bc5912164028
+- name: '% Rural'
+  owners: []
+  uuid: 75422b6a-0ead-4d03-ad02-a299792c17ca
+- name: Growth Rate
+  owners: []
+  uuid: 9f1f4025-678e-4dcc-aa4e-7ecae5a14e3e
+- name: Most Populated Countries
+  owners: []
+  uuid: 861ae1e3-567a-45fc-b1fb-827d3a3715c6
+- name: World's Population
+  owners: []
+  uuid: 30ee411a-c152-4254-a274-ce26e55d557e
+dashboard:
+- name: COVID Vaccine Dashboard
+  owners: []
+  uuid: f4065089-110a-41fa-8dd7-9ce98a65e250
+- name: FCC New Coder Survey 2018
+  owners: []
+  uuid: 5b12b583-8204-08e9-392c-422209c29787
+- name: Featured Charts
+  owners: []
+  uuid: 9992d759-90d7-4d2a-b34d-373a8aaa9889
+- name: Sales Dashboard
+  owners: []
+  uuid: 04f79081-fb49-7bac-7f14-cc76cd2ad93b
+- name: Slack Dashboard
+  owners: []
+  uuid: 9726d8b0-222f-eb2c-034a-02b9f51ef5fd
+- name: Unicode Test
+  owners: []
+  uuid: 6b2de44e-7db1-4264-bfc1-ac3c00d42fad
+- name: Video Game Sales
+  owners: []
+  uuid: c7bc10f4-6a2d-7569-caae-bbc91864ee11
+- name: deck.gl Demo
+  owners: []
+  uuid: 1f9322cc-1ae2-4031-9024-490ecfc7c0af
+- name: Misc Charts
+  owners: []
+  uuid: c705a8d2-20ce-4548-b26c-372f19e7e07b
+- name: USA Births Names
+  owners: []
+  uuid: 2ae43244-b8e7-4bae-8557-2b93bb1048ef
+- name: World Bank's Data
+  owners: []
+  uuid: f6a33dc8-ec7c-4eff-8a05-a7f181d368ea
+dataset:
+- name: FCC 2018 Survey
+  owners: []
+  uuid: d95a2865-53ce-1f82-a53d-8e3c89331469
+- name: channel_members
+  owners: []
+  uuid: 3e8130eb-0831-d568-b531-c3ce6d68d3d8
+- name: channels
+  owners: []
+  uuid: f7db6d45-7056-f395-d24a-6c805fb4c97d
+- name: cleaned_sales_data
+  owners: []
+  uuid: e8623bb9-5e00-f531-506a-19607f5f8005
+- name: covid_vaccines
+  owners: []
+  uuid: 974b7a1c-22ea-49cb-9214-97b7dbd511e0
+- name: exported_stats
+  owners: []
+  uuid: 0bd5d01c-b7d8-471b-b3a5-366ce6c920d4
+- name: hierarchical_dataset
+  owners: []
+  uuid: f710a997-c65e-4aa6-aaed-b7d6998565ae
+- name: members_channels_2
+  owners: []
+  uuid: 3d9c0054-b31b-4102-92de-b1ef9f9e5e77
+- name: messages
+  owners: []
+  uuid: e032c69e-716e-d700-eff7-07800d0f9989
+- name: messages_channels
+  owners: []
+  uuid: 6e533506-fce6-4f6a-b116-d139df6dbdea
+- name: new_members_daily
+  owners: []
+  uuid: 9dd99cda-ff6b-4575-9a74-684d06e871ab
+- name: threads
+  owners: []
+  uuid: d7438be6-6078-17dd-cf9a-56f0ef546c80
+- name: unicode_test
+  owners: []
+  uuid: a6771c73-96fc-44c6-8b6e-9d303955ea48
+- name: users
+  owners: []
+  uuid: 7195db6b-2d17-7619-b7c7-26b15378df8c
+- name: users_channels-uzooNNtSRO
+  owners: []
+  uuid: 473d6113-b44a-48d8-a6ae-e0ef7e2aebb0
+- name: users_channels
+  owners: []
+  uuid: 29b18573-c9d6-40bc-b8cb-f70c9a1b6244
+- name: video_game_sales
+  owners: []
+  uuid: 53d47c0c-c03d-47f0-b9ac-81225f808283
+- name: bart_lines
+  owners: []
+  uuid: e86d5509-f1ed-4bef-a813-4ce13e63f0ce
+- name: flights
+  owners: []
+  uuid: 2cbe9ee4-fcd9-4178-ac11-9217b2bec697
+- name: sf_population_polygons
+  owners: []
+  uuid: 7f956e58-b292-4894-81f3-bb141010423e
+- name: birth_france_by_region
+  owners: []
+  uuid: 0beec9c7-2cb4-486c-960b-20e81d041f1d
+- name: long_lat
+  owners: []
+  uuid: 210c18b8-c80b-4d69-b484-1b1440db6d31
+- name: birth_names
+  owners: []
+  uuid: ed07ccba-faf1-4d89-8e1e-11ac77e48eb8
+- name: wb_health_population
+  owners: []
+  uuid: 09411f0d-c9fa-4dc0-ae58-053ea45a49a9

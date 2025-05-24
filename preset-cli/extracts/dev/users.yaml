@@ -1,0 +1,6 @@
+- email: admin@superset.com
+  first_name: Superset
+  last_name: Admin
+  role:
+  - Admin
+  username: admin

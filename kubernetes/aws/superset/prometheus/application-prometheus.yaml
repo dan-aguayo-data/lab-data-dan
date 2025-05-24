@@ -1,0 +1,53 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 66.3.0
+    helm:
+      values: |
+        grafana:
+          service:
+            labels: {"app": "grafana"}
+            type: LoadBalancer
+            port: 80
+            targetPort: 3000
+          resources:
+            requests:
+              memory: "256Mi" 
+              cpu: "250m"    
+            limits:
+              memory: "512Mi" 
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          persistence:
+            enabled: true
+            size: 10Gi
+            storageClassName: "gp2" 
+            accessModes:
+              - ReadWriteOnce   
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    syncOptions:
+    - ServerSideApply=true
+    - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
+
+
+

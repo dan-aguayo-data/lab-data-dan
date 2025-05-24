@@ -1,0 +1,57 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: EKS-data-team-sandbox-cluster
+  region: ap-southeast-2
+
+nodeGroups:
+  - name: scale-southeast2c
+    instanceType: t2.small
+    desiredCapacity: 1
+    maxSize: 10
+    availabilityZones: ["ap-southeast-2c"]
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+    labels:
+      nodegroup-type: stateful-southeast2c
+      instance-type: onDemand
+      team: data-team
+    ssh:
+      publicKeyName: data-team-cli-sandbox
+
+  - name: scale-southeast2b
+    instanceType: t2.small
+    desiredCapacity: 1
+    maxSize: 10
+    availabilityZones: ["ap-southeast-2b"]
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+    labels:
+      nodegroup-type: stateful-southeastb
+      instance-type: onDemand
+      team: data-team
+    ssh:
+      publicKeyName: data-team-cli-sandbox
+
+  - name: scale-spot
+    desiredCapacity: 1
+    maxSize: 10
+    instancesDistribution:
+      instanceTypes: ["t2.small", "t3.small"]
+      onDemandBaseCapacity: 0
+      onDemandPercentageAboveBaseCapacity: 0
+    availabilityZones: ["ap-southeast-2c", "ap-southeast-2b"]
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+    labels:
+      nodegroup-type: stateless-workload
+      instance-type: spot
+      team: data-team
+    ssh:
+      publicKeyName: data-team-cli-sandbox
+
+availabilityZones: ["ap-southeast-2c", "ap-southeast-2b"]

@@ -1,0 +1,28 @@
+slice_name: Pivot Table v2
+description: null
+certified_by: null
+certification_details: null
+viz_type: pivot_table_v2
+params:
+  compare_lag: '10'
+  compare_suffix: o10Y
+  granularity_sqla: ds
+  groupby: []
+  groupbyColumns:
+  - state
+  groupbyRows:
+  - name
+  limit: '25'
+  markup_type: markdown
+  metrics:
+  - sum__num
+  row_limit: 50000
+  time_range: '100 years ago : now'
+  viz_type: pivot_table_v2
+query_context: '{"datasource": {"id": 2, "type": "table"}, "queries": [{"columns":
+  ["name", "state"], "metrics": ["sum__num"]}], "result_format": "json", "result_type":
+  "full"}'
+cache_timeout: null
+uuid: af08a7d0-5798-4914-9853-7ca5085376b5
+version: 1.0.0
+dataset_uuid: ed07ccba-faf1-4d89-8e1e-11ac77e48eb8

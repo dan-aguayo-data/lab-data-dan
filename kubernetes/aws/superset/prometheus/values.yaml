@@ -1,0 +1,15 @@
+grafana:
+persistence:
+  enabled: true
+  size: 5Gi
+service:
+  type: LoadBalancer
+  service:
+    type: LoadBalancer
+    port: 3000
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: nlb
+      service.beta.kubernetes.io/aws-load-balancer-internal: "true" # Optional, for internal NLB
+
+      
+
