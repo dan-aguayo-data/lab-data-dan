@@ -1,0 +1,45 @@
+{%- set trimmed_source_rel = model.name | replace("LANDING_ORACLE_","") -%}
+
+{{  
+    config(
+        alias=trimmed_source_rel
+    )
+}}
+
+WITH SOURCE AS (
+    SELECT
+        *
+    FROM
+        {{ source('LANDING_ORACLE', 'AWS_RDS_STAGE_CES_MSCM') }}
+    WHERE METADATA:"table-name"='INVOICE_AP_TXN_HDR' AND DATA is not null
+)
+
+SELECT
+    N.DATA:ID::string as ID,
+    N.DATA:INVOICE_NUMBER::string as INVOICE_NUMBER,
+    N.DATA:BUSINESS_UNIT::string as BUSINESS_UNIT,
+    N.DATA:INVOICE_SOURCE::string as INVOICE_SOURCE,
+    N.DATA:INVOICE_AMOUNT::float as INVOICE_AMOUNT,
+    N.DATA:INVOICE_DATE::string as INVOICE_DATE,
+    N.DATA:SUPPLIER_NUMBER::string as SUPPLIER_NUMBER,
+    N.DATA:SUPPLIER_SITE::string as SUPPLIER_SITE,
+    N.DATA:INVOICE_CURRENCY::string as INVOICE_CURRENCY,
+    N.DATA:PAYMENT_CURRENCY::string as PAYMENT_CURRENCY,
+    N.DATA:DESCRIPTION::string as DESCRIPTION,
+    N.DATA:INVOICE_TYPE::string as INVOICE_TYPE,
+    N.DATA:LEGAL_ENTITY::string as LEGAL_ENTITY,
+    N.DATA:PAYMENT_TERMS::string as PAYMENT_TERMS,
+    N.DATA:PAY_GROUP::string as PAY_GROUP,
+    N.DATA:CALCULATE_TAX_DURING_IMPORT::string as CALCULATE_TAX_DURING_IMPORT,
+    N.DATA:ADD_TAX_TO_INVOICE_AMOUNT::string as ADD_TAX_TO_INVOICE_AMOUNT,
+    N.DATA:INVOICE_GROUP::bigint as INVOICE_GROUP,
+    nullif(N.DATA:CREATED_BY,'')::string as CREATED_BY,
+    nullif(N.DATA:CREATED_ON,'')::TIMESTAMP_NTZ as CREATED_ON,
+    N.DATA:LAST_MODIFIED_BY::string as LAST_MODIFIED_BY,
+    N.DATA:LAST_MODIFIED_ON::TIMESTAMP_NTZ as LAST_MODIFIED_ON,
+    nullif(N.DATA:INVOICE_BATCH_ID,'')::string as INVOICE_BATCH_ID,
+    nullif(N.DATA:MULTI_SCHEME_ID,'')::bigint as MULTI_SCHEME_ID,
+    nullif(N.DATA:SYNCED,'')::bigint as SYNCED,
+    TO_TIMESTAMP(N.METADATA:timestamp::string) as METADATA_TIMESTAMP,
+    N.METADATA:operation::string as METADATA_OPERATION
+FROM SOURCE as N

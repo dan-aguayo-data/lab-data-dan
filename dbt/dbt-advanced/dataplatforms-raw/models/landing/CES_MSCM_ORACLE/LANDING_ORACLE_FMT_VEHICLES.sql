@@ -1,0 +1,34 @@
+{%- set trimmed_source_rel = model.name | replace("LANDING_ORACLE_","") -%}
+
+{{  
+    config(
+        alias=trimmed_source_rel
+    )
+}}
+
+WITH SOURCE AS (
+    SELECT
+        *
+    FROM
+        {{ source('LANDING_ORACLE', 'AWS_RDS_STAGE_COEX') }}
+    WHERE METADATA:"table-name"='FMT_VEHICLES' AND DATA is not null
+)
+
+SELECT
+    N.DATA:VEHICLE_ID::bigint as VEHICLE_ID,
+    N.DATA:ORGANISATION_ID::bigint as ORGANISATION_ID,
+    N.DATA:VEHICLE_TYPE_ID::bigint as VEHICLE_TYPE_ID,
+    N.DATA:STATE_OF_REGISTRATION_ID::bigint as STATE_OF_REGISTRATION_ID,
+    N.DATA:REGISTRATION_NUMBER::string as REGISTRATION_NUMBER,
+    N.DATA:VEHICLE_STATUS_ID::bigint as VEHICLE_STATUS_ID,
+    nullif(N.DATA:YEAR_OF_MANUFACTURE,'')::bigint as YEAR_OF_MANUFACTURE,
+    nullif(N.DATA:NO_OF_TRAILERS,'')::bigint as NO_OF_TRAILERS,
+    N.DATA:START_DATE_ACTIVE::DATE as START_DATE_ACTIVE,
+    nullif(N.DATA:END_DATE_ACTIVE,'')::DATE as END_DATE_ACTIVE,
+    N.DATA:CREATED_BY::string as CREATED_BY,
+    N.DATA:CREATED_ON::TIMESTAMP_NTZ as CREATED_ON,
+    N.DATA:LAST_MODIFIED_BY::string as LAST_MODIFIED_BY,
+    N.DATA:LAST_MODIFIED_ON::TIMESTAMP_NTZ as LAST_MODIFIED_ON,
+    TO_TIMESTAMP(N.METADATA:timestamp::string) as METADATA_TIMESTAMP,
+    N.METADATA:operation::string as METADATA_OPERATION
+FROM SOURCE as N

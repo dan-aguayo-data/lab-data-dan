@@ -1,0 +1,12 @@
+WITH SOURCE as (
+    
+    SELECT
+        *
+    FROM
+        {{ ref('LANDING_INCREMENTAL_AG_EMPLOYEE_AD_GROUPS') }}
+)
+SELECT
+    s.*
+FROM
+    source s
+QUALIFY row_number() OVER (PARTITION BY s.EMAIL1 ORDER BY s.DATE_UPDATED DESC) = 1 

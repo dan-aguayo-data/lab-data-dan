@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: LANDING_ORACLE
+    description: "Data engineering incrementals tables!"
+    database: LANDING_ORACLE
+    schema: |
+      {{'{%-'}} if  target.name.upper() == "DEV" {{'-%}'}} ORACLE_UAT
+      {{'{%-'}} elif target.name.upper() == "SIT" {{'-%}'}} ORACLE_SIT      
+      {{'{%-'}} elif target.name.upper() == "UAT" {{'-%}'}} ORACLE_UAT
+      {{'{%-'}} elif target.name.upper() == "PROD" {{'-%}'}} ORACLE_PROD
+      {{'{%-'}} endif {{'-%}'}}
+    tables:
+{% for table in TABLE_DATA.keys() %}      - name: {{table}}
+{% endfor %}

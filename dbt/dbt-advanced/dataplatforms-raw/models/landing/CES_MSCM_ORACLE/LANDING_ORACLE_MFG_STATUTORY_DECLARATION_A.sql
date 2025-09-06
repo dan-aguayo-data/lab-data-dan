@@ -1,0 +1,37 @@
+{%- set trimmed_source_rel = model.name | replace("LANDING_ORACLE_","") -%}
+
+{{  
+    config(
+        alias=trimmed_source_rel
+    )
+}}
+
+WITH SOURCE AS (
+    SELECT
+        *
+    FROM
+        {{ source('LANDING_ORACLE', 'AWS_RDS_STAGE_CES_MSCM') }}
+    WHERE METADATA:"table-name"='MFG_STATUTORY_DECLARATION_A' AND DATA is not null
+)
+
+SELECT
+    nullif(N.DATA:MFG_STATUTORY_DECLARATION_ID,'')::bigint as MFG_STATUTORY_DECLARATION_ID,
+    N.DATA:PARTICIPANT_SITE_ID::bigint as PARTICIPANT_SITE_ID,
+    N.DATA:MANUFACTURER_ID::string as MANUFACTURER_ID,
+    N.DATA:STATUS::string as STATUS,
+    N.DATA:DECLARATION_PERIOD_ID::bigint as DECLARATION_PERIOD_ID,
+    nullif(N.DATA:DECLARANT_NAME,'')::string as DECLARANT_NAME,
+    nullif(N.DATA:DECLARANT_ADDRESS,'')::string as DECLARANT_ADDRESS,
+    nullif(N.DATA:DECLARANT_OCCUPATION,'')::string as DECLARANT_OCCUPATION,
+    N.DATA:CREATED_BY::string as CREATED_BY,
+    N.DATA:CREATED_ON::TIMESTAMP_NTZ as CREATED_ON,
+    N.DATA:LAST_MODIFIED_BY::string as LAST_MODIFIED_BY,
+    N.DATA:LAST_MODIFIED_ON::TIMESTAMP_NTZ as LAST_MODIFIED_ON,
+    N.DATA:MULTI_SCHEME_ID::bigint as MULTI_SCHEME_ID,
+    nullif(N.DATA:AUDIT_TYPE,'')::string as AUDIT_TYPE,
+    nullif(N.DATA:AUDIT_DATE,'')::TIMESTAMP_NTZ as AUDIT_DATE,
+    nullif(N.DATA:AUDIT_USER,'')::string as AUDIT_USER,
+    nullif(N.DATA:DISCUSSION_STATUS,'')::string as DISCUSSION_STATUS,
+    TO_TIMESTAMP(N.METADATA:timestamp::string) as METADATA_TIMESTAMP,
+    N.METADATA:operation::string as METADATA_OPERATION
+FROM SOURCE as N

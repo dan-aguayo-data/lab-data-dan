@@ -1,0 +1,2 @@
+SELECT * FROM
+{{ source('CES_ZENDESK_PROD', 'GROUP') }}

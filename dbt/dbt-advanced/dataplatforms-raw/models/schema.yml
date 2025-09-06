@@ -1,0 +1,211 @@
+models:
+  - name: ANZ_BTR_HEADER
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: ID
+        data_type: string
+        constraints:
+         - type: not_null
+         - type: primary_key
+        data_tests:
+          - unique 
+      - name: ACCOUNT_NUMBER
+        data_type: string
+      - name: MULTI_SCHEME_ID
+        data_type: string
+      - name: AMOUNT
+        data_type: float
+      - name: CURRENCY_CODE
+        data_type: string
+      - name: FILE_DATE
+        data_type: DATE
+      - name: ACCOUNTING_DATE
+        data_type: DATE
+      - name: FILE_NAME
+        data_type: string
+      - name: ITEM_COUNT
+        data_type: string
+      - name: LANDED_DATETIME
+        data_type: TIMESTAMP_NTZ
+      - name: RECORD_CODE
+        data_type: string
+      - name: TYPE_CODE
+        data_type: string
+      - name: FUNDS_TYPE
+        data_type: string
+  - name: CES_PAYPAL_SETTLEMENT_VICRETURN
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: ID
+        data_type: string
+        constraints:
+         - type: not_null
+         - type: primary_key
+        data_tests:
+          - unique 
+      - name: TRANSACTION_ID
+        data_type: string
+      - name: PAY_REF_NUMBER
+        data_type: string
+      - name: INVOICE_ID
+        data_type: string
+      - name: CONSUMER_ID
+        data_type: string
+      - name: PAYPAL_REFERENCE_ID
+        data_type: string
+      - name: PAYPAL_REFERENCE_ID_TYPE
+        data_type: string
+      - name: TRANSACTION_EVENT_CODE
+        data_type: string
+      - name: GROSS_TRANSACTION_AMOUNT
+        data_type: decimal(10, 4)
+      - name: GROSS_TRANSACTION_CURRENCY
+        data_type: string
+      - name: TRANSACTION_DEBIT_OR_CREDIT
+        data_type: string
+      - name: TRANSACTION_INITIATION_DATE
+        data_type: TIMESTAMP_NTZ
+      - name: TRANSACTION_COMPLETION_DATE
+        data_type: TIMESTAMP_NTZ
+      - name: FEE_DEBIT_OR_CREDIT
+        data_type: string
+      - name: FEE_AMOUNT
+        data_type: decimal(10, 4)
+      - name: FEE_CURRENCY
+        data_type: string
+      - name: PAYMENT_TRACKING_ID
+        data_type: string
+      - name: STORE_ID
+        data_type: string
+      - name: BANK_REFERENCE_ID
+        data_type: string
+      - name: CREDIT_TRANSACTIONAL_FEE
+        data_type: decimal(10, 4)
+      - name: CREDIT_PROMOTIONAL_FEE
+        data_type: decimal(10, 4)
+      - name: CREDIT_TERM
+        data_type: string
+      - name: PAYPAL_FILE_DATE
+        data_type: DATE
+      - name: PAYPAL_FILE_LANDED_DATE
+        data_type: TIMESTAMP_NTZ
+  - name: CES_PAYPAL_SETTLEMENT_WARRRL
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: ID
+        data_type: string
+        constraints:
+         - type: not_null
+         - type: primary_key
+        data_tests:
+          - unique 
+      - name: TRANSACTION_ID
+        data_type: string
+      - name: PAY_REF_NUMBER
+        data_type: string
+      - name: INVOICE_ID
+        data_type: string
+      - name: CONSUMER_ID
+        data_type: string
+      - name: PAYPAL_REFERENCE_ID
+        data_type: string
+      - name: PAYPAL_REFERENCE_ID_TYPE
+        data_type: string
+      - name: TRANSACTION_EVENT_CODE
+        data_type: string
+      - name: GROSS_TRANSACTION_AMOUNT
+        data_type: decimal(10, 4)
+      - name: GROSS_TRANSACTION_CURRENCY
+        data_type: string
+      - name: TRANSACTION_DEBIT_OR_CREDIT
+        data_type: string
+      - name: TRANSACTION_INITIATION_DATE
+        data_type: TIMESTAMP_NTZ
+      - name: TRANSACTION_COMPLETION_DATE
+        data_type: TIMESTAMP_NTZ
+      - name: FEE_DEBIT_OR_CREDIT
+        data_type: string
+      - name: FEE_AMOUNT
+        data_type: decimal(10, 4)
+      - name: FEE_CURRENCY
+        data_type: string
+      - name: PAYMENT_TRACKING_ID
+        data_type: string
+      - name: STORE_ID
+        data_type: string
+      - name: BANK_REFERENCE_ID
+        data_type: string
+      - name: CREDIT_TRANSACTIONAL_FEE
+        data_type: decimal(10, 4)
+      - name: CREDIT_PROMOTIONAL_FEE
+        data_type: decimal(10, 4)
+      - name: CREDIT_TERM
+        data_type: string
+      - name: PAYPAL_FILE_DATE
+        data_type: DATE
+      - name: PAYPAL_FILE_LANDED_DATE
+        data_type: TIMESTAMP_NTZ
+  - name: CES_PAYPAL_SETTLEMENT_COEX
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: ID
+        data_type: string
+        constraints:
+         - type: not_null
+         - type: primary_key
+        data_tests:
+          - unique 
+      - name: TRANSACTION_ID
+        data_type: string
+      - name: PAY_REF_NUMBER
+        data_type: string
+      - name: INVOICE_ID
+        data_type: string
+      - name: CONSUMER_ID
+        data_type: string
+      - name: PAYPAL_REFERENCE_ID
+        data_type: string
+      - name: PAYPAL_REFERENCE_ID_TYPE
+        data_type: string
+      - name: TRANSACTION_EVENT_CODE
+        data_type: string
+      - name: GROSS_TRANSACTION_AMOUNT
+        data_type: decimal(10, 4)
+      - name: GROSS_TRANSACTION_CURRENCY
+        data_type: string
+      - name: TRANSACTION_DEBIT_OR_CREDIT
+        data_type: string
+      - name: TRANSACTION_INITIATION_DATE
+        data_type: TIMESTAMP_NTZ
+      - name: TRANSACTION_COMPLETION_DATE
+        data_type: TIMESTAMP_NTZ
+      - name: FEE_DEBIT_OR_CREDIT
+        data_type: string
+      - name: FEE_AMOUNT
+        data_type: decimal(10, 4)
+      - name: FEE_CURRENCY
+        data_type: string
+      - name: PAYMENT_TRACKING_ID
+        data_type: string
+      - name: STORE_ID
+        data_type: string
+      - name: BANK_REFERENCE_ID
+        data_type: string
+      - name: CREDIT_TRANSACTIONAL_FEE
+        data_type: decimal(10, 4)
+      - name: CREDIT_PROMOTIONAL_FEE
+        data_type: decimal(10, 4)
+      - name: CREDIT_TERM
+        data_type: string
+      - name: PAYPAL_FILE_DATE
+        data_type: DATE
+      - name: PAYPAL_FILE_LANDED_DATE
+        data_type: TIMESTAMP_NTZ

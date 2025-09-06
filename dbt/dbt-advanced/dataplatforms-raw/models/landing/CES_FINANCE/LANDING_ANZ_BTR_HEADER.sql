@@ -1,0 +1,46 @@
+{%- set trimmed_source_rel = model.name | replace("LANDING_","") -%}
+{%- set tbl_name = "ANZ_BTR_PROD" if target.name.upper() == 'PROD' else "ANZ_BTR_UAT" -%}
+
+{{  
+    config(
+        alias=trimmed_source_rel
+    )
+}}
+
+
+WITH ANZ_BTR_SOURCE AS (
+ 
+  select * from {{source('SNOWPIPE_UAT_PROD',tbl_name|string)}} 
+
+ 
+), ANZ_BTR_FILE_DT AS (
+ 
+    select FILE_NAME ,to_date(COL_4, 'YYMMDD') as FILE_DATE from ANZ_BTR_SOURCE where COL_1='01'
+
+), ANZ_BTR_FILE_ADT AS (
+ 
+    select FILE_NAME ,to_date(COL_5, 'YYMMDD') as ACCOUNTING_DATE from ANZ_BTR_SOURCE where COL_1='02'
+)
+    select
+     ANZ_BTR_SOURCE.FILE_NAME
+    ,ANZ_BTR_FILE_DT.FILE_DATE
+    ,ANZ_BTR_FILE_ADT.ACCOUNTING_DATE
+    ,CONCAT(TO_CHAR(ANZ_BTR_FILE_DT.FILE_DATE, 'YYYYMMDD'),'-',ANZ_BTR_SOURCE.COL_2) AS ID
+    ,ANZ_BTR_SOURCE.LANDED_DATETIME
+    ,ANZ_BTR_SOURCE.COL_1 as RECORD_CODE
+    ,ANZ_BTR_SOURCE.COL_2 as ACCOUNT_NUMBER
+    ,AC.MULTI_SCHEME_ID as MULTI_SCHEME_ID
+    ,ANZ_BTR_SOURCE.COL_3 as CURRENCY_CODE
+    ,ANZ_BTR_SOURCE.COL_4 as TYPE_CODE
+    ,CAST((ANZ_BTR_SOURCE.COL_5/100) AS FLOAT) as AMOUNT
+    ,ANZ_BTR_SOURCE.COL_6 as ITEM_COUNT
+    ,ANZ_BTR_SOURCE.COL_7 as FUNDS_TYPE
+    from ANZ_BTR_SOURCE
+    INNER JOIN ANZ_BTR_FILE_DT 
+    ON ANZ_BTR_FILE_DT.FILE_NAME = ANZ_BTR_SOURCE.FILE_NAME
+    INNER JOIN ANZ_BTR_FILE_ADT 
+    ON ANZ_BTR_FILE_ADT.FILE_NAME = ANZ_BTR_SOURCE.FILE_NAME
+    LEFT JOIN {{source('CES_REF','BANK_REC_ACCOUNT_MAPPING')}} AC
+    ON AC.ACCOUNT_NUM = ANZ_BTR_SOURCE.COL_2
+    where ANZ_BTR_SOURCE.COL_1='03'
+    and ANZ_BTR_SOURCE.COL_2 like any ('%8801','%0896','%2895')

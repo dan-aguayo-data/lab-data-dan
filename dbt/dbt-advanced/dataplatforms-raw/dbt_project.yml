@@ -1,0 +1,609 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'dataplatforms_raw'
+version: '1.0.0'
+config-version: 2
+
+#dbt cloud config to work on CLI 
+
+dbt-cloud:
+  project-id: 61207
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'RAW_DEV'
+
+# These configurations specify where dbt should look for different types of files.
+# The `source-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+seed-paths: ["data"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+    - "target"
+    - "dbt_modules"
+
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+# In this example config, we tell dbt to build all models in the example/ directory
+# as tables. These settings can be overridden in the individual model files
+# using the `{{ config(...) }}` macro.
+models:
+  +transient: false
+  dataplatforms_raw:
+    snowflake_warehouse: |
+      {%- if  target.name.upper() == "DEV" -%} ETL_CES_DEV
+      {%- elif target.name.upper() == "SIT"  -%} ETL_CES_SIT
+      {%- elif target.name.upper() == "UAT"  -%} ETL_CES_UAT
+      {%- elif target.name.upper() == "PROD"  -%} ETL_CES
+      {%- endif -%}
+    landing:
+      COEX_AGILOFT:
+        snowflake_warehouse: "COEX_AGILOFT"
+        schema: COEX_AGILOFT_PROD
+        database: LANDING
+        materialized: view
+        tags: 
+          - COEX_AGILOFT_LANDING
+          - COEX_AGILOFT
+          - LANDING
+          - COEX_LANDING
+      COEX_CONSULTATION_MANAGER:
+        snowflake_warehouse: "ETL_COEX"
+        schema: COEX_CONSULTATION_MANAGER
+        database: LANDING
+        materialized: view
+        tags: 
+          - COEX_CONSULTATION_MANAGER
+          - LANDING
+          - COEX_LANDING
+      COEX_READINOW:
+        snowflake_warehouse: "ETL_COEX"
+        schema: READINOW_PROD
+        database: LANDING
+        materialized: view
+        tags: 
+          - COEX_READINOW
+          - LANDING
+          - COEX_LANDING
+      COEX_ESTRAPI:
+        snowflake_warehouse: "ETL_COEX"
+        schema: COEX_ESTRAPI_PROD
+        database: LANDING
+        materialized: view
+        tags: 
+          - COEX_ESTRAPI
+          - LANDING
+          - COEX_LANDING
+      COEX_COLLECT:
+        snowflake_warehouse: "ETL_COEX"
+        schema: COEX_COLLECT
+        database: LANDING
+        materialized: view
+        tags: 
+          - COEX_COLLECT
+          - LANDING
+          - COEX_LANDING
+          - DEV
+          - PROD
+          - UAT
+      COEX_ALLOTRAC:
+        snowflake_warehouse: "ETL_COEX"
+        schema: COEX_ALLOTRAC_PROD
+        database: LANDING
+        materialized: view
+        tags: 
+          - COEX_ALLOTRAC
+          - LANDING
+          - COEX_LANDING                   
+      CES_TEMPO:
+        schema: TEMPO_PROD
+        database: LANDING
+        materialized: view
+        tags: 
+          - TEMPO_LANDING
+          - LANDING
+          - CES_LANDING      
+      CES_MAILCHIMP:
+        schema: MAILCHIMP_PROD
+        database: LANDING
+        materialized: view
+        tags: 
+          - MAILCHIMP_LANDING
+          - LANDING
+          - CES_LANDING  
+      CES_GREAT_EXPECTATIONS:
+        schema: CES_GREAT_EXPECTATIONS_PROD
+        database: LANDING
+        materialized: view
+        tags: 
+          - GREAT_EXPECTATIONS_LANDING
+          - LANDING
+          - CES_LANDING
+      CES_ADF:
+        schema: CES_ADF_{{ target.name.upper()|replace('RAW_','') }}
+        database: LANDING
+        materialized: view
+        tags: 
+          - ADF_LANDING
+          - LANDING
+          - CES_LANDING
+      CES_ABN:
+        schema: CES_ABN_PROD
+        database: LANDING
+        materialized: view
+        tags: 
+          - ABN_LANDING
+          - ACNC_LANDING
+          - LANDING
+          - CES_LANDING
+      COEX_AD:
+        schema: COEX_AD_PROD 
+        database: LANDING
+        materialized: view
+        tags: 
+          - LANDING
+          - COEX_LANDING
+          - COEX_AD
+      CES_MSCM_ORACLE:
+        schema: |
+          {%- if  target.name.upper() == "DEV" -%} CES_MSCM_ORACLE_DEV
+          {%- elif target.name.upper() == "SIT"  -%} CES_MSCM_ORACLE_SIT
+          {%- elif target.name.upper() == "UAT"  -%} CES_MSCM_ORACLE_UAT
+          {%- elif target.name.upper() == "PROD"  -%} CES_MSCM_ORACLE_PROD
+          {%- endif -%}
+        database: LANDING
+        materialized: view
+        tags: 
+          - LANDING
+          - CES_MSCM_ORACLE_LANDING
+      CES_PAYPAL:
+        schema: CES_PAYPAL_{{ target.name.upper()|replace('RAW_','') }} 
+        database: LANDING
+        materialized: view
+        tags: 
+          - LANDING
+          - CES_PAYPAL
+      CES_FINANCE:
+        schema: CES_FINANCE_{{ target.name.upper()|replace('RAW_','') }} 
+        database: LANDING
+        materialized: view
+        tags:
+          - LANDING
+          - CES_FINANCE_LANDING
+    raw:
+      COEX_AGILOFT:
+        snowflake_warehouse: "COEX_AGILOFT"
+        schema: COEX_AGILOFT
+        materialized: table
+        tags: 
+          - COEX_AGILOFT
+          - COEX_AGILOFT_RAW
+          - HOURLY
+          - RAW
+          - COEX_RAW
+          - DEV
+          - PROD
+          - UAT      
+      COEX_CONSULTATION_MANAGER:
+        snowflake_warehouse: "ETL_COEX"
+        schema: COEX_CONSULTATION_MANAGER
+        materialized: table
+        tags: 
+          - COEX_CONSULTATION_MANAGER
+          - DAILY
+          - RAW
+          - COEX_RAW
+          - DEV
+          - PROD
+          - UAT 
+      COEX_READINOW:
+        snowflake_warehouse: "ETL_COEX"
+        schema: COEX_READINOW
+        materialized: table
+        tags: 
+          - COEX_READINOW
+          - DAILY
+          - RAW
+          - COEX_RAW
+          - DEV
+          - PROD
+          - UAT 
+      COEX_ESTRAPI:
+        snowflake_warehouse: "ETL_COEX"
+        schema: COEX_ESTRAPI
+        materialized: table
+        tags: 
+          - COEX_ESTRAPI
+          - DAILY
+          - RAW
+          - COEX_RAW
+          - DEV
+          - PROD
+          - UAT 
+      COEX_COLLECT:
+        snowflake_warehouse: "ETL_COEX"
+        schema: COEX_COLLECT
+        materialized: table
+        tags: 
+          - COEX_COLLECT
+          - HOURLY
+          - RAW
+          - COEX_RAW
+          - DEV
+          - UAT
+          - PROD
+      COEX_ASANA:
+        snowflake_warehouse: "ETL_COEX"
+        schema: COEX_ASANA
+        materialized: table
+        tags: 
+          - COEX_ASANA
+          - DAILY
+          - RAW
+          - COEX_RAW
+          - DEV
+          - PROD
+          - UAT 
+      COEX_GOOGLE:
+        snowflake_warehouse: "ETL_COEX"
+        schema: COEX_GOOGLE
+        materialized: table
+        tags: 
+          - COEX_GOOGLE
+          - DAILY
+          - RAW
+          - COEX_RAW
+          - DEV
+          - PROD
+          - UAT 
+      COEX_REFUND_DEC:
+        snowflake_warehouse: "ETL_COEX"
+        schema: COEX_REFUND_DEC
+        materialized: table
+        tags: 
+          - COEX_REFUND_DEC
+          - DAILY
+          - RAW
+          - COEX_RAW
+          - DEV
+          - PROD
+          - UAT 
+      COEX_HSE_RESPONSES:
+        snowflake_warehouse: "ETL_COEX"
+        schema: COEX_HSE_RESPONSES
+        materialized: table
+        tags: 
+          - COEX_HSE_RESPONSES
+          - DAILY
+          - RAW
+          - COEX_RAW
+          - DEV
+          - PROD
+          - UAT 
+      COEX_ALLOTRAC:
+        snowflake_warehouse: "ETL_COEX"
+        schema: COEX_ALLOTRAC
+        materialized: table
+        tags: 
+          - COEX_ALLOTRAC
+          - HOURLY
+          - RAW
+          - COEX_RAW
+          - DEV
+          - PROD
+          - UAT 
+      COEX_AD:
+        snowflake_warehouse: "ETL_COEX"
+        schema: COEX_AD
+        materialized: table
+        tags: 
+          - HOURLY
+          - RAW
+          - COEX_RAW
+          - COEX_AD_RAW
+          - COEX_AD
+          - DEV
+          - PROD
+          - UAT             
+      CES_TEMPO:
+        schema: CES_TEMPO
+        materialized: table
+        tags: 
+          - TEMPO
+          - RAW
+          - CES_RAW
+          - DAILY
+          - DEV
+          - PROD
+          - UAT 
+      CES_MAILCHIMP:
+        schema: CES_MAILCHIMP
+        materialized: table
+        tags: 
+          - MAILCHIMP
+          - RAW
+          - CES_RAW
+          - DAILY
+          - DEV
+          - PROD
+          - UAT 
+      CES_GREAT_EXPECTATIONS:
+        schema: CES_GREAT_EXPECTATIONS
+        materialized: table
+        tags: 
+          - GREAT_EXPECTATIONS
+          - RAW
+          - CES_RAW
+          - DAILY
+          - DEV
+          - PROD
+          - UAT 
+      CES_ADF:
+        AD_CURRENT:
+          snowflake_warehouse: |
+            {%- if  target.name.upper() == "DEV" -%} ETL_CES_HOURLY_DEV
+            {%- elif target.name.upper() == "SIT"  -%} ETL_CES_HOURLY_DEV
+            {%- elif target.name.upper() == "UAT"  -%} ETL_CES_HOURLY_UAT
+            {%- elif target.name.upper() == "PROD"  -%} ETL_CES_HOURLY
+            {%- endif -%}     
+          schema: CES_ADF
+          materialized: table
+          tags:
+            - AD_JOBS
+            - CES_RAW
+            - DAILY
+            - DEV
+            - PROD
+            - UAT
+        AD_HISTORICAL: 
+          snowflake_warehouse: |
+            {%- if  target.name.upper() == "DEV" -%} ETL_CES_DEV
+            {%- elif target.name.upper() == "SIT"  -%} ETL_CES_SIT
+            {%- elif target.name.upper() == "UAT"  -%} ETL_CES_UAT
+            {%- elif target.name.upper() == "PROD"  -%} ETL_CES
+            {%- endif -%}
+          schema: CES_ADF
+          materialized: table
+          tags:
+            - ADF_HISTORICAL
+            - RAW
+            - CES_RAW
+            - DAILY
+            - DEV
+            - PROD
+            - UAT 
+      CES_ABN:
+        schema: CES_ABN
+        materialized: table
+        tags: 
+          - ABN
+          - ACNC
+          - RAW
+          - CES_RAW
+          - DAILY
+          - DEV
+          - PROD
+          - UAT 
+      CES_ZENDESK:
+        schema: CES_ZENDESK
+        snowflake_warehouse: |
+          {%- if  target.name.upper() == "DEV" -%} ETL_CES_HOURLY_DEV
+          {%- elif target.name.upper() == "SIT"  -%} ETL_CES_HOURLY_DEV
+          {%- elif target.name.upper() == "UAT"  -%} ETL_CES_HOURLY_UAT
+          {%- elif target.name.upper() == "PROD"  -%} ETL_CES_HOURLY
+          {%- endif -%}     
+        materialized: view
+        tags: 
+          - CES_ZENDESK
+          - HOURLY
+          - RAW
+          - CES_RAW
+          - DEV
+          - PROD
+          - UAT 
+      CES_ZENDESK_CHAT:
+        snowflake_warehouse: |
+          {%- if  target.name.upper() == "DEV" -%} ETL_CES_HOURLY_DEV
+          {%- elif target.name.upper() == "SIT"  -%} ETL_CES_HOURLY_DEV
+          {%- elif target.name.upper() == "UAT"  -%} ETL_CES_HOURLY_UAT
+          {%- elif target.name.upper() == "PROD"  -%} ETL_CES_HOURLY
+          {%- endif -%}  
+        schema: CES_ZENDESK_CHAT
+        materialized: view
+        tags: 
+          - CES_ZENDESK_CHAT  
+          - HOURLY       
+          - RAW
+          - CES_RAW
+          - DEV
+          - PROD
+      CES_MSCM_KAFKA_UAT:  
+        snowflake_warehouse: |
+          {%- if  target.name.upper() == "DEV" -%} ETL_CES_HOURLY_DEV
+          {%- elif target.name.upper() == "SIT"  -%} ETL_CES_HOURLY_DEV
+          {%- elif target.name.upper() == "UAT"  -%} ETL_CES_HOURLY_UAT
+          {%- elif target.name.upper() == "PROD"  -%} ETL_CES_HOURLY
+          {%- endif -%}  
+        schema: CES_MSCM_KAFKA
+        database: RAW_UAT
+        materialized: table
+        tags: 
+          - CES_MSCM_KAFKA_UAT
+          - HOURLY
+          - RAW
+          - CES_RAW
+          - UAT
+      CES_MSCM_KAFKA:    
+        snowflake_warehouse: |
+          {%- if  target.name.upper() == "DEV" -%} "ETL_CES_HOURLY_DEV"
+          {%- elif target.name.upper() == "SIT"  -%} "ETL_CES_HOURLY_DEV"
+          {%- elif target.name.upper() == "UAT"  -%} "ETL_CES_HOURLY_UAT"
+          {%- elif target.name.upper() == "PROD"  -%} "ETL_CES_SMALL"
+          {%- endif -%}
+        schema: CES_MSCM_KAFKA
+        materialized: table
+        tags: 
+          - CES_MSCM_KAFKA
+          - HOURLY
+          - RAW
+          - CES_RAW
+          - DEV
+          - PROD
+      RETURNIT_VOUCHER:
+        snowflake_warehouse: "ETL_RETURNIT"
+        schema: RETURNIT_VOUCHER
+        materialized: table
+        tags: 
+          - RETURNIT_VOUCHER
+          - HOURLY
+          - RAW
+          - RETURNIT_RAW
+          - DEV
+          - PROD
+          - UAT
+      CES_MSCM_ORACLE:  
+        snowflake_warehouse: |
+          {%- if  target.name.upper() == "DEV" -%} "CES_ETL_MSCM_ORACLE_DEV"
+          {%- elif target.name.upper() == "SIT"  -%} "CES_ETL_MSCM_ORACLE_SIT"
+          {%- elif target.name.upper() == "UAT"  -%} "CES_ETL_MSCM_ORACLE_UAT"
+          {%- elif target.name.upper() == "PROD"  -%} "CES_ETL_MSCM_ORACLE"
+          {%- endif -%}
+        schema: CES_MSCM_ORACLE
+        database: |
+          {%- if  target.name.upper() == "DEV" -%} RAW_DEV
+          {%- elif target.name.upper() == "SIT"  -%} RAW_SIT
+          {%- elif target.name.upper() == "UAT"  -%} RAW_UAT
+          {%- elif target.name.upper() == "PROD"  -%} RAW_PROD
+          {%- endif -%}
+        materialized: table
+        tags: 
+          - CES_MSCM_ORACLE_HOURLY
+          - HOURLY
+          - CES_MSCM_ORACLE
+          - RAW
+          - CES_RAW
+          - DEV
+          - PROD
+          - UAT
+      CES_MSCM_ORACLE_DAILY: 
+        snowflake_warehouse: |
+          {%- if  target.name.upper() == "DEV" -%} "CES_ETL_MSCM_ORACLE_DEV"
+          {%- elif target.name.upper() == "SIT"  -%} "CES_ETL_MSCM_ORACLE_SIT"
+          {%- elif target.name.upper() == "UAT"  -%} "CES_ETL_MSCM_ORACLE_UAT"
+          {%- elif target.name.upper() == "PROD"  -%} "CES_ETL_MSCM_ORACLE"
+          {%- endif -%}     
+        schema: CES_MSCM_ORACLE
+        database: |
+          {%- if  target.name.upper() == "DEV" -%} RAW_DEV
+          {%- elif target.name.upper() == "SIT"  -%} RAW_SIT
+          {%- elif target.name.upper() == "UAT"  -%} RAW_UAT
+          {%- elif target.name.upper() == "PROD"  -%} RAW_PROD
+          {%- endif -%}
+        materialized: table
+        tags: 
+          - CES_MSCM_ORACLE_DAILY
+          - CES_MSCM_ORACLE
+          - RAW
+          - CES_RAW
+          - DAILY
+          - DEV
+          - PROD
+          - UAT
+      CES_MSCM_ORACLE_FREQUENT:  
+        snowflake_warehouse: |
+          {%- if  target.name.upper() == "DEV" -%} "ETL_CES_FREQUENT_DEV"
+          {%- elif target.name.upper() == "SIT"  -%} "ETL_CES_FREQUENT_SIT"
+          {%- elif target.name.upper() == "UAT"  -%} "ETL_CES_FREQUENT_UAT"
+          {%- elif target.name.upper() == "PROD"  -%} "ETL_CES_FREQUENT"
+          {%- endif -%}
+        schema: CES_MSCM_ORACLE
+        database: |
+          {%- if  target.name.upper() == "DEV" -%} RAW_DEV
+          {%- elif target.name.upper() == "SIT"  -%} RAW_SIT
+          {%- elif target.name.upper() == "UAT"  -%} RAW_UAT
+          {%- elif target.name.upper() == "PROD"  -%} RAW_PROD
+          {%- endif -%}
+        materialized: table
+        tags: 
+          - CES_MSCM_ORACLE_FREQUENT
+          - FREQUENT
+          - CES_MSCM_ORACLE
+          - RAW
+          - CES_RAW
+          - DEV
+          - PROD
+          - UAT                  
+      CES_PAYPAL:
+        schema: CES_PAYPAL
+        materialized: table
+        tags: 
+          - CES_PAYPAL
+          - CES_RAW
+          - RAW
+          - CES_PAYPAL_RAW
+          - UAT
+          - DEV
+          - PROD
+      CES_FINANCE:
+        schema: CES_FINANCE
+        materialized: table
+        tags: 
+          - CES_FINANCE
+          - RAW
+          - CES_RAW
+          - DAILY
+          - UAT
+          - DEV
+          - PROD
+      CES_AD_INVITE:
+        schema: CES_AD_INVITE
+        materialized: table
+        tags: 
+          - AD_JOBS
+          - RAW
+          - CES_RAW
+          - UAT
+          - DEV
+          - PROD        
+
+snapshots:
+  +transient: false
+  dataplatforms_raw:
+    CES_DRUPAL_SNAP:
+      target_schema: CES_DRUPAL_SNAPSHOT
+      tags:     
+        - CES_DRUPAL_SNAPSHOT
+
+on-run-end:
+  - "{{ grant_permission_to_db_schema(database_schemas, var('grant_permission_roles'), var('branch'), var('schema_exclusions'),var('db_exclusions')) }}"
+  - "{{ grant_select_to_db_schema(database_schemas, var('grant_select_roles'), var('branch'), var('schema_exclusions'),var('db_exclusions')) }}" 
+  #- "{{share_with_control_table(database_schemas) }}"
+  #- "{{ grant_permission_to_schema(schemas, var('project_role'), var('branch')) }}"
+  #- "{{ grant_select_to_schema(schemas, var('reporting_role'), var('branch')) }}"
+  #- "{{ share_with_subsidiaries(var('share_with')) }}"  
+
+vars:
+
+  data_stages: [] # schemas to be cloned from prod and cleaned-up on test
+  src_clone_db: ''
+  branch: ''
+  inc_offset: '-3'
+  no_schema_update_branches: ['master','main']
+  schema_exclusions: ['_PROD', '_FULL_LOAD', '_INCREMENTALS', '_DEV', '_STG','CES_JIRA']
+  db_exclusions: ['DUMMY']
+  grant_permission_roles: ['SF_DEV_CES']
+  grant_select_roles: ['DEV_CES_SEC']
+  share_dbt_project_name: 'RAW'
+
+  #share_with: ['CES_MSCM:both','CES_MSCM_DAILY:both','COEX_AGILOFT:coex','COEX_CONSULTATION_MANAGER:coex','COEX_READINOW:coex','COEX_ESTRAPI:coex','COEX_COLLECT:coex','COEX_ASANA:coex','COEX_GOOGLE:coex','COEX_REFUND_DEC:coex','COEX_HSE_RESPONSES:coex','COEX_ALLOTRAC:coex','COEX_AD:coex'] 
+  #project_role: 'SF_DEV_CES'
+  #reporting_role: ['DEV_CES_SEC']

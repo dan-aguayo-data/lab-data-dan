@@ -1,0 +1,45 @@
+{%- set trimmed_source_rel = model.name | replace("LANDING_ORACLE_","") -%}
+
+{{  
+    config(
+        alias=trimmed_source_rel
+    )
+}}
+
+WITH SOURCE AS (
+    SELECT
+        *
+    FROM
+        {{ source('LANDING_ORACLE', 'AWS_RDS_STAGE_CES_MSCM') }}
+    WHERE METADATA:"table-name"='MDT_SITE_OPENING_HOURS_A' AND DATA is not null
+)
+
+SELECT
+    nullif(N.DATA:MDT_SITE_OPENING_HOURS_ID,'')::bigint as MDT_SITE_OPENING_HOURS_ID,
+    nullif(N.DATA:PARTICIPANT_SITE_ID,'')::bigint as PARTICIPANT_SITE_ID,
+    nullif(N.DATA:OPEN_24_HOURS,'')::string as OPEN_24_HOURS,
+    nullif(N.DATA:HOURS_MONDAY_OPEN,'')::string as HOURS_MONDAY_OPEN,
+    nullif(N.DATA:HOURS_MONDAY_CLOSE,'')::string as HOURS_MONDAY_CLOSE,
+    nullif(N.DATA:HOURS_TUESDAY_OPEN,'')::string as HOURS_TUESDAY_OPEN,
+    nullif(N.DATA:HOURS_TUESDAY_CLOSE,'')::string as HOURS_TUESDAY_CLOSE,
+    nullif(N.DATA:HOURS_WEDNESDAY_OPEN,'')::string as HOURS_WEDNESDAY_OPEN,
+    nullif(N.DATA:HOURS_WEDNESDAY_CLOSE,'')::string as HOURS_WEDNESDAY_CLOSE,
+    nullif(N.DATA:HOURS_THURSDAY_OPEN,'')::string as HOURS_THURSDAY_OPEN,
+    nullif(N.DATA:HOURS_THURSDAY_CLOSE,'')::string as HOURS_THURSDAY_CLOSE,
+    nullif(N.DATA:HOURS_FRIDAY_OPEN,'')::string as HOURS_FRIDAY_OPEN,
+    nullif(N.DATA:HOURS_FRIDAY_CLOSE,'')::string as HOURS_FRIDAY_CLOSE,
+    nullif(N.DATA:HOURS_SATURDAY_OPEN,'')::string as HOURS_SATURDAY_OPEN,
+    nullif(N.DATA:HOURS_SATURDAY_CLOSE,'')::string as HOURS_SATURDAY_CLOSE,
+    nullif(N.DATA:HOURS_SUNDAY_OPEN,'')::string as HOURS_SUNDAY_OPEN,
+    nullif(N.DATA:HOURS_SUNDAY_CLOSE,'')::string as HOURS_SUNDAY_CLOSE,
+    nullif(N.DATA:SPECIAL_TRADING_HOURS,'')::string as SPECIAL_TRADING_HOURS,
+    nullif(N.DATA:CREATED_BY,'')::string as CREATED_BY,
+    nullif(N.DATA:CREATED_ON,'')::TIMESTAMP_NTZ as CREATED_ON,
+    N.DATA:LAST_MODIFIED_BY::string as LAST_MODIFIED_BY,
+    N.DATA:LAST_MODIFIED_ON::TIMESTAMP_NTZ as LAST_MODIFIED_ON,
+    nullif(N.DATA:AUDIT_TYPE,'')::string as AUDIT_TYPE,
+    nullif(N.DATA:AUDIT_DATE,'')::TIMESTAMP_NTZ as AUDIT_DATE,
+    nullif(N.DATA:AUDIT_USER,'')::string as AUDIT_USER,
+    TO_TIMESTAMP(N.METADATA:timestamp::string) as METADATA_TIMESTAMP,
+    N.METADATA:operation::string as METADATA_OPERATION
+FROM SOURCE as N

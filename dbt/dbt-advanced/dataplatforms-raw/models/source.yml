@@ -1,0 +1,498 @@
+version: 2
+
+sources:
+  - name: SNOWPIPE_PROD
+    description: "Data engineering incrementals tables!"
+    database: LANDING
+    schema: SNOWPIPE_PROD
+    tables:
+      - name: COEX_AGILOFT_CRM
+      - name: COEX_CONSULTATION_MANAGER
+      - name: COEX_READINOW
+      - name: COEX_ESTRAPI    
+      - name: CES_ERP_PROD
+      - name: COEX_COLLECT
+      - name: CES_TEMPO_PROD
+      - name: CES_MAILCHIMP_PROD
+      - name: CES_GREAT_EXPECTATIONS_PROD
+      - name: CES_ADF_PROD
+      - name: COEX_ALLOTRAC
+      - name: CES_ABN_PROD
+      - name: CES_ACNC_PROD
+      - name: RETURNIT_ANKER_PROD      
+      - name: RETURNIT_COLES_PROD
+      - name: RETURNIT_RVMS_PROD
+      - name: RETURNIT_RVMS2_PROD
+      - name: RETURNIT_WOOLWORTHS_PROD
+      - name: COEX_ALLOTRAC_JOBPROOF
+      - name: COEX_AD
+      - name: CES_PAYPAL_SFTP_STL_VICRETURN
+      - name: CES_PAYPAL_SFTP_TRR_VICRETURN
+      - name: CES_PAYPAL_SFTP_STL_WARRRL
+      - name: CES_PAYPAL_SFTP_STL_COEX
+
+  - name: CES_MSCM_KAFKA_UAT
+    description: "Data engineering incrementals tables!"
+    database: LANDING
+    schema: CES_MSCM_KAFKA_UAT
+    tables:
+      - name: PAYMENTEVENT
+      - name: PAYMENT_UAT_S_D
+      - name: PAYMENT_UAT_S_P
+      - name: PAYMENT_UAT_S
+      - name: PAYMENT_AMT_TO_PAY_UAT_S_D
+      - name: PAYMENT_AMT_TO_PAY_UAT_S_P
+      - name: PAYMENT_AMT_TO_PAY_UAT_S
+      - name: PAYMENT_EVALUATION_UAT_S_D
+      - name: PAYMENT_EVALUATION_UAT_S_P
+      - name: PAYMENT_EVALUATION_UAT_S
+      - name: PAYMENT_REFUND_ITEMS_UAT_S_D
+      - name: PAYMENT_REFUND_ITEMS_UAT_S_P
+      - name: PAYMENT_REFUND_ITEMS_UAT_S
+      - name: NOPCLAIMEVENTTOPIC
+      - name: NOPCLAIM_UAT_S_D
+      - name: NOPCLAIM_UAT_S_P
+      - name: NOPCLAIM_UAT_S
+      - name: NOPCLAIM_REFUND_UAT_S_D
+      - name: NOPCLAIM_REFUND_UAT_S_P
+      - name: NOPCLAIM_REFUND_UAT_S
+      - name: NOPCLAIM_REFUND_ITEMS_UAT_S_D
+      - name: NOPCLAIM_REFUND_ITEMS_UAT_S_P
+      - name: NOPCLAIM_REFUND_ITEMS_UAT_S
+      - name: NOPCLAIM_ADJ_UAT_S_D
+      - name: NOPCLAIM_ADJ_UAT_S_P
+      - name: NOPCLAIM_ADJ_UAT_S
+      - name: NOPCLAIM_ADJ_ITEMS_UAT_S_D
+      - name: NOPCLAIM_ADJ_ITEMS_UAT_S_P
+      - name: NOPCLAIM_ADJ_ITEMS_UAT_S
+      - name: NOPCLAIM_ADJ_DOCS_UAT_S_D
+      - name: NOPCLAIM_ADJ_DOCS_UAT_S_P
+      - name: NOPCLAIM_ADJ_DOCS_UAT_S
+      - name: POSREFUNDSERVICEREFUNDTRANSACTIONTOPIC
+      - name: REFUND_TRANSACTION_HDR_UAT_S_D
+      - name: REFUND_TRANSACTION_HDR_UAT_S_P
+      - name: REFUND_TRANSACTION_HDR_UAT_S
+      - name: REFUND_TRANSACTION_DTL_UAT_S_D
+      - name: REFUND_TRANSACTION_DTL_UAT_S_P
+      - name: REFUND_TRANSACTION_DTL_UAT_S
+      - name: REFUND_BAG_DROP_UAT_S_D
+      - name: REFUND_BAG_DROP_UAT_S_P
+      - name: REFUND_BAG_DROP_UAT_S
+      - name: CRPCLAIMEVENTTOPIC
+      - name: CRPCLAIM_APPROVAL_UAT_S_D
+      - name: CRPCLAIM_APPROVAL_UAT_S_P
+      - name: CRPCLAIM_APPROVAL_UAT_S
+      - name: CRPCLAIM_UAT_S_D
+      - name: CRPCLAIM_UAT_S_P
+      - name: CRPCLAIM_UAT_S
+      - name: CRPCLAIM_ADJ_UAT_S_D
+      - name: CRPCLAIM_ADJ_UAT_S_P
+      - name: CRPCLAIM_ADJ_UAT_S
+      - name: PARTICIPANTREGISTRATIONEVENTTOPIC
+      - name: PARTICREG_UAT_S_D
+      - name: PARTICREG_UAT_S_P
+      - name: PARTICREG_UAT_S
+      - name: PARTICREG_CONTACTS_UAT_S_D
+      - name: PARTICREG_CONTACTS_UAT_S_P
+      - name: PARTICREG_CONTACTS_UAT_S
+      - name: PARTICREG_CONTACTS_ROLE_UAT_S_D
+      - name: PARTICREG_CONTACTS_ROLE_UAT_S_P
+      - name: PARTICREG_CONTACTS_ROLE_UAT_S
+      - name: PARTICREG_DOCUMENTS_UAT_S
+      - name: POSAGREEMENTEVENTTOPIC
+      - name: PSF_AGREEMENT_UAT_S_D
+      - name: PSF_AGREEMENT_UAT_S_P
+      - name: PSF_AGREEMENT_UAT_S
+      - name: DONATIONPARTNEREVENTTOPIC
+      - name: DONATION_PARTNER_UAT_S_D
+      - name: DONATION_PARTNER_UAT_S_P
+      - name: DONATION_PARTNER_UAT_S
+      - name: CONSUMER_WATCHLIST_S
+      - name: CONSUMERWATCHLISTEVENT
+      - name: INVOICINGEVENT
+      - name: INVOICINGEVENT_HIST
+      - name: INVOICINGEVENT_HEADER_S
+      - name: INVOICINGEVENT_LINE_S
+      - name: PAYMENTSTEPDOWNEVENT
+      - name: PAYMENTSTEPDOWNEVENT_S
+      - name: PAYMENTEVENT_NEWPAYREF_S
+      - name: PAYMENTEVENT_PREVPAYREF_S
+      - name: PARTICIPANTCONTRACTEVENTTOPIC
+      - name: PARTICIPANTCONTRACTEVENTTOPIC_S
+
+
+  - name: CES_MSCM_KAFKA_PROD
+    description: "Data engineering incrementals tables!"
+    database: LANDING
+    schema: CES_MSCM_KAFKA_PROD
+    tables:
+      - name: PAYMENTEVENT
+      - name: PAYMENT_S_D
+      - name: PAYMENT_S_P
+      - name: PAYMENT_AMT_TO_PAY_S_D
+      - name: PAYMENT_AMT_TO_PAY_S_P
+      - name: PAYMENT_EVALUATION_S_D
+      - name: PAYMENT_EVALUATION_S_P
+      - name: PAYMENT_REFUND_ITEMS_S_D
+      - name: PAYMENT_REFUND_ITEMS_S_P
+      - name: NOPCLAIMEVENTTOPIC
+      - name: NOPCLAIM_S_D
+      - name: NOPCLAIM_S_P
+      - name: NOPCLAIM_REFUND_S_D
+      - name: NOPCLAIM_REFUND_S_P
+      - name: NOPCLAIM_REFUND_ITEMS_S_D
+      - name: NOPCLAIM_REFUND_ITEMS_S_P
+      - name: NOPCLAIM_ADJ_S_D
+      - name: NOPCLAIM_ADJ_S_P
+      - name: NOPCLAIM_ADJ_ITEMS_S_D
+      - name: NOPCLAIM_ADJ_ITEMS_S_P
+      - name: NOPCLAIM_ADJ_DOCS_S_D
+      - name: NOPCLAIM_ADJ_DOCS_S_P       
+      - name: POSREFUNDSERVICEREFUNDTRANSACTIONTOPIC
+      - name: REFUND_TRANSACTION_HDR_S_D
+      - name: REFUND_TRANSACTION_HDR_S_P
+      - name: REFUND_TRANSACTION_DTL_S_D
+      - name: REFUND_TRANSACTION_DTL_S_P
+      - name: REFUND_BAG_DROP_S_D
+      - name: REFUND_BAG_DROP_S_P      
+      - name: CRPCLAIMEVENTTOPIC
+      - name: CRPCLAIM_APPROVAL_S_D
+      - name: CRPCLAIM_APPROVAL_S_P
+      - name: CRPCLAIM_S_D
+      - name: CRPCLAIM_S_P
+      - name: CRPCLAIM_ADJ_S_D
+      - name: CRPCLAIM_ADJ_S_P
+      - name: PARTICIPANTREGISTRATIONEVENTTOPIC
+      - name: PARTICREG_S_D
+      - name: PARTICREG_S_P
+      - name: PARTICREG_DOCUMENTS_PROD_S
+      - name: PARTICREG_CONTACTS_S_D
+      - name: PARTICREG_CONTACTS_S_P
+      - name: PARTICREG_CONTACTS_ROLE_S_D
+      - name: PARTICREG_CONTACTS_ROLE_S_P
+      - name: POS_REFUND_TRANSACTION_TOPIC
+      - name: REFUND_TRANSACTION_HDR_S1_D
+      - name: REFUND_TRANSACTION_HDR_S1_P
+      - name: REFUND_TRANSACTION_DTL_S1_D
+      - name: REFUND_TRANSACTION_DTL_S1_P
+      - name: POSAGREEMENTEVENTTOPIC
+      - name: PSF_AGREEMENT_S_D
+      - name: PSF_AGREEMENT_S_P
+      - name: DONATIONPARTNEREVENTTOPIC
+      - name: DONATION_PARTNER_S_D
+      - name: DONATION_PARTNER_S_P
+      - name: CONSUMERWATCHLISTEVENT
+      - name: CONSUMER_WATCHLIST_S_P
+      - name: CONSUMER_WATCHLIST_S_D
+      - name: INVOICINGEVENT
+      - name: INVOICINGEVENT_HIST 
+      - name: INVOICINGEVENT_HEADER_S
+      - name: INVOICINGEVENT_LINE_S
+      - name: PAYMENTSTEPDOWNEVENT
+      - name: PAYMENTSTEPDOWNEVENT_S
+      - name: PAYMENTEVENT_NEWPAYREF_S
+      - name: PAYMENTEVENT_PREVPAYREF_S
+      - name: PARTICIPANTCONTRACTEVENTTOPIC
+      - name: PARTICIPANTCONTRACTEVENTTOPIC_S      
+      
+  - name: SNOWPIPE
+    description: "Data engineering incrementals tables!"
+    database: LANDING
+    schema: SNOWPIPE_{{ "DEV" if target.name.upper() in ["DEV", "UAT"] else "PROD" }}
+    tables:
+      - name: CES_ADF_DEV
+      - name: CES_ADF_PROD
+
+  - name: SNOWPIPE_UAT_PROD   #this will only run in uat and prod, when running in DEV add this {%- set tbl_name = "ANZ_BTR_PROD" if target.name.upper() == 'PROD' else "ANZ_BTR_UAT" -%}
+    description: "Data engineering incrementals tables!"
+    database: LANDING
+    schema: |
+          {%- if  target.name.upper() == "DEV" -%} SNOWPIPE_UAT
+          {%- elif target.name.upper() == "UAT"  -%} SNOWPIPE_UAT
+          {%- elif target.name.upper() == "PROD"  -%} SNOWPIPE_PROD
+          {%- endif -%}
+    tables:
+      - name: ANZ_BTR_UAT
+      - name: ANZ_BTR_PROD
+      - name: ANZ_RTI_UAT
+      - name: ANZ_RTI_PROD
+
+  - name: POSTGRES_MIGRATION_PROD
+    description: "Data engineering incrementals tables!"
+    database: LANDING
+    schema: POSTGRES_MIGRATION_PROD
+    tables:
+      - name: ADDRESSES
+      - name: COMPANY_DETAILS
+      - name: CONTACTS
+      - name: REGISTRATIONS    
+      - name: ROLES
+      - name: DONATION_PARTNERS
+
+  - name: CES_REF
+    description: "reference tables"
+    database: CES_REF
+    schema: CES_FINANCE
+    tables:
+      - name: BANK_REC_ACCOUNT_MAPPING
+      - name: ANZ_BTR_HIST
+
+  - name: CES_REF_DBT
+    description: "reference tables"
+    database: CES_REF
+    schema: CES_DBT
+    tables:
+      - name: CONTROL_INCREMENTAL_GENERIC
+
+  - name: CES_FINANCE_LANDING
+    description: "Data engineering incrementals tables!"
+    database: LANDING
+    schema: CES_FINANCE_{{ target.name.upper()|replace('RAW_','') }} 
+    tables:
+      - name: ANZ_BTR_HEADER_HIST
+      - name: ANZ_BTR_LINES_HIST
+      - name: ANZ_BTR_HEADER
+      - name: ANZ_BTR_LINES
+      
+  - name: CES_MSCM_ORACLE
+    description: "Data engineering incrementals tables!"
+    database: RAW_{{ target.name.upper()|replace('RAW_','') }}
+    schema: CES_MSCM_ORACLE
+    tables:
+      - name: MDT_CONTACTS
+      - name: MDT_CONTACT_ROLES
+      - name: MDT_PARTICIPANT_SITES
+      - name: MDT_PARTICIPANTS
+      - name: SCHEME_REF_CODES
+      - name: INVOICE_AP_TXN_HDR
+      - name: INV_AP_INVOICES_INT
+      - name: PHOTO_ID_TYPE
+      - name: CONSUMER_REFUND_TXN_HDR
+      
+  - name: CES_DRUPAL
+    description: "Drupal tables! no DEV atm"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_UAT
+      {%- elif target.name.upper() == "UAT" -%} RAW_UAT
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: |
+      {%- if target.name.upper() == "DEV" -%} CES_DRUPAL_MEMBER
+      {%- elif target.name.upper() == "UAT" -%} CES_DRUPAL_MEMBER
+      {%- elif target.name.upper() == "PROD" -%} CES_DRUPAL_FT_MEMBER
+      {%- endif -%}
+    tables:
+      - name: USERS_FIELD_DATA  
+
+  - name: CES_ZENDESK_PROD
+    description: "CES Zendesk target tables for unprocessed data"
+    database: LANDING
+    schema: CES_ZENDESK_PROD
+    tables:
+      - name: ADDRESS
+      - name: ALERT_RECIPIENT
+      - name: ARTICLE
+      - name: BRAND
+      - name: CALL_LEG
+      - name: CALL_LEG_QUALITY_ISSUE
+      - name: CALL_METRIC
+      - name: CUSTOM_ROLE
+      - name: DAYLIGHT_TIME
+      - name: DOMAIN_NAME
+      - name: FORUM_TOPIC
+      - name: GREETING
+      - name: GREETING_CATEGORY
+      - name: GROUP
+        quoting:
+          identifier: true
+      - name: GROUP_MEMBER
+      - name: IVR
+      - name: IVR_MENU
+      - name: IVR_MENU_ROUTE
+      - name: LINE
+      - name: LINE_CATEGORISED_GREETING
+      - name: LINE_GREETING
+      - name: ORGANIZATION
+      - name: ORGANIZATION_MEMBER
+      - name: POST
+      - name: SCHEDULE
+      - name: SLA_POLICY_HISTORY
+      - name: SLA_POLICY_METRIC_HISTORY
+      - name: TICKET
+      - name: TICKET_ALERT
+      - name: TICKET_COMMENT
+      - name: TICKET_CUSTOM_FIELD
+      - name: TICKET_CUSTOM_STATUS
+      - name: TICKET_FIELD_HARDWARE_REQUESTS
+      - name: TICKET_FIELD_HISTORY
+      - name: TICKET_FIELD_OPTION
+      - name: TICKET_FIELD_SCHEME_SERVICES
+      - name: TICKET_FORM_HISTORY
+      - name: TICKET_MACRO_REFERENCE
+      - name: TICKET_SCHEDULE
+      - name: TICKET_SLA_POLICY
+      - name: TICKET_TAG
+      - name: TICKET_TAG_HISTORY
+      - name: TIME_ZONE
+      - name: USER
+      - name: USER_TAG
+
+  - name: CES_ZENDESK_CHAT_PROD
+    description: "CES Zendesk Chat target tables for unprocessed data"
+    database: LANDING
+    schema: CES_ZENDESK_CHAT_PROD
+    tables:
+      - name: AGENT
+      - name: AGENT_ROLE
+      - name: DEPARTMENT
+      - name: DEPARTMENT_MEMBER
+      
+  - name: COEX_COLLECT_LANDING
+    description: "Data engineering incremental tables!"
+    database: LANDING
+    schema: |
+      {%- if  target.name.upper() == "DEV" -%} COEX_COLLECT_PROD
+      {%- elif target.name.upper() == "SIT"  -%} COEX_COLLECT_PROD
+      {%- elif target.name.upper() == "UAT"  -%} COEX_COLLECT_UAT
+      {%- elif target.name.upper() == "PROD"  -%} COEX_COLLECT_PROD
+      {%- endif -%}
+    tables:
+      - name: CONTAINER_COLLECT_BOOKINGS
+      - name: CONTAINER_COLLECT_BOOKING_V2
+      - name: CONTAINER_COLLECT_CONTACT_DETAILS_V2
+      - name: CONTAINER_COLLECT_NOTES_V2
+
+  - name: COEX_GOOGLE
+    description: "Coex Google target tables for unprocessed data"
+    database: LANDING
+    schema: COEX_GOOGLE
+    tables:
+      - name: CC_GA_EVENTS
+
+  - name: COEX_ASANA
+    description: "Coex Asana target tables for unprocessed data"
+    database: LANDING
+    schema: COEX_ASANA
+    tables:
+      - name: ATTACHMENT
+      - name: CUSTOM_FIELD
+      - name: ORGANIZATION
+      - name: PORTFOLIO
+      - name: PORTFOLIO_ITEM
+      - name: PORTFOLIO_MEMBER
+      - name: PROJECT
+      - name: PROJECT_STATUS
+      - name: PROJECT_TASK
+      - name: SECTION
+      - name: STORY
+      - name: STORY_HEART
+      - name: TAG
+      - name: TASK
+      - name: TASK_FOLLOWER
+      - name: TASK_SECTION
+      - name: TEAM
+      - name: USER
+      - name: WORKSPACE     
+
+  - name: COEX_REFUND_DEC
+    description: "Coex Refund Dec target tables for unprocessed data"
+    database: CES_REF
+    schema: COEX_REFUND_DEC
+    tables:
+      - name: _01_REFUND_DECLARATIONS_LOG_SHEET
+
+  - name: COEX_HSE_RESPONSES
+    description: "Coex HSE Response target tables for unprocessed data"
+    database: CES_REF
+    schema: COEX_HSE_RESPONSES
+    tables:
+      - name: FORM_RESPONSES
+
+  - name: COEX_ESTRAPI
+    description: "COEX ESTRAPI incrementals tables!"
+    database: LANDING
+    schema: COEX_ESTRAPI_PROD
+    tables:
+      - name: STRAPI_CUSTOMER_SURVEY
+  - name: CES_JIRA
+    description: "CES JIRA PROD SOURCES"
+    database: RAW_PROD
+    schema: CES_JIRA
+    tables:
+      - name: ISSUE
+
+  - name: COEX_CONSULTATION_MANAGER
+    description: "COEX CONSULTATION MANAGER incrementals tables!"
+    database: LANDING
+    schema: COEX_CONSULTATION_MANAGER
+    tables:
+      - name: CM_ACTIONS
+      - name: CM_COMPLAINTS
+      - name: CM_DOCUMENTS
+      - name: CM_EVENTACTION
+      - name: CM_PROJECTS
+      - name: CM_PROPERTIES
+      - name: CM_STAKEHOLDERS
+
+  - name: COEX_READINOW
+    description: "COEX READINOW incrementals tables!"
+    database: LANDING
+    schema: READINOW_PROD
+    tables:
+      - name: RN_AUDITENTITY
+      - name: RN_AUDITISSUES
+      - name: RN_AUDITPLANS
+      - name: RN_AUDITTEST
+      - name: RN_AUDITWORKLIBRARIES
+      - name: RN_AUDITWORKPAPER
+      - name: RN_CONTROLLIBRARY
+      - name: RN_INVESTIGATION
+      - name: RN_KEYPERFORMANCEINDICATORS
+      - name: RN_RISK
+      - name: RN_RISKCATEGORY
+      - name: RN_RISKCAUSES
+      - name: RN_RISKCONSEQUENCE
+      - name: RN_RISKISSUES
+      - name: RN_RISKLIBRARY
+      - name: RN_RISKTREND
+
+  - name: COEX_AGILOFT_PROD
+    description: "Data engineering incrementals tables!"
+    database: LANDING
+    schema: COEX_AGILOFT_PROD
+    tables:
+      - name: INCREMENTAL_AG_CONTRACT
+      - name: INCREMENTAL_AG_CONTRACT_TYPE
+      - name: INCREMENTAL_AG_DECLARATION
+      - name: INCREMENTAL_AG_DEPARTMENT      
+      - name: INCREMENTAL_AG_EMPLOYEE      
+      - name: INCREMENTAL_AG_ENTITY      
+      - name: INCREMENTAL_AG_EXTERNAL_USER      
+      - name: INCREMENTAL_AG_FIELD_CHANGE      
+      - name: INCREMENTAL_AG_JIRA_ISSUE      
+      - name: INCREMENTAL_AG_LOCATION      
+      - name: INCREMENTAL_AG_REGION      
+      - name: INCREMENTAL_AG_SUPPLIER_QM
+
+  - name: LOOKUPS_PROD
+    description: "Data engineering lookup tables!"
+    database: RAW_PROD
+    schema: LOOKUPS
+    tables:
+      - name: RETURNIT_ANKER_MATERIAL_TYPE
+
+  - name: LANDING_ORACLE
+    description: "Data engineering incrementals tables!"
+    database: |
+      {%- if  target.name.upper() == "DEV" -%} AWS_LANDING_UAT
+      {%- elif target.name.upper() == "SIT"  -%} AWS_LANDING_SIT
+      {%- elif target.name.upper() == "UAT"  -%} AWS_LANDING_UAT
+      {%- elif target.name.upper() == "PROD"  -%} AWS_LANDING_PROD
+      {%- endif -%}
+    schema: ORACLE
+    tables:
+      - name: AWS_RDS_STAGE_CES_MSCM
+      - name: AWS_RDS_STAGE_CES_MSCM_SEC
+      - name: AWS_RDS_STAGE_COEX
+      - name: AWS_RDS_STAGE_CES_MSCM_TEST

@@ -1,0 +1,2 @@
+SELECT *
+FROM {{ ref('LANDING_AL_VEHICLES') }}

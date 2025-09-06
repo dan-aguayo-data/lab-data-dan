@@ -1,0 +1,36 @@
+{%- set trimmed_source_rel = model.name | replace("LANDING_ORACLE_","") -%}
+
+{{  
+    config(
+        alias=trimmed_source_rel
+    )
+}}
+
+WITH SOURCE AS (
+    SELECT
+        *
+    FROM
+        {{ source('LANDING_ORACLE', 'AWS_RDS_STAGE_CES_MSCM') }}
+    WHERE METADATA:"table-name"='CRP_SHIPPING_MANIFEST_DTL' AND DATA is not null
+)
+
+SELECT
+    N.DATA:ID::string as ID,
+    N.DATA:CRP_SHIPPING_MANIFEST_HDR_ID::string as CRP_SHIPPING_MANIFEST_HDR_ID,
+    N.DATA:ASSET_ID::string as ASSET_ID,
+    N.DATA:MATERIAL_TYPE_ID::string as MATERIAL_TYPE_ID,
+    N.DATA:EMPTY_WEIGHT::float as EMPTY_WEIGHT,
+    N.DATA:ACTUAL_WEIGHT::float as ACTUAL_WEIGHT,
+    N.DATA:CONVERTED_WEIGHT::float as CONVERTED_WEIGHT,
+    N.DATA:QUANTITY::float as QUANTITY,
+    N.DATA:TRANSACTION_QUANTITY::float as TRANSACTION_QUANTITY,
+    nullif(N.DATA:CREATED_BY,'')::string as CREATED_BY,
+    nullif(N.DATA:CREATED_ON,'')::TIMESTAMP_NTZ as CREATED_ON,
+    N.DATA:LAST_MODIFIED_BY::string as LAST_MODIFIED_BY,
+    N.DATA:LAST_MODIFIED_ON::TIMESTAMP_NTZ as LAST_MODIFIED_ON,
+    nullif(N.DATA:TRANSACTION_MATERIAL_TYPE_ID,'')::string as TRANSACTION_MATERIAL_TYPE_ID,
+    nullif(N.DATA:MULTI_SCHEME_ID,'')::bigint as MULTI_SCHEME_ID,
+    nullif(N.DATA:SHIPPER_UNIT_TYPE_ID,'')::bigint as SHIPPER_UNIT_TYPE_ID,
+    TO_TIMESTAMP(N.METADATA:timestamp::string) as METADATA_TIMESTAMP,
+    N.METADATA:operation::string as METADATA_OPERATION
+FROM SOURCE as N

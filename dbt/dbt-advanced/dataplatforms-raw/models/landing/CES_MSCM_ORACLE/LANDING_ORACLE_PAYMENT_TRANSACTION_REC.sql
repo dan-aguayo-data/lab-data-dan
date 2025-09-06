@@ -1,0 +1,54 @@
+{%- set trimmed_source_rel = model.name | replace("LANDING_ORACLE_","") -%}
+
+{{  
+    config(
+        alias=trimmed_source_rel
+    )
+}}
+
+WITH SOURCE AS (
+    SELECT
+        *
+    FROM
+        {{ source('LANDING_ORACLE', 'AWS_RDS_STAGE_CES_MSCM') }}
+    WHERE METADATA:"table-name"='PAYMENT_TRANSACTION_REC' AND DATA is not null
+)
+
+SELECT
+    N.DATA:ID::string as ID,
+    N.DATA:PAYMENT_BATCH_ID::string as PAYMENT_BATCH_ID,
+    N.DATA:PAYMENT_TYPE::string as PAYMENT_TYPE,
+    nullif(N.DATA:PAYMENT_METHOD,'')::string as PAYMENT_METHOD,
+    N.DATA:SCHEME_PARTICIPANT_ID::string as SCHEME_PARTICIPANT_ID,
+    N.DATA:SCHEME_PARTICIPANT_NAME::string as SCHEME_PARTICIPANT_NAME,
+    N.DATA:SCHEME_PARTICIPANT_TYPE::string as SCHEME_PARTICIPANT_TYPE,
+    nullif(N.DATA:MATERIAL_TYPE_ID,'')::string as MATERIAL_TYPE_ID,
+    nullif(N.DATA:MRF_MATERIAL_TYPE_ID,'')::string as MRF_MATERIAL_TYPE_ID,
+    N.DATA:PAYMENT_PERIOD::string as PAYMENT_PERIOD,
+    N.DATA:PERIOD::string as PERIOD,
+    N.DATA:PERIOD_TYPE::string as PERIOD_TYPE,
+    N.DATA:ENTRY_TYPE::string as ENTRY_TYPE,
+    N.DATA:ARREAR::string as ARREAR,
+    N.DATA:VOLUME::float as VOLUME,
+    N.DATA:UNIT_SELLING_PRICE::float as UNIT_SELLING_PRICE,
+    N.DATA:UOM::string as UOM,
+    N.DATA:GROSS_AMOUNT::float as GROSS_AMOUNT,
+    N.DATA:TAXABLE_AMOUNT::float as TAXABLE_AMOUNT,
+    N.DATA:GST_AMOUNT::float as GST_AMOUNT,
+    N.DATA:LINE_TYPE::string as LINE_TYPE,
+    N.DATA:PAYMENT_TIMESTAMP::TIMESTAMP_NTZ as PAYMENT_TIMESTAMP,
+    nullif(N.DATA:VOLUME_HDR_ID,'')::string as VOLUME_HDR_ID,
+    nullif(N.DATA:STATUS,'')::string as STATUS,
+    nullif(N.DATA:LOT_ITEM_ID,'')::string as LOT_ITEM_ID,
+    nullif(N.DATA:FINAL_MANIFEST_ID,'')::string as FINAL_MANIFEST_ID,
+    nullif(N.DATA:PROCESSOR_ID,'')::string as PROCESSOR_ID,
+    nullif(N.DATA:CREATED_BY,'')::string as CREATED_BY,
+    nullif(N.DATA:CREATED_ON,'')::TIMESTAMP_NTZ as CREATED_ON,
+    N.DATA:LAST_MODIFIED_BY::string as LAST_MODIFIED_BY,
+    N.DATA:LAST_MODIFIED_ON::TIMESTAMP_NTZ as LAST_MODIFIED_ON,
+    nullif(N.DATA:LOT_ITEM_MANIFEST_ID,'')::string as LOT_ITEM_MANIFEST_ID,
+    nullif(N.DATA:VOLUME_HDR_ENTRY_TYPE,'')::string as VOLUME_HDR_ENTRY_TYPE,
+    nullif(N.DATA:MULTI_SCHEME_ID,'')::bigint as MULTI_SCHEME_ID,
+    TO_TIMESTAMP(N.METADATA:timestamp::string) as METADATA_TIMESTAMP,
+    N.METADATA:operation::string as METADATA_OPERATION
+FROM SOURCE as N

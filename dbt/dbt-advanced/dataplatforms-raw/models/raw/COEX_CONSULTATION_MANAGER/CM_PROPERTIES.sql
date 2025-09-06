@@ -1,0 +1,3 @@
+
+SELECT *
+FROM {{ ref('LANDING_CM_PROPERTIES') }}
