@@ -1,0 +1,8 @@
+selenium
+azure
+azure-functions
+azure-identity
+azure-keyvault-secrets
+azure-storage-blob
+shutil
+logging
