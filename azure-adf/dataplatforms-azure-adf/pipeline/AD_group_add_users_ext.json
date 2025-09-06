@@ -1,0 +1,351 @@
+{
+	"name": "AD_group_add_users_ext",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get List of Users",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "WITH USER_LIST AS (\n  SELECT DISTINCT AD.ID AS USER_ID\n    ,CONCAT('https://graph.microsoft.com/v1.0/directoryObjects/', AD.ID) AS USER_LINK\n  FROM @{pipeline().parameters.TABLE_USER_HEADER} COEX\n  LEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_USERS\" AS AD\n    ON lower(COEX.LOGIN_ID) = lower(AD.MAIL)\n  LEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_GROUP_MEMBERS\" AS ADG\n    ON AD.ID = ADG.USER_ID\n  WHERE 1=1\n    AND COEX.ACTIVE = 1\n    AND lower(COEX.LOGIN_ID) NOT IN (SELECT DISTINCT lower(MAIL) FROM RAW_PROD.CES_ADF.AD_GROUP_MEMBERS ADG WHERE GROUP_ID = '3b8e9bda-66bd-49a9-979e-5fc53c61cc94' AND MAIL IS NOT NULL )\n    AND AD.EXTERNALUSERSTATE = 'Accepted'\n)\nSELECT \n  '3b8e9bda-66bd-49a9-979e-5fc53c61cc94' AS GROUP_ID // GROUP ID OF Power BI - COEX External - Partners\n  ,ARRAY_AGG(USER_LINK) AS ARRAY\n  ,OBJECT_CONSTRUCT(\n    'members@odata.bind', ARRAY_AGG(USER_LINK)\n  ) AS API_BODY\nFROM USER_LIST\n",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Get Audit Metadata",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "  SELECT DISTINCT \n  AD.ID AS USER_ID, \n LOGIN_ID, \n'3b8e9bda-66bd-49a9-979e-5fc53c61cc94' AS GROUP_ID, \n'Power BI - COEX External - Partners' AS GROUP_NAME, \n'ADD' AS OPERATION\nFROM @{pipeline().parameters.TABLE_USER_HEADER} COEX\nLEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_USERS\" AS AD\n  ON lower(COEX.LOGIN_ID) = lower(AD.MAIL)\nLEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_GROUP_MEMBERS\" AS ADG\n  ON AD.ID = ADG.USER_ID\nWHERE \n   COEX.ACTIVE = 1\n  AND lower(COEX.LOGIN_ID) NOT IN (SELECT DISTINCT lower(MAIL) FROM RAW_PROD.CES_ADF.AD_GROUP_MEMBERS ADG WHERE GROUP_ID = '3b8e9bda-66bd-49a9-979e-5fc53c61cc94' AND MAIL IS NOT NULL )\n    AND AD.EXTERNALUSERSTATE = 'Accepted'",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get Audit Metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set triggered_by",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "If Condition2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Audit Metadata').output.resultSets[0].rows",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Set user_id",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "user_id",
+								"value": {
+									"value": "@item().USER_ID",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set user_email",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "user_email",
+								"value": {
+									"value": "@item().LOGIN_ID",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Execute AD_audit_log",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Set user_id",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Set user_email",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Set group_id",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Set group_name",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_audit_log",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"operation": {
+										"value": "@variables('operation')",
+										"type": "Expression"
+									},
+									"triggered_by": {
+										"value": "@variables('triggered_by')",
+										"type": "Expression"
+									},
+									"user_id": {
+										"value": "@variables('user_id')",
+										"type": "Expression"
+									},
+									"user_email": {
+										"value": "@variables('user_email')",
+										"type": "Expression"
+									},
+									"group_id": {
+										"value": "@variables('group_id')",
+										"type": "Expression"
+									},
+									"group_name": {
+										"value": "@variables('group_name')",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Set group_id",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "group_id",
+								"value": {
+									"value": "@item().GROUP_ID",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set group_name",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "group_name",
+								"value": {
+									"value": "@item().GROUP_NAME",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Set triggered_by",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "triggered_by",
+					"value": {
+						"value": "@pipeline().Pipeline",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "If Condition2",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get List of Users",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@not(equals(activity('Get List of Users').output.resultSets[0].rows[0].ARRAY, '[]'))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Add Users to Group",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 60,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "PATCH",
+								"url": {
+									"value": "https://graph.microsoft.com/v1.0/groups/@{activity('Get List of Users').output.resultSets[0].rows[0].GROUP_ID}",
+									"type": "Expression"
+								},
+								"body": {
+									"value": "@activity('Get List of Users').output.resultSets[0].rows[0].API_BODY",
+									"type": "Expression"
+								},
+								"authentication": {
+									"resource": "https://graph.microsoft.com",
+									"credential": {
+										"referenceName": "ADF-AD-INTEGRATION",
+										"type": "CredentialReference"
+									},
+									"userTenant": "abf0de66-3ab3-4ea3-b35e-502502be1261",
+									"username": "2118d493-c18b-44eb-8f35-adc880193c22",
+									"password": {
+										"type": "AzureKeyVaultSecret",
+										"store": {
+											"referenceName": "CES_ADF_KEY_VAULT",
+											"type": "LinkedServiceReference"
+										},
+										"secretName": "ADF-AD-Integration"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"TABLE_USER_HEADER": {
+				"type": "string",
+				"defaultValue": "RAW_PROD.CES_AD_INVITE.COEX_EXT_ORG_SECURITY_MAPPING_HDR "
+			},
+			"COOLDOWN_DELETE": {
+				"type": "string",
+				"defaultValue": "7"
+			}
+		},
+		"variables": {
+			"operation": {
+				"type": "String",
+				"defaultValue": "ADD"
+			},
+			"user_id": {
+				"type": "String"
+			},
+			"user_email": {
+				"type": "String"
+			},
+			"site_scheme_id": {
+				"type": "String"
+			},
+			"triggered_by": {
+				"type": "String"
+			},
+			"group_id": {
+				"type": "String"
+			},
+			"group_name": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "AD/COEX_External Partners"
+		},
+		"annotations": []
+	}
+}

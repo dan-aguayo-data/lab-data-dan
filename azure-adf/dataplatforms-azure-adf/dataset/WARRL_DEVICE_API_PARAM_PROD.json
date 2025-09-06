@@ -1,0 +1,15 @@
+{
+	"name": "WARRL_DEVICE_API_PARAM_PROD",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SwaggerUI_DEVICE",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "WARRRL"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	}
+}

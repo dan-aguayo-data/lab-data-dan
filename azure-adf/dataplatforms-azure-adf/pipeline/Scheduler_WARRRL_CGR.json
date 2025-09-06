@@ -1,0 +1,64 @@
+{
+	"name": "Scheduler_WARRRL_CGR",
+	"properties": {
+		"activities": [
+			{
+				"name": "CGR_DATA_PROD",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "CGR_DATA",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "CGR_DATA_PROD",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"pipelineName": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"pipelineTriggerName": {
+							"value": "@pipeline().TriggerName",
+							"type": "Expression"
+						},
+						"pipelineTriggerTime": {
+							"value": "@pipeline().TriggerTime",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "Workflows"
+		},
+		"annotations": []
+	}
+}

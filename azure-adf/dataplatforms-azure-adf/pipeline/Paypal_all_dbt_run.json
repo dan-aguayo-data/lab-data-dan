@@ -1,0 +1,46 @@
+{
+	"name": "Paypal_all_dbt_run",
+	"properties": {
+		"activities": [
+			{
+				"name": "DBT_GENERIC_RUN",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DBT_GENERIC_RUN",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"dbt_job_id": {
+							"value": "@pipeline().globalParameters.P_DBT_JOBID_PAYPAL_PARAM_DEV",
+							"type": "Expression"
+						},
+						"dbt_account_id": {
+							"value": "@pipeline().globalParameters.dbt_account_id",
+							"type": "Expression"
+						},
+						"key_vault_name": {
+							"value": "@pipeline().globalParameters.Key_Vault_Name",
+							"type": "Expression"
+						},
+						"dbt_service_token_name": {
+							"value": "@pipeline().globalParameters.dbt_service_token_name",
+							"type": "Expression"
+						},
+						"reference_name": "CES PAYPAL DAILY"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "PayPal"
+		},
+		"annotations": []
+	}
+}

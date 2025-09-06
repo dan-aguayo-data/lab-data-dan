@@ -1,0 +1,24 @@
+{
+	"name": "CES_ADF_AD_Integration",
+	"properties": {
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://graph.microsoft.com/v1.0/",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "AadServicePrincipal",
+			"servicePrincipalId": "2118d493-c18b-44eb-8f35-adc880193c22",
+			"servicePrincipalKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "CES_ADF_KEY_VAULT",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "ADF-AD-Integration"
+			},
+			"tenant": "abf0de66-3ab3-4ea3-b35e-502502be1261",
+			"aadResourceId": "https://graph.microsoft.com"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
+}

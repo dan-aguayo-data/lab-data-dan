@@ -1,0 +1,262 @@
+{
+	"name": "MATTER_API_SITES",
+	"properties": {
+		"activities": [
+			{
+				"name": "COPY INTO MATTER_SITES",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Web_Get_Secret",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 3,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:05:00",
+						"requestInterval": "00.00:00:01.000"
+					},
+					"sink": {
+						"type": "SnowflakeV2Sink",
+						"importSettings": {
+							"type": "SnowflakeImportCopyCommand"
+						}
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "cesadfprod_matter_api",
+							"type": "LinkedServiceReference"
+						},
+						"path": "ceswarrrlmatterapi",
+						"enableCompression": false
+					},
+					"parallelCopies": 1,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "['site_id']"
+								},
+								"sink": {
+									"name": "SITE_ID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['site_name']"
+								},
+								"sink": {
+									"name": "SITE_NAME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['site_type']"
+								},
+								"sink": {
+									"name": "SITE_TYPE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['polygon']['id']"
+								},
+								"sink": {
+									"name": "POLYGON_ID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['polygon']['polygon_type']"
+								},
+								"sink": {
+									"name": "POLYGON_TYPE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['polygon']['area']['type']"
+								},
+								"sink": {
+									"name": "AREA_TYPE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['polygon']['area']['properties']['gid']"
+								},
+								"sink": {
+									"name": "AREA_PROPERTIES_GID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['polygon']['area']['properties']['admin_level']"
+								},
+								"sink": {
+									"name": "AREA_PROPERTIES_ADMINLEVEL",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['polygon']['area']['properties']['boundary']"
+								},
+								"sink": {
+									"name": "AREA_PROPERTIES_BOUNDARY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['polygon']['area']['properties']['name']"
+								},
+								"sink": {
+									"name": "AREA_PROPERTIES_NAME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['polygon']['area']['properties']['place']"
+								},
+								"sink": {
+									"name": "AREA_PROPERTIES_PLACE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['polygon']['area']['properties']['population']"
+								},
+								"sink": {
+									"name": "AREA_PROPERTIES_POPULATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['polygon']['area']['properties']['ref']"
+								},
+								"sink": {
+									"name": "AREA_PROPERTIES_REF",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['polygon']['area']['properties']['z_order']"
+								},
+								"sink": {
+									"name": "AREA_PROPERTIES_ZORDER",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['polygon']['area']['properties']['way_area']"
+								},
+								"sink": {
+									"name": "AREA_PROPERTIES_WAYAREA",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['polygon']['area']['geometry']['type']"
+								},
+								"sink": {
+									"name": "AREA_GEOMETRY_TYPE",
+									"type": "String"
+								}
+							}
+						],
+						"collectionReference": "$['data']",
+						"mapComplexValuesToString": true
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "WARRL_SITE_API_PARAM_PROD",
+						"type": "DatasetReference",
+						"parameters": {
+							"api_key": {
+								"value": "@activity('Web_Get_Secret').output.value",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SNOWFLAKE_MATTER_API_SITES_PARAM_DEV",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Web_Get_Secret",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": {
+						"value": "https://@{pipeline().parameters.key_vault_name}.vault.azure.net/secrets/@{pipeline().parameters.service_token_name}?api-version=7.0",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"key_vault_name": {
+				"type": "string",
+				"defaultValue": "CES-SNOWFLAKE-KEYS"
+			},
+			"service_token_name": {
+				"type": "string",
+				"defaultValue": "ADF-WARRRL-MATTER-API-SECRET"
+			}
+		},
+		"variables": {
+			"jsonOutput": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "WARRL/WARRL_MATTER_API"
+		},
+		"annotations": []
+	}
+}

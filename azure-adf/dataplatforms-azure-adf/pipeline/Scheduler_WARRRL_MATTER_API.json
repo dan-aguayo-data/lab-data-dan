@@ -1,0 +1,64 @@
+{
+	"name": "Scheduler_WARRRL_MATTER_API",
+	"properties": {
+		"activities": [
+			{
+				"name": "WARRRL_MATTER_API_workflow",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "WARRRL_MATTER_API_workflow",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "WARRRL_MATTER_API_workflow",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"pipelineName": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"pipelineTriggerName": {
+							"value": "@pipeline().TriggerTime",
+							"type": "Expression"
+						},
+						"pipelineTriggerTime": {
+							"value": "@pipeline().TriggerTime",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "Workflows"
+		},
+		"annotations": []
+	}
+}

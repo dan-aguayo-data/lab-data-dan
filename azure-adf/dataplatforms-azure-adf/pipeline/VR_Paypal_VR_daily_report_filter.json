@@ -1,0 +1,81 @@
+{
+	"name": "VR_Paypal_VR_daily_report_filter",
+	"properties": {
+		"activities": [
+			{
+				"name": "REPORT_FILTER",
+				"type": "Switch",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"on": {
+						"value": "@pipeline().parameters.ReportName",
+						"type": "Expression"
+					},
+					"cases": [
+						{
+							"value": "STL",
+							"activities": [
+								{
+									"name": "Paypal_VR_daily_STL_load_child",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "VR_Paypal_VR_daily_STL_load",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true
+									}
+								}
+							]
+						},
+						{
+							"value": "TRR",
+							"activities": [
+								{
+									"name": "Paypal_VR_daily_TRR_load_child",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "VR_Paypal_VR_daily_TRR_load",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"ReportName": {
+				"type": "string",
+				"defaultValue": "STL"
+			}
+		},
+		"variables": {
+			"STLDailyPath": {
+				"type": "String"
+			},
+			"TRRDailyPath": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "PayPal/VICRETURN"
+		},
+		"annotations": []
+	}
+}

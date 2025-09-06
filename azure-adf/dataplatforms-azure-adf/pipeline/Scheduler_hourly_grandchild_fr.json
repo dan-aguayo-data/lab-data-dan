@@ -1,0 +1,158 @@
+{
+	"name": "Scheduler_hourly_grandchild_fr",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get current time",
+				"description": "Get current_time as a variable, time is taken in terms of hours from 0 to 23 ",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "current_time_dbt_scheduler_hourly",
+					"value": {
+						"value": "@substring(convertTimeZone(pipeline().TriggerTime,'UTC','AUS Eastern Standard Time'),11,2)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "If it is full refresh power bi",
+				"description": "",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get current time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@or(equals(int(variables('current_time_dbt_scheduler_hourly')),5)\n,equals(int(variables('current_time_dbt_scheduler_hourly')),13))",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Execute DBT_run_jobs_hourly_false",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "DBT_run_jobs_hourly",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						},
+						{
+							"name": "Scheduler_PBI_refresh_datasets_hourly",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Execute DBT_run_jobs_hourly_false",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "PBI_Scheduler_refresh_datasets_hourly",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Execute DBT_run_jobs_hourly",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "DBT_run_jobs_hourly",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						},
+						{
+							"name": "PBI_refresh_master_data_prod",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Execute DBT_run_jobs_hourly",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "PBI_full_refresh_prod_1AM",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						}
+					]
+				}
+			}
+		],
+		"concurrency": 1,
+		"variables": {
+			"asString": {
+				"type": "String"
+			},
+			"Component": {
+				"type": "String"
+			},
+			"asArray": {
+				"type": "Array"
+			},
+			"current_time": {
+				"type": "String"
+			},
+			"current_time_scheduler_hourly": {
+				"type": "String"
+			},
+			"current_time_dbt_scheduler_hourly": {
+				"type": "String"
+			},
+			"current_time_pbi_refresh_hourly": {
+				"type": "String"
+			},
+			"current_time_frequent": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "DBT_PBI_FLOWS"
+		},
+		"annotations": []
+	}
+}

@@ -1,0 +1,55 @@
+{
+	"name": "Prod_CES_frequent_job_general",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Scheduler_CES_frequent",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-11-29T22:28:00",
+				"timeZone": "AUS Eastern Standard Time",
+				"schedule": {
+					"minutes": [
+						16,
+						31,
+						46,
+						1
+					],
+					"hours": [
+						7,
+						8,
+						9,
+						10,
+						11,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20,
+						6,
+						5,
+						4,
+						3,
+						12,
+						21,
+						22,
+						23
+					]
+				}
+			}
+		}
+	}
+}

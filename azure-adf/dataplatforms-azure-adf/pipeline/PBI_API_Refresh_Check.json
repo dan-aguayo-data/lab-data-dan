@@ -1,0 +1,115 @@
+{
+	"name": "PBI_API_Refresh_Check",
+	"properties": {
+		"activities": [
+			{
+				"name": "CheckRefreshStatus",
+				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.RefreshStatus,'Failed')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "SEND_EMAIL_GENERIC",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "SEND_EMAIL_GENERIC",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"Email": {
+										"value": "@pipeline().globalParameters.P_ALERT_GENERIC_EMAIL_PARAM_DEV",
+										"type": "Expression"
+									},
+									"Subject": {
+										"value": "@pipeline().parameters.Subject",
+										"type": "Expression"
+									},
+									"Body": {
+										"value": "@pipeline().parameters.Body",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "SEND_EMAIL_GENERIC",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"pipelineName": {
+										"value": "@pipeline().parameters.PipelineName",
+										"type": "Expression"
+									},
+									"pipelineTriggerName": {
+										"value": "@pipeline().parameters.PipelineTriggerName",
+										"type": "Expression"
+									},
+									"pipelineTriggerTime": {
+										"value": "@pipeline().parameters.PipelineTriggerTime",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"RefreshStatus": {
+				"type": "string"
+			},
+			"Email": {
+				"type": "string"
+			},
+			"Subject": {
+				"type": "string"
+			},
+			"Body": {
+				"type": "string"
+			},
+			"PipelineName": {
+				"type": "string"
+			},
+			"PipelineTriggerName": {
+				"type": "string"
+			},
+			"PipelineTriggerTime": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "DBT_PBI_FLOWS/PBI"
+		},
+		"annotations": []
+	}
+}

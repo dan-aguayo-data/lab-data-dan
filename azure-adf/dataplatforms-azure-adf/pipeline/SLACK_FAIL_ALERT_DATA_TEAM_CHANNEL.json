@@ -1,0 +1,54 @@
+{
+	"name": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+	"properties": {
+		"activities": [
+			{
+				"name": "GENERIC_SLACK_ALERT_DATA_TEAM",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": {
+						"value": "@pipeline().globalParameters.P_SLACK_ALERT_DATATEAM_CHANNEL_PARAM_DEV",
+						"type": "Expression"
+					},
+					"body": {
+						"value": "@concat(\n  '{',\n    '\"text\": \"*Automated ADF Alert Notification*\\n\\n',\n    ':x: *', pipeline().DataFactory, '* Pipeline *FAILED*! \\n\\n',\n    '*Pipeline Name:* `', pipeline().parameters.pipelineName, '` \\n',\n    '*Triggered by:* `', pipeline().parameters.pipelineTriggerName, '` \\n',\n    '*Trigger time:* `', convertTimeZone(pipeline().parameters.pipelineTriggerTime, 'UTC', 'AUS Eastern Standard Time'), '` \\n',\n    ':warning: Please check the Azure portal for more details.\"',\n  '}'\n)",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"pipelineName": {
+				"type": "string",
+				"defaultValue": "Test"
+			},
+			"pipelineTriggerName": {
+				"type": "string",
+				"defaultValue": "Test"
+			},
+			"pipelineTriggerTime": {
+				"type": "string",
+				"defaultValue": "2025-05-13T01:11:26.5764489Z"
+			}
+		},
+		"variables": {
+			"current_time_scheduler_hourly": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Generic/ALERTS"
+		},
+		"annotations": []
+	}
+}

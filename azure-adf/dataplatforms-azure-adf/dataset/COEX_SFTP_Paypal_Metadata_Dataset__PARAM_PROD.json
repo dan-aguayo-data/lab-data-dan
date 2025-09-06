@@ -1,0 +1,25 @@
+{
+	"name": "COEX_SFTP_Paypal_Metadata_Dataset__PARAM_PROD",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SFTP_COEX_Paypal_PROD",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Paypal"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "SftpLocation",
+				"folderPath": "/ppreports/outgoing"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": false,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

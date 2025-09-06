@@ -1,0 +1,37 @@
+{
+	"name": "AD_blob_plvar_PARAM_PROD",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cesadfprod",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"group_id": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "AD"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@{dataset().group_id}_@{formatDateTime(convertFromUtc(utcnow(),'AUS Eastern Standard Time'),'yyyyMMddHHmmss')}",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@{toLower(pipeline().parameters.API_Name)}/@{dataset().group_id}",
+					"type": "Expression"
+				},
+				"container": "cesadfprod"
+			},
+			"compression": {
+				"type": "gzip"
+			}
+		},
+		"schema": {}
+	}
+}

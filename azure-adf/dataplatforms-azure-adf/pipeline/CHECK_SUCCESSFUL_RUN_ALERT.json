@@ -1,0 +1,278 @@
+{
+	"name": "CHECK_SUCCESSFUL_RUN_ALERT",
+	"properties": {
+		"activities": [
+			{
+				"name": "GET_STATUS_RUN_ACTIVITIES",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "subscriptionID",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "resourceGroupName",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": {
+						"value": "https://management.azure.com/subscriptions/@{variables('subscriptionID')}/resourceGroups/@{variables('resourceGroupName')}/providers/Microsoft.DataFactory/factories/@{pipeline().parameters.factoryName}/pipelineruns/@{pipeline().parameters.pipelineRunId}/queryActivityruns?api-version=2018-06-01\n",
+						"type": "Expression"
+					},
+					"body": {
+						"lastUpdatedAfter": "2022-01-01T00:00:00Z",
+						"lastUpdatedBefore": "2099-01-01T00:00:00Z"
+					},
+					"authentication": {
+						"resource": "https://management.azure.com/",
+						"credential": {
+							"referenceName": "ADF-AZURE-MGMT-API-CRED",
+							"type": "CredentialReference"
+						},
+						"type": "UserAssignedManagedIdentity"
+					}
+				}
+			},
+			{
+				"name": "Subscription_id",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": "https://CES-SNOWFLAKE-KEYS.vault.azure.net/secrets/ADF-SUBSCRIPTION-ID?api-version=7.1",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net/"
+					}
+				}
+			},
+			{
+				"name": "resource_group_name",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": "https://CES-SNOWFLAKE-KEYS.vault.azure.net/secrets/ADF-RESOURCE-GROUP?api-version=7.1",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net/"
+					}
+				}
+			},
+			{
+				"name": "subscriptionID",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Subscription_id",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "subscriptionID",
+					"value": {
+						"value": "@activity('Subscription_id').output.value",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "resourceGroupName",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "resource_group_name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "resourceGroupName",
+					"value": {
+						"value": "@activity('resource_group_name').output.value",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ActivitiesSuceededCheck",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "FilterUnsuccessfulStatus",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(length(activity('FilterUnsuccessfulStatus').output.value), 0)\n",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "False",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						},
+						{
+							"name": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "False",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"pipelineName": {
+										"value": "@pipeline().parameters.pipelineName",
+										"type": "Expression"
+									},
+									"pipelineTriggerName": {
+										"value": "@pipeline().parameters.pipelineTriggerName",
+										"type": "Expression"
+									},
+									"pipelineTriggerTime": {
+										"value": "@pipeline().parameters.pipelineTriggerTime",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "True",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "FilterUnsuccessfulStatus",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "GET_STATUS_RUN_ACTIVITIES",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('GET_STATUS_RUN_ACTIVITIES').output.value\n",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@not(equals(item().status, 'Succeeded'))\n",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"pipelineRunId": {
+				"type": "string",
+				"defaultValue": "effb021d-46ea-41b2-adb9-e9b6c67a0f35"
+			},
+			"pipelineName": {
+				"type": "string",
+				"defaultValue": "DBT_run_jobs_hourly"
+			},
+			"factoryName": {
+				"type": "string",
+				"defaultValue": "dataplatforms-adf-dev"
+			},
+			"pipelineTriggerName": {
+				"type": "string"
+			},
+			"pipelineTriggerTime": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"TEST": {
+				"type": "String"
+			},
+			"subscriptionID": {
+				"type": "String"
+			},
+			"resourceGroupName": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Generic/ALERTS"
+		},
+		"annotations": []
+	}
+}

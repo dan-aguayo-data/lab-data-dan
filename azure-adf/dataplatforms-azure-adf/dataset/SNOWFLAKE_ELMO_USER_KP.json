@@ -1,0 +1,132 @@
+{
+	"name": "SNOWFLAKE_ELMO_USER_KP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SNOWFLAKE_ADF_CES_SEC_RAW_PROD",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Elmo"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "ID",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "IDENTIFIER",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "FIRSTNAME",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LASTNAME",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "USERNAME",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "EMAIL",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "DATEOFBIRTH",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "EMPLOYEENUMBER",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "MANAGER",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "STARTDATE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "ENDDATE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "EXPIRYDATE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "MOBILE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "COUNTRY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "STATE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "TIMEZONE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "ACTIVE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CUSTOMDATA",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "POSITION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LOCATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "DEPARTMENT",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LEGALENTITY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "ROLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "SERVICESTARTDATE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LOGS",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "RESPONSECODE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "SUMMARY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LANDED_DATETIME",
+				"type": "TIMESTAMP_NTZ"
+			}
+		],
+		"typeProperties": {
+			"schema": "CES_ELMO",
+			"table": "USERS"
+		}
+	}
+}

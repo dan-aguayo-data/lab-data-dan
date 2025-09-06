@@ -1,0 +1,1640 @@
+{
+	"name": "CGR_DATA",
+	"properties": {
+		"activities": [
+			{
+				"name": "COPY INTO CGR",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 180,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:10:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET"
+					},
+					"sink": {
+						"type": "SnowflakeV2Sink",
+						"preCopyScript": {
+							"value": "@concat('TRUNCATE TABLE ',pipeline().globalParameters.P_WARRRL_CGR_TABLE_PATH_PARAM_DEV, ';')",
+							"type": "Expression"
+						},
+						"importSettings": {
+							"type": "SnowflakeImportCopyCommand"
+						}
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "cesadfdev_acckey",
+							"type": "LinkedServiceReference"
+						},
+						"path": "ceswarrrlcgdapi",
+						"enableCompression": false
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "['id']"
+								},
+								"sink": {
+									"name": "ID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['type']"
+								},
+								"sink": {
+									"name": "TYPE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['closed_at']"
+								},
+								"sink": {
+									"name": "CLOSE_AT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['created_at']"
+								},
+								"sink": {
+									"name": "CREATED_AT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['custom_fields']['18']"
+								},
+								"sink": {
+									"name": "CUSTOM_FIELDS_18",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['custom_fields']['19']"
+								},
+								"sink": {
+									"name": "CUSTOM_FIELDS_19",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['custom_fields']['25']"
+								},
+								"sink": {
+									"name": "CUSTOM_FIELDS_25",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['custom_fields']['31']"
+								},
+								"sink": {
+									"name": "CUSTOM_FIELDS_31",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['custom_fields']['32']"
+								},
+								"sink": {
+									"name": "CUSTOM_FIELDS_32",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['custom_fields']['40']"
+								},
+								"sink": {
+									"name": "CUSTOM_FIELDS_40",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['custom_fields']['43']"
+								},
+								"sink": {
+									"name": "CUSTOM_FIELDS_43",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['custom_fields']['94']"
+								},
+								"sink": {
+									"name": "CUSTOM_FIELDS_94",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['custom_fields']['127']"
+								},
+								"sink": {
+									"name": "CUSTOM_FIELDS_127",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['immediate_actions']"
+								},
+								"sink": {
+									"name": "IMMEDIATE_ACTIONS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['long_description']"
+								},
+								"sink": {
+									"name": "LONG_DESCCRIPTION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['occurred_at']"
+								},
+								"sink": {
+									"name": "OCCURRED_AT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['reported_at']"
+								},
+								"sink": {
+									"name": "REPORTED_AT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['sensitivity']"
+								},
+								"sink": {
+									"name": "SENSITIVITY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['target_close_date']"
+								},
+								"sink": {
+									"name": "TARGET_CLOSE_DATE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['title']"
+								},
+								"sink": {
+									"name": "TITLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['updated_at']"
+								},
+								"sink": {
+									"name": "UPDATED_AT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['uuid']"
+								},
+								"sink": {
+									"name": "UUID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_25_text']"
+								},
+								"sink": {
+									"name": "CD_25_TEXT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_31_text']"
+								},
+								"sink": {
+									"name": "CD_31_TEXT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_18_string']"
+								},
+								"sink": {
+									"name": "CD_18_STRING",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_19_string']"
+								},
+								"sink": {
+									"name": "CD_19_STRING",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_32_string']"
+								},
+								"sink": {
+									"name": "CD_32_STRING",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_40_string']"
+								},
+								"sink": {
+									"name": "CD_40_STRING",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_127_string']"
+								},
+								"sink": {
+									"name": "CD_127_STRING",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_43_boolean']"
+								},
+								"sink": {
+									"name": "CD_43_BOOLEAN",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_94_boolean']"
+								},
+								"sink": {
+									"name": "CD_94_BOOLEAN",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['human_id']"
+								},
+								"sink": {
+									"name": "HUMAN_ID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['actual_consequence']['data']"
+								},
+								"sink": {
+									"name": "ACTUAL_CONSEQUENCE_DATA",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['actual_consequence']['meta']['association']"
+								},
+								"sink": {
+									"name": "ACTUAL_CONSEQUENCE_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['assignee']['meta']['association']"
+								},
+								"sink": {
+									"name": "ASSIGNEE_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['business_unit']['meta']['association']"
+								},
+								"sink": {
+									"name": "BUSINESS_UNIT_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['custom_type']['data']['id']"
+								},
+								"sink": {
+									"name": "CUSTOM_TYPE_DATA_ID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['custom_type']['data']['type']"
+								},
+								"sink": {
+									"name": "CUSTOM_TYPE_DATA_TYPE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['custom_type']['meta']['association']"
+								},
+								"sink": {
+									"name": "CUSTOM_TYPE_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['entered_by']['data']['id']"
+								},
+								"sink": {
+									"name": "ENTERED_BY_DATA_ID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['entered_by']['data']['type']"
+								},
+								"sink": {
+									"name": "ENTERED_BY_DATA_TYPE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['entered_by']['meta']['association']"
+								},
+								"sink": {
+									"name": "ENTERED_BY_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['location']['data']['id']"
+								},
+								"sink": {
+									"name": "LOCATION_DATA_ID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['location']['data']['type']"
+								},
+								"sink": {
+									"name": "LOCATION_DATA_TYPE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['location']['meta']['association']"
+								},
+								"sink": {
+									"name": "LOCATION_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['owner']['data']['id']"
+								},
+								"sink": {
+									"name": "OWNER_DATA_ID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['owner']['data']['type']"
+								},
+								"sink": {
+									"name": "OWNER_DATA_TYPE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['owner']['meta']['association']"
+								},
+								"sink": {
+									"name": "OWNER_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['potential_consequence']['data']"
+								},
+								"sink": {
+									"name": "POTENTIAL_CONSEQUENCE_DATA",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['potential_consequence']['meta']['association']"
+								},
+								"sink": {
+									"name": "POTENTIAL_CONSEQUENCE_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['project']['meta']['association']"
+								},
+								"sink": {
+									"name": "PROJECT_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['reporter']['data']['id']"
+								},
+								"sink": {
+									"name": "REPORTER_DATA_ID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['reporter']['data']['type']"
+								},
+								"sink": {
+									"name": "REPORTER_DATA_TYPE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['reporter']['meta']['association']"
+								},
+								"sink": {
+									"name": "REPORTER_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['state']['data']['id']"
+								},
+								"sink": {
+									"name": "STATE_DATA_ID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['state']['data']['type']"
+								},
+								"sink": {
+									"name": "STATE_DATA_TYPE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['state']['meta']['association']"
+								},
+								"sink": {
+									"name": "STATE_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['attachments']['meta']['association']"
+								},
+								"sink": {
+									"name": "ATTACHMENTS_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['audits']['meta']['association']"
+								},
+								"sink": {
+									"name": "AUDITS_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['blocked_users']['meta']['association']"
+								},
+								"sink": {
+									"name": "BLOCKED_USERS_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['business_objectives']['meta']['association']"
+								},
+								"sink": {
+									"name": "BUSINESS_OBJECTIVES_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['custom_field_values']['meta']['association']"
+								},
+								"sink": {
+									"name": "CUSTOM_FIELD_VALUES_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['hazards']['meta']['association']"
+								},
+								"sink": {
+									"name": "HAZARDS_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['history_activities']['meta']['association']"
+								},
+								"sink": {
+									"name": "HISTORY_ACTIVITIES_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['impacts']['meta']['association']"
+								},
+								"sink": {
+									"name": "IMPACTS_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['incident_types']['meta']['association']"
+								},
+								"sink": {
+									"name": "INCIDENT_TYPES_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['incidents']['meta']['association']"
+								},
+								"sink": {
+									"name": "INCIDENTS_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['individuals']['meta']['association']"
+								},
+								"sink": {
+									"name": "INDIVIDUALS_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['investigations']['meta']['association']"
+								},
+								"sink": {
+									"name": "INVESTIGATIONS_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['learnings']['meta']['association']"
+								},
+								"sink": {
+									"name": "LEARNINGS_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['progress_activities']['meta']['association']"
+								},
+								"sink": {
+									"name": "PROGRESS_ACTIVITIES_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['recommendations']['meta']['association']"
+								},
+								"sink": {
+									"name": "RECOMMENDATIONS_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['resources']['meta']['association']"
+								},
+								"sink": {
+									"name": "RESOURCES_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['survey_responses']['meta']['association']"
+								},
+								"sink": {
+									"name": "SURVEY_RESPONSES_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['tasks']['meta']['association']"
+								},
+								"sink": {
+									"name": "TASKS_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['timeline_events']['meta']['association']"
+								},
+								"sink": {
+									"name": "TIMELINE_EVENTS_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['relationships']['treatment_plans']['meta']['association']"
+								},
+								"sink": {
+									"name": "TREATMENT_PLANS_META_ASSOCIATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['links']['self']['href']"
+								},
+								"sink": {
+									"name": "LINKS_SELF_HREF",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['meta']['can_delete']"
+								},
+								"sink": {
+									"name": "META_CAN_DELETE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['meta']['can_update']"
+								},
+								"sink": {
+									"name": "META_CAN_UPDATE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['meta']['can_mass']"
+								},
+								"sink": {
+									"name": "META_CAN_MASS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['meta']['can_merge']"
+								},
+								"sink": {
+									"name": "META_CAN_MERGE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['meta']['can_transition']"
+								},
+								"sink": {
+									"name": "META_CAN_TRANSITION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['custom_fields']['15'][0]"
+								},
+								"sink": {
+									"name": "CUSTOM_FIELDS_15",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['custom_fields']['23'][0]"
+								},
+								"sink": {
+									"name": "CUSTOM_FIELDS_23",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['custom_fields']['88'][0]"
+								},
+								"sink": {
+									"name": "CUSTOM_FIELDS_88",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['custom_fields']['110'][0]"
+								},
+								"sink": {
+									"name": "CUSTOM_FIELDS_110",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['custom_fields']['126'][0]"
+								},
+								"sink": {
+									"name": "CUSTOM_FIELDS_126",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_15_lookup'][0]['color']"
+								},
+								"sink": {
+									"name": "CD_15_LOOKUP_COLOR"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_15_lookup'][0]['depth']"
+								},
+								"sink": {
+									"name": "CD_15_LOOKUP_DEPTH"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_15_lookup'][0]['hierarchy']"
+								},
+								"sink": {
+									"name": "CD_15_LOOKUP_HIERARCHY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_15_lookup'][0]['icon']"
+								},
+								"sink": {
+									"name": "CD_15_LOOKUP_ICON",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_15_lookup'][0]['id']"
+								},
+								"sink": {
+									"name": "CD_15_LOOKUP_ID",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_15_lookup'][0]['order_cache']"
+								},
+								"sink": {
+									"name": "CD_15_LOOKUP_ORDER_CACHE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_15_lookup'][0]['position']"
+								},
+								"sink": {
+									"name": "CD_15_LOOKUP_POSITION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_15_lookup'][0]['subtitle']"
+								},
+								"sink": {
+									"name": "CD_15_LOOKUP_SUBTITLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_15_lookup'][0]['title']"
+								},
+								"sink": {
+									"name": "CD_15_LOOKUP_TITLE"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_15_lookup'][0]['disabled']"
+								},
+								"sink": {
+									"name": "CD_15_LOOKUP_DISABLED",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_23_lookup'][0]['color']"
+								},
+								"sink": {
+									"name": "CD_23_LOOKUP_COLOR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_23_lookup'][0]['depth']"
+								},
+								"sink": {
+									"name": "CD_23_LOOKUP_DEPTH",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_23_lookup'][0]['hierarchy']"
+								},
+								"sink": {
+									"name": "CD_23_LOOKUP_HIERARCHY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_23_lookup'][0]['icon']"
+								},
+								"sink": {
+									"name": "CD_23_LOOKUP_ICON",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_23_lookup'][0]['id']"
+								},
+								"sink": {
+									"name": "CD_23_LOOKUP_ID",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_23_lookup'][0]['order_cache']"
+								},
+								"sink": {
+									"name": "CD_23_LOOKUP_ORDER_CACHE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_23_lookup'][0]['position']"
+								},
+								"sink": {
+									"name": "CD_23_LOOKUP_POSITION",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_23_lookup'][0]['subtitle']"
+								},
+								"sink": {
+									"name": "CD_23_LOOKUP_SUBTITLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_23_lookup'][0]['title']"
+								},
+								"sink": {
+									"name": "CD_23_LOOKUP_TITLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_23_lookup'][0]['disabled']"
+								},
+								"sink": {
+									"name": "CD_23_LOOKUP_DISABLED",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_63_lookup'][0]['color']"
+								},
+								"sink": {
+									"name": "CD_63_LOOKUP_COLOR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_63_lookup'][0]['depth']"
+								},
+								"sink": {
+									"name": "CD_63_LOOKUP_DEPTH",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_63_lookup'][0]['hierarchy']"
+								},
+								"sink": {
+									"name": "CD_63_LOOKUP_HIERARCHY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_63_lookup'][0]['icon']"
+								},
+								"sink": {
+									"name": "CD_63_LOOKUP_ICON",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_63_lookup'][0]['id']"
+								},
+								"sink": {
+									"name": "CD_63_LOOKUP_ID",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_63_lookup'][0]['order_cache']"
+								},
+								"sink": {
+									"name": "CD_63_LOOKUP_ORDER_CACHE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_63_lookup'][0]['position']"
+								},
+								"sink": {
+									"name": "CD_63_LOOKUP_POSITION",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_63_lookup'][0]['subtitle']"
+								},
+								"sink": {
+									"name": "CD_63_LOOKUP_SUBTITLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_63_lookup'][0]['title']"
+								},
+								"sink": {
+									"name": "CD_63_LOOKUP_TITLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_63_lookup'][0]['disabled']"
+								},
+								"sink": {
+									"name": "CD_63_LOOKUP_DISABLED",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_88_lookup'][0]['color']"
+								},
+								"sink": {
+									"name": "CD_88_LOOKUP_COLOR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_88_lookup'][0]['depth']"
+								},
+								"sink": {
+									"name": "CD_88_LOOKUP_DEPTH",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_88_lookup'][0]['hierarchy']"
+								},
+								"sink": {
+									"name": "CD_88_LOOKUP_HIERARCHY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_88_lookup'][0]['icon']"
+								},
+								"sink": {
+									"name": "CD_88_LOOKUP_ICON",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_88_lookup'][0]['id']"
+								},
+								"sink": {
+									"name": "CD_88_LOOKUP_ID",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_88_lookup'][0]['order_cache']"
+								},
+								"sink": {
+									"name": "CD_88_LOOKUP_ORDER_CACHE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_88_lookup'][0]['position']"
+								},
+								"sink": {
+									"name": "CD_88_LOOKUP_POSITION",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_88_lookup'][0]['subtitle']"
+								},
+								"sink": {
+									"name": "CD_88_LOOKUP_SUBTITLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_88_lookup'][0]['title']"
+								},
+								"sink": {
+									"name": "CD_88_LOOKUP_TITLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_88_lookup'][0]['disabled']"
+								},
+								"sink": {
+									"name": "CD_88_LOOKUP_DISABLED",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_26_lookup'][0]['color']"
+								},
+								"sink": {
+									"name": "CD_26_LOOKUP_COLOR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_26_lookup'][0]['depth']"
+								},
+								"sink": {
+									"name": "CD_26_LOOKUP_DEPTH",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_26_lookup'][0]['hierarchy']"
+								},
+								"sink": {
+									"name": "CD_26_LOOKUP_HIERARCHY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_26_lookup'][0]['icon']"
+								},
+								"sink": {
+									"name": "CD_26_LOOKUP_ICON",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_26_lookup'][0]['id']"
+								},
+								"sink": {
+									"name": "CD_26_LOOKUP_ID",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_26_lookup'][0]['order_cache']"
+								},
+								"sink": {
+									"name": "CD_26_LOOKUP_ORDER_CACHE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_26_lookup'][0]['position']"
+								},
+								"sink": {
+									"name": "CD_26_LOOKUP_POSITION",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_26_lookup'][0]['subtitle']"
+								},
+								"sink": {
+									"name": "CD_26_LOOKUP_SUBTITLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_26_lookup'][0]['title']"
+								},
+								"sink": {
+									"name": "CD_26_LOOKUP_TITLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_26_lookup'][0]['disabled']"
+								},
+								"sink": {
+									"name": "CD_26_LOOKUP_DISABLED",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_110_lookup'][0]['color']"
+								},
+								"sink": {
+									"name": "CD_110_LOOKUP_COLOR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_110_lookup'][0]['depth']"
+								},
+								"sink": {
+									"name": "CD_110_LOOKUP_DEPTH",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_110_lookup'][0]['hierarchy']"
+								},
+								"sink": {
+									"name": "CD_110_LOOKUP_HIERARCHY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_110_lookup'][0]['icon']"
+								},
+								"sink": {
+									"name": "CD_110_LOOKUP_ICON",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_110_lookup'][0]['id']"
+								},
+								"sink": {
+									"name": "CD_110_LOOKUP_ID",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_110_lookup'][0]['order_cache']"
+								},
+								"sink": {
+									"name": "CD_110_LOOKUP_ORDER_CACHE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_110_lookup'][0]['position']"
+								},
+								"sink": {
+									"name": "CD_110_LOOKUP_POSITION",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_110_lookup'][0]['subtitle']"
+								},
+								"sink": {
+									"name": "CD_110_LOOKUP_SUBTITLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_110_lookup'][0]['title']"
+								},
+								"sink": {
+									"name": "CD_110_LOOKUP_TITLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_110_lookup'][0]['disabled']"
+								},
+								"sink": {
+									"name": "CD_110_LOOKUP_DISABLED",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_126_lookup'][0]['color']"
+								},
+								"sink": {
+									"name": "CD_126_LOOKUP_COLOR"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_126_lookup'][0]['depth']"
+								},
+								"sink": {
+									"name": "CD_126_LOOKUP_DEPTH"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_126_lookup'][0]['hierarchy']"
+								},
+								"sink": {
+									"name": "CD_126_LOOKUP_HIERARCHY"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_126_lookup'][0]['icon']"
+								},
+								"sink": {
+									"name": "CD_126_LOOKUP_ICON"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_126_lookup'][0]['id']"
+								},
+								"sink": {
+									"name": "CD_126_LOOKUP_ID"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_126_lookup'][0]['position']"
+								},
+								"sink": {
+									"name": "CD_126_LOOKUP_POSITION"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_126_lookup'][0]['subtitle']"
+								},
+								"sink": {
+									"name": "CD_126_LOOKUP_SUBTITLE"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_126_lookup'][0]['title']"
+								},
+								"sink": {
+									"name": "CD_126_LOOKUP_TITLE"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_126_lookup'][0]['disabled']"
+								},
+								"sink": {
+									"name": "CD_126_LOOKUP_DISABLED"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_122_lookup'][0]['color']"
+								},
+								"sink": {
+									"name": "CD_122_LOOKUP_COLOR"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_122_lookup'][0]['depth']"
+								},
+								"sink": {
+									"name": "CD_122_LOOKUP_DEPTH"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_122_lookup'][0]['hierarchy']"
+								},
+								"sink": {
+									"name": "CD_122_LOOKUP_HIERARCHY"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_122_lookup'][0]['icon']"
+								},
+								"sink": {
+									"name": "CD_122_LOOKUP_ICON"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_122_lookup'][0]['id']"
+								},
+								"sink": {
+									"name": "CD_122_LOOKUP_ID"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_122_lookup'][0]['position']"
+								},
+								"sink": {
+									"name": "CD_122_LOOKUP_POSITION"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_122_lookup'][0]['subtitle']"
+								},
+								"sink": {
+									"name": "CD_122_LOOKUP_SUBTITLE"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_122_lookup'][0]['title']"
+								},
+								"sink": {
+									"name": "CD_122_LOOKUP_TITLE"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_122_lookup'][0]['disabled']"
+								},
+								"sink": {
+									"name": "CD_122_LOOKUP_DISABLED"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_122_lookup'][0]['order_cache']"
+								},
+								"sink": {
+									"name": "CD_122_LOOKUP_ORDER_CACHE"
+								}
+							},
+							{
+								"source": {
+									"path": "['attributes']['cd']['cd_126_lookup'][0]['order_cache']"
+								},
+								"sink": {
+									"name": "CD_126_LOOKUP_ORDER_CACHE"
+								}
+							},
+							{
+								"source": {
+									"path": "$['links']['self']"
+								},
+								"sink": {
+									"name": "LINKS_SELF",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['links']['first']"
+								},
+								"sink": {
+									"name": "LINKS_FIRST",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['links']['prev']"
+								},
+								"sink": {
+									"name": "LINKS_PREV",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['links']['next']"
+								},
+								"sink": {
+									"name": "LINKS_NEXT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['links']['last']"
+								},
+								"sink": {
+									"name": "LINKS_LAST",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['timestamp']"
+								},
+								"sink": {
+									"name": "META_TIMESTAMP",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['num_pages']"
+								},
+								"sink": {
+									"name": "META_NUM_PAGES",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['total_count']"
+								},
+								"sink": {
+									"name": "TOTAL_COUNT",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['ordered_ids'][0]"
+								},
+								"sink": {
+									"name": "META_ORDERED_IDS",
+									"type": "Int64"
+								}
+							}
+						],
+						"collectionReference": "['data']",
+						"mapComplexValuesToString": true
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "WARRL_CGR_API_PARAM_PROD",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SNOWFLAKE_CGR_PARAM_DEV",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "WARRL/WARRRL_CGR_DATA"
+		},
+		"annotations": []
+	}
+}

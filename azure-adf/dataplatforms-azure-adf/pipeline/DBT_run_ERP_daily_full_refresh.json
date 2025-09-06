@@ -1,0 +1,47 @@
+{
+	"name": "DBT_run_ERP_daily_full_refresh",
+	"properties": {
+		"activities": [
+			{
+				"name": "DBT_FULL_REFRESH_ERP_RUN",
+				"description": "",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DBT_GENERIC_RUN",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"dbt_job_id": {
+							"value": "@pipeline().globalParameters.P_DBT_JOBID_ERP_FULLREFRESH_PARAM_DEV",
+							"type": "Expression"
+						},
+						"dbt_account_id": {
+							"value": "@pipeline().globalParameters.dbt_account_id",
+							"type": "Expression"
+						},
+						"key_vault_name": {
+							"value": "@pipeline().globalParameters.Key_Vault_Name",
+							"type": "Expression"
+						},
+						"dbt_service_token_name": {
+							"value": "@pipeline().globalParameters.dbt_service_token_name",
+							"type": "Expression"
+						},
+						"reference_name": "Common Prod Full refresh"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "DBT_PBI_FLOWS/DBT"
+		},
+		"annotations": []
+	}
+}

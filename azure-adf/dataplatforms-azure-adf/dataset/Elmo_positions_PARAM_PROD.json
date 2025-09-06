@@ -1,0 +1,15 @@
+{
+	"name": "Elmo_positions_PARAM_PROD",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Elmo_positions_prod",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Elmo"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	}
+}

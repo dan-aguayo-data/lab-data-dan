@@ -1,0 +1,78 @@
+{
+	"name": "Scheduler_CES_hourly",
+	"properties": {
+		"activities": [
+			{
+				"name": "Scheduler_hourly",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Scheduler_hourly_workflow",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Scheduler_hourly",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"pipelineName": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"pipelineTriggerName": {
+							"value": "@pipeline().TriggerName",
+							"type": "Expression"
+						},
+						"pipelineTriggerTime": {
+							"value": "@pipeline().TriggerTime",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"variables": {
+			"current_time": {
+				"type": "String"
+			},
+			"current_time_scheduler_hourly": {
+				"type": "String"
+			},
+			"current_time_dbt_scheduler_hourly": {
+				"type": "String"
+			},
+			"current_time_pbi_refresh_hourly": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Workflows"
+		},
+		"annotations": []
+	}
+}

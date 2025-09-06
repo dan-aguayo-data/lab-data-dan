@@ -1,0 +1,54 @@
+{
+	"name": "AD_delete_user_from_directory",
+	"properties": {
+		"activities": [
+			{
+				"name": "Delete User from Group",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "DELETE",
+					"url": {
+						"value": "@concat('https://graph.microsoft.com/v1.0/users/', pipeline().parameters.user_id)",
+						"type": "Expression"
+					},
+					"authentication": {
+						"resource": "https://graph.microsoft.com",
+						"credential": {
+							"referenceName": "ADF-AD-INTEGRATION",
+							"type": "CredentialReference"
+						},
+						"userTenant": "abf0de66-3ab3-4ea3-b35e-502502be1261",
+						"username": "2118d493-c18b-44eb-8f35-adc880193c22",
+						"password": {
+							"type": "AzureKeyVaultSecret",
+							"store": {
+								"referenceName": "CES_ADF_KEY_VAULT",
+								"type": "LinkedServiceReference"
+							},
+							"secretName": "ADF-AD-Integration"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"user_id": {
+				"type": "string",
+				"defaultValue": "2ef69ce8-eaeb-4480-9f8c-696f45de04b9"
+			}
+		},
+		"folder": {
+			"name": "AD"
+		},
+		"annotations": []
+	}
+}

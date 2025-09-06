@@ -1,0 +1,80 @@
+{
+	"name": "PBI_Scheduler_refresh_datasets_hourly",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get current time",
+				"description": "Evaluates at what times we should run the following pipeline",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "current_time_pbi_refresh_hourly",
+					"value": {
+						"value": "@substring(convertTimeZone(pipeline().TriggerTime,'UTC','AUS Eastern Standard Time'),11,2)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "If Avoid Power Bi refresh",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get current time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@or(\n    or(\n        equals(int(variables('current_time_pbi_refresh_hourly')), 23),\n        equals(int(variables('current_time_pbi_refresh_hourly')), 23)\n    ),\n    equals(int(variables('current_time_pbi_refresh_hourly')), 1)\n)",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "PBI_refresh_datasets_hourly",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "PBI_refresh_datasets_hourly",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"current_time": {
+				"type": "String"
+			},
+			"current_time_scheduler_hourly": {
+				"type": "String"
+			},
+			"current_time_dbt_scheduler_hourly": {
+				"type": "String"
+			},
+			"current_time_pbi_refresh_hourly": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "DBT_PBI_FLOWS/PBI"
+		},
+		"annotations": []
+	}
+}

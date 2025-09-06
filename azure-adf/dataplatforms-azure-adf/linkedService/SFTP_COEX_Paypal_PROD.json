@@ -1,0 +1,23 @@
+{
+	"name": "SFTP_COEX_Paypal_PROD",
+	"properties": {
+		"annotations": [],
+		"type": "Sftp",
+		"typeProperties": {
+			"host": "reports.paypal.com",
+			"port": 22,
+			"skipHostKeyValidation": true,
+			"authenticationType": "Basic",
+			"userName": " sftpl7_paypalcontainerexchange.c",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "CES_ADF_KEY_VAULT",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "ADF-SFTP-PAYPAL-COEX-PSSWD-PROD"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
+}

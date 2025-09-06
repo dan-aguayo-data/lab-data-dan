@@ -1,0 +1,24 @@
+{
+	"name": "WARRRL_CGR",
+	"properties": {
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://warrrl.cgrfoundation.com/api/v2/incidents",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "OAuth2ClientCredential",
+			"clientId": "lRuvVM1uDtcHNbMrZNk2RjctNvWnFRymEGvoUYqvq2U",
+			"clientSecret": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "CES_ADF_KEY_VAULT",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "ADF-WARRRL-CGR-CLIENT-SECRET"
+			},
+			"tokenEndpoint": "https://warrrl.cgrfoundation.com/oauth/token",
+			"scope": "public"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
+}

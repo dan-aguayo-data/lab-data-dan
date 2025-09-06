@@ -1,0 +1,19 @@
+{
+	"name": "cespaypalprod",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"connectionString": "DefaultEndpointsProtocol=https;AccountName=cespaypalsftpprod;EndpointSuffix=core.windows.net;",
+			"accountKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "CES_ADF_KEY_VAULT",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "ADF-BLOB-PAYPAL-KEY-PROD"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
+}

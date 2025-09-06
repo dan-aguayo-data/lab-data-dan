@@ -1,0 +1,10 @@
+{
+	"name": "CES_ADF_KEY_VAULT",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://CES-SNOWFLAKE-KEYS.vault.azure.net/"
+		}
+	}
+}

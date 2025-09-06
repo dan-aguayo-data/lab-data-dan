@@ -1,0 +1,311 @@
+{
+	"name": "COEX_AD_int_workflow",
+	"properties": {
+		"activities": [
+			{
+				"name": "Check if any new users to add",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "WITH GROUP_TABLE AS (\n    SELECT ADG.ID AS GROUP_ID, ADGM.USER_ID, ADG.DISPLAYNAME FROM \"RAW_PROD\".\"CES_ADF\".\"AD_GROUPS\" AS ADG\n    LEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_GROUP_MEMBERS\" AS ADGM\n      ON ADG.ID = ADGM.GROUP_ID\n    WHERE ADG.DISPLAYNAME LIKE 'Power BI - COEX%'\n)\nSELECT DISTINCT AD.ID\n    ,GT.GROUP_ID\n    ,GT.DISPLAYNAME\n  FROM \"COEX_PROD\".\"COEX_AGILOFT\".\"AG_COEX_EMPLOYEE_SECURITY_MAPPING\" COEX\n  LEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_USERS\" AS AD\n    ON LOWER(COEX.COEX_LOGIN_ID) = LOWER(AD.MAIL)\n  LEFT JOIN GROUP_TABLE AS GT\n    ON COEX.AD_GROUP = GT.DISPLAYNAME\n  WHERE COEX.DATE_UPDATED >= DATEADD(DAY ,-1,  CURRENT_DATE())\n    AND AD.ID IS NOT NULL\n    AND GROUP_ID IS NOT NULL\n    AND COEX.ACTIVE = 1 \n    AND AD_GROUP_STATUS = 'NEW'",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "If there are new users",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Check if any new users to add",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(activity('Check if any new users to add').output.resultSetCount,0)",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Execute AD_group_add_users",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_group_add_users_coex_int",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Check if any users to remove",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "If there are new users",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "WITH GROUP_TABLE AS (\n    SELECT ADG.ID AS GROUP_ID, ADGM.USER_ID, ADG.DISPLAYNAME FROM \"RAW_PROD\".\"CES_ADF\".\"AD_GROUPS\" AS ADG\n    LEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_GROUP_MEMBERS\" AS ADGM\n      ON ADG.ID = ADGM.GROUP_ID\n    WHERE ADG.DISPLAYNAME LIKE 'Power BI - COEX%'\n)\nSELECT DISTINCT AD.ID\n    ,GT.GROUP_ID\n    ,GT.DISPLAYNAME\n  FROM \"COEX_PROD\".\"COEX_AGILOFT\".\"AG_COEX_EMPLOYEE_SECURITY_MAPPING\" COEX\n  LEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_USERS\" AS AD\n    ON LOWER(COEX.COEX_LOGIN_ID) = LOWER(AD.MAIL)\n  LEFT JOIN GROUP_TABLE AS GT\n    ON COEX.AD_GROUP = GT.DISPLAYNAME\n  WHERE COEX.DATE_UPDATED >= DATEADD(DAY ,-1,  CURRENT_DATE())\n    AND AD.ID IS NOT NULL\n    AND GROUP_ID IS NOT NULL\n    AND COEX.ACTIVE != 1\n    AND AD_GROUP_STATUS = 'REMOVE'",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "If there are users to remove",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Check if any users to remove",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(activity('Check if any users to remove').output.resultSetCount,0)",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Execute AD_group_remove_users",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_group_remove_users_coex_int",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Check if any users to deactivate",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "If there are users to remove",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "WITH GROUP_TABLE AS (\n    SELECT ADG.ID AS GROUP_ID, ADGM.USER_ID, ADG.DISPLAYNAME FROM \"RAW_PROD\".\"CES_ADF\".\"AD_GROUPS\" AS ADG\n    LEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_GROUP_MEMBERS\" AS ADGM\n      ON ADG.ID = ADGM.GROUP_ID\n    WHERE ADG.DISPLAYNAME LIKE 'Power BI - COEX%'\n)\n,COEX AS (\n  SELECT * FROM \"COEX_PROD\".\"COEX_AGILOFT\".\"AG_COEX_EMPLOYEE_SECURITY_MAPPING\" COEX\n  QUALIFY row_number() OVER (PARTITION BY COEX_LOGIN_ID, AD_GROUP  ORDER BY DATE_UPDATED DESC) = 1\n)\nSELECT\n    AD.ID AS USER_ID\n    ,COEX_LOGIN_ID AS LOGIN_ID\n    ,CASE WHEN SUM(COEX.ACTIVE) >= 1 THEN 'ACTIVATE USER' ELSE 'DEACTIVATE USER' END AS OPERATION\n    ,OBJECT_CONSTRUCT(\n      'accountEnabled', CASE WHEN SUM(COEX.ACTIVE) >= 1 THEN TRUE ELSE FALSE END\n    ) AS API_BODY\nFROM COEX\nLEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_USERS\" AS AD\n  ON LOWER(COEX.COEX_LOGIN_ID) = LOWER(AD.MAIL)\nLEFT JOIN GROUP_TABLE AS GT\n  ON COEX.AD_GROUP = GT.DISPLAYNAME\nWHERE COEX.DATE_UPDATED >= DATEADD(DAY ,-1,  CURRENT_DATE())\n  AND AD.ID IS NOT NULL\n  AND GROUP_ID IS NOT NULL\nGROUP BY AD.ID, LOGIN_ID",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "If there are users to deactivate",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Check if any users to deactivate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Get current time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@and(greater(activity('Check if any users to deactivate').output.resultSetCount,0),\nand(greaterOrEquals(int(variables('current_time')),12)\n,lessOrEquals(int(variables('current_time')),2)))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Execute AD_update_user_status",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_update_user_status_coex_int",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get current time",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "If there are users to remove",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "current_time",
+					"value": {
+						"value": "@substring(convertTimeZone(pipeline().TriggerTime,'UTC','AUS Eastern Standard Time'),11,2)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Update CES AD if there was addition or removal",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "If there are users to deactivate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@or(greater(activity('Check if any new users to add').output.resultSetCount, 0), greater(activity('Check if any users to remove').output.resultSetCount, 0))\n",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "AD_CES_group_members_extract",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_CES_group_members_extract",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						},
+						{
+							"name": "Scheduler_CES_AD_extracts",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "CES_AD_extracts_workflow",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"current_time": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "AD/COEX_Internal/wf"
+		},
+		"annotations": []
+	}
+}

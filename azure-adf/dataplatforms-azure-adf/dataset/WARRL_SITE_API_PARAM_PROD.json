@@ -1,0 +1,30 @@
+{
+	"name": "WARRL_SITE_API_PARAM_PROD",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SwaggerUI_SITE",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"api_key": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "WARRRL"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": "sites?polygon=true",
+			"requestMethod": "GET",
+			"additionalHeaders": {
+				"accept": "application/json",
+				"key": {
+					"value": "@{dataset().api_key}",
+					"type": "Expression"
+				}
+			}
+		}
+	}
+}

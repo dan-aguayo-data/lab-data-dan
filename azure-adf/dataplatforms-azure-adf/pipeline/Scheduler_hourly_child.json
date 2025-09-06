@@ -1,0 +1,119 @@
+{
+	"name": "Scheduler_hourly_child",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get current time",
+				"description": "",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "current_time_full_refresh_dbt",
+					"value": {
+						"value": "@substring(convertTimeZone(pipeline().TriggerTime,'UTC','AUS Eastern Standard Time'),11,2)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "If Full refresh dbt",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get current time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(int(variables('current_time_full_refresh_dbt')), 0)\n",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "DBT_scheduler_hourly",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Scheduler_hourly_grandchild_fr",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "DBT_scheduler_full_refresh",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "DBT_run_Common_daily_full_refresh",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						},
+						{
+							"name": "PBI_refresh_datasets_hourly",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "DBT_scheduler_full_refresh",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "PBI_refresh_datasets_hourly",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"TargetWorkspace": {
+										"value": "@pipeline().globalParameters.P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_DEV",
+										"type": "Expression"
+									},
+									"PipelineReference": "Scheduler_CES_hourly"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"current_time_full_refresh_dbt": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "DBT_PBI_FLOWS"
+		},
+		"annotations": []
+	}
+}

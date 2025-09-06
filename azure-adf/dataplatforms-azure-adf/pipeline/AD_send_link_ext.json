@@ -1,0 +1,222 @@
+{
+	"name": "AD_send_link_ext",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get JSON Payload",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "  WITH NEW_DATA AS (\n  SELECT DISTINCT \n  AD.ID AS USER_ID\n  ,COEX.LOGIN_ID \n  ,FULL_NAME\n  ,CONCAT('https://graph.microsoft.com/v1.0/directoryObjects/', AD.ID) AS USER_LINK\n  FROM @{pipeline().parameters.TABLE_USER_HEADER} COEX\n  LEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_USERS\" AS AD\n  ON lower(COEX.LOGIN_ID) = lower(AD.MAIL)\n  LEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_GROUP_MEMBERS\" AS ADG\n  ON AD.ID = ADG.USER_ID\n  WHERE \n    COEX.ACTIVE = 1\n    AND lower(COEX.LOGIN_ID) NOT IN (SELECT DISTINCT lower(MAIL) FROM RAW_PROD.CES_ADF.AD_GROUP_MEMBERS ADG WHERE GROUP_ID = '3b8e9bda-66bd-49a9-979e-5fc53c61cc94' AND MAIL IS NOT NULL )\n    AND AD.EXTERNALUSERSTATE = 'Accepted'\n)\nSELECT \nUSER_ID\n,LOGIN_ID\n,'SEND_LINK' AS OPERATION\n,OBJECT_CONSTRUCT (\n  'message','<p>Hi '||FULL_NAME||',<br>\\nPlease find attached the link <a href=\\\"https://app.powerbi.com/links/4R3DAi-vXK?ctid=abf0de66-3ab3-4ea3-b35e-502502be1261&amp;pbi_source=linkShare\\\">here</a>. Feel free to reach out to us at abc@coexservices.com.au if you encounter any difficulties.<br>\\n<br>\\nRegards,<br>\\n<br>\\n<img src=\\\"https://containerexchange.com.au/wp-content/uploads/2023/07/logo_cotainer-exchange.png\\\" style=\\\"width:50px;height:60px;\\\"/><br>\\n</p>','receiver',LOGIN_ID,'context','EXTERNAL','name',FULL_NAME\n) as api_body\nFROM NEW_DATA",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Set operation",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set Pipeline Name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get JSON Payload').output.resultSets[0].rows",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Set User Email",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "user_email",
+								"value": {
+									"value": "@item().LOGIN_ID",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Execute AD_audit_log",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Set User Email",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Send email",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_audit_log",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"operation": {
+										"value": "@variables('operation')",
+										"type": "Expression"
+									},
+									"triggered_by": {
+										"value": "@variables('triggered_by')",
+										"type": "Expression"
+									},
+									"user_email": {
+										"value": "@variables('user_email')",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Send email",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "POST",
+								"url": {
+									"value": "@pipeline().globalParameters.lapp_ad_crp_ext_send_email_PARAM_DEV",
+									"type": "Expression"
+								},
+								"body": {
+									"value": "@item().API_BODY",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Set operation",
+				"description": "THIS FAILS WHEN THERE ARE NO VALUES IN THE ARRAY",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Get JSON Payload",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "operation",
+					"value": {
+						"value": "@activity('Get JSON Payload').output.resultSets[0].rows[0].OPERATION",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set Pipeline Name",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "triggered_by",
+					"value": {
+						"value": "@pipeline().Pipeline",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"TABLE_USER_HEADER": {
+				"type": "string",
+				"defaultValue": "RAW_DEV.TEST.COEX_EXT_ORG_SECURITY_MAPPING_HDR_TEST "
+			},
+			"COOLDOWN_DELETE": {
+				"type": "string",
+				"defaultValue": "7"
+			}
+		},
+		"variables": {
+			"operation": {
+				"type": "String",
+				"defaultValue": "INVITE"
+			},
+			"user_email": {
+				"type": "String"
+			},
+			"triggered_by": {
+				"type": "String"
+			},
+			"group_name": {
+				"type": "String"
+			},
+			"group_id": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "AD/COEX_External Partners"
+		},
+		"annotations": []
+	}
+}

@@ -1,0 +1,40 @@
+{
+	"name": "CES_tempo_blob_cost_tracker_labour_PARAM_PROD",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cestempoprod",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"project_id": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Tempo"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@{dataset().project_id}_@{formatDateTime(convertFromUtc(utcnow(),'AUS Eastern Standard Time'),'yyyyMMdd')}",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@{toLower(pipeline().parameters.API_Name)}/@{formatDateTime(convertFromUtc(utcnow(),'AUS Eastern Standard Time'),'yyyyMMdd')}-@{pipeline().RunId}",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "cestempoprod",
+					"type": "Expression"
+				}
+			},
+			"compression": {
+				"type": "gzip"
+			}
+		},
+		"schema": {}
+	}
+}

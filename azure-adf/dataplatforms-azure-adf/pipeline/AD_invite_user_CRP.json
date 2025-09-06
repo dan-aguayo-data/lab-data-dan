@@ -1,0 +1,242 @@
+{
+	"name": "AD_invite_user_CRP",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get JSON Payload",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "WITH NEW_DATA AS (\n  SELECT DISTINCT AD.ID AS USER_ID, CRP.FULL_NAME, CRP.LOGIN_ID as LOGIN_ID, CRP.FIRST_NAME, CRP.LAST_NAME\n  FROM (SELECT LOGIN_ID, FULL_NAME, FIRST_NAME, LAST_NAME,  MAX(ACTIVE) AS ACTIVE, MAX(LAST_MODIFIED_ON_UTC) AS LAST_MODIFIED_ON_UTC FROM @{pipeline().parameters.TABLE_USER_HEADER}  GROUP BY ALL ) CRP\n  LEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_USERS\" AS AD\n      ON lower(CRP.LOGIN_ID) = lower(AD.MAIL)\n  WHERE 1=1\n  AND CRP.ACTIVE = 1\n  AND CRP.LAST_MODIFIED_ON_UTC > (SELECT DATEADD(DAY, @{pipeline().parameters.DAYS_DATEADD_LASTRUN} ,LAST_RUN) AS LAST_RUN FROM CES_REF.ADF.COEX_CRP_PIPELINE_LAST_RUN) \n  AND AD.MAIL IS NULL\n)\nSELECT \nUSER_ID\n,LOGIN_ID\n,'INVITE' AS OPERATION\n,OBJECT_CONSTRUCT (\n  'invitedUserDisplayName', FULL_NAME,\n  'invitedUserEmailAddress', LOGIN_ID,\n  'firstName', FIRST_NAME,\n  'lastName', LAST_NAME,\n  'invitedUserMessageInfo', OBJECT_CONSTRUCT (\n    'ccRecipients', [OBJECT_CONSTRUCT (\n      'emailAddress', OBJECT_CONSTRUCT (\n        'address', LOGIN_ID,\n        'name', FIRST_NAME\n      ))],\n    'customizedMessageBody', '\n    Container Exchange Pty Ltd would like to invite you to join\n    our Power BI reporting suite so you can view your Operator\n    Analytics reporting. \n    \n    Simply accept the invite below and follow the process\n    provided in the Operator Hub [https://app.powerbi.com/] or by\n    your Network Lead to get you started!  \n    \n    If you have any questions, please reach out to your Network\n    Lead or contact 13 42 42 for technical support.\n'\n  ),\n  'sendInvitationMessage', True,\n  'inviteRedirectUrl', 'https://containerexchange.com.au/',\n  'status', 'PendingAcceptance',\n  'invitedUserType', 'Guest'\n) as api_body\nFROM NEW_DATA",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Set json payload",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set Pipeline Name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get JSON Payload').output.resultSets[0].rows",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Set User Email",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "user_email",
+								"value": {
+									"value": "@item().LOGIN_ID",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Execute AD_audit_log",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Set User Email",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Send User Invite Email",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_audit_log",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"operation": {
+										"value": "SEND_INVITE",
+										"type": "Expression"
+									},
+									"triggered_by": {
+										"value": "@variables('triggered_by')",
+										"type": "Expression"
+									},
+									"user_email": {
+										"value": "@variables('user_email')",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Send User Invite Email",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "POST",
+								"headers": {
+									"Content-Type": "application/json"
+								},
+								"url": "https://graph.microsoft.com/v1.0/invitations/",
+								"body": {
+									"value": "@item().API_BODY",
+									"type": "Expression"
+								},
+								"authentication": {
+									"resource": "https://graph.microsoft.com",
+									"credential": {
+										"referenceName": "ADF-AD-INTEGRATION",
+										"type": "CredentialReference"
+									},
+									"userTenant": "abf0de66-3ab3-4ea3-b35e-502502be1261",
+									"username": "2118d493-c18b-44eb-8f35-adc880193c22",
+									"password": {
+										"type": "AzureKeyVaultSecret",
+										"store": {
+											"referenceName": "CES_ADF_KEY_VAULT",
+											"type": "LinkedServiceReference"
+										},
+										"secretName": "ADF-AD-Integration"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Set json payload",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Get JSON Payload",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "operation",
+					"value": {
+						"value": "@activity('Get JSON Payload').output.resultSets[0].rows[0].OPERATION",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set Pipeline Name",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "triggered_by",
+					"value": {
+						"value": "@pipeline().Pipeline",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"TABLE_USER_HEADER": {
+				"type": "string",
+				"defaultValue": "RAW_DEV.TEST.COEX_CRP_ORG_SECURITY_MAPPING_HDR_TEST"
+			},
+			"DELETE_COOLDOWN": {
+				"type": "string",
+				"defaultValue": "7"
+			},
+			"DAYS_DATEADD_LASTRUN": {
+				"type": "string",
+				"defaultValue": "0"
+			}
+		},
+		"variables": {
+			"operation": {
+				"type": "String",
+				"defaultValue": "INVITE"
+			},
+			"user_email": {
+				"type": "String"
+			},
+			"triggered_by": {
+				"type": "String"
+			},
+			"group_name": {
+				"type": "String"
+			},
+			"group_id": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "AD/COEX_External CRP"
+		},
+		"annotations": []
+	}
+}

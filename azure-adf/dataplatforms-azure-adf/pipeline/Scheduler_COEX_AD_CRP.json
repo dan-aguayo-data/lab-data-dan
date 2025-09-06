@@ -1,0 +1,50 @@
+{
+	"name": "Scheduler_COEX_AD_CRP",
+	"properties": {
+		"activities": [
+			{
+				"name": "COEX_AD_CRP_workflow",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "COEX_AD_CRP_workflow",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "COEX_AD_CRP_workflow",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "Workflows"
+		},
+		"annotations": []
+	}
+}

@@ -1,0 +1,31 @@
+{
+	"name": "SwaggerUI_DEVICE",
+	"properties": {
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://capture.matter.city/api/v1/sites/101/devices?levels=true",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous",
+			"authHeaders": {
+				"accept": {
+					"type": "AzureKeyVaultSecret",
+					"store": {
+						"referenceName": "CES_ADF_KEY_VAULT",
+						"type": "LinkedServiceReference"
+					},
+					"secretName": "ADF-API-WARRRL-MATTER-ACCPET-TYPE-PROD"
+				},
+				"key": {
+					"type": "AzureKeyVaultSecret",
+					"store": {
+						"referenceName": "CES_ADF_KEY_VAULT",
+						"type": "LinkedServiceReference"
+					},
+					"secretName": "ADF-WARRRL-MATTER-API-SECRET"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
+}

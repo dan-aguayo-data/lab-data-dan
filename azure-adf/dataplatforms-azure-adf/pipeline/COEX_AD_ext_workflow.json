@@ -1,0 +1,458 @@
+{
+	"name": "COEX_AD_ext_workflow",
+	"properties": {
+		"activities": [
+			{
+				"name": "Check if any new data",
+				"description": "DO 0 IN PARAMETER INVITE_DAYS_SUBSTRACT_LAST_RUN TO USE PIPELINE LAST RUN, ADD -X TO GO BACK FROM THAT DATE AS MANY DAYS AS NEEDED",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "SELECT DISTINCT AD.ID AS USER_ID, FULL_NAME, LOGIN_ID \n  FROM @{pipeline().parameters.TABLE_USER_HEADER} AS COEX\n  LEFT JOIN RAW_PROD.CES_ADF.AD_USERS AS AD\n      ON lower(COEX.LOGIN_ID) = lower(AD.MAIL)\n  WHERE AD.MAIL IS NULL\n  AND COEX.ACTIVE = 1\n  AND  COEX.LOGIN_ID NOT IN (SELECT \"user_email\" FROM \"CES_REF\".\"ADF\".\"AD_AUDIT_LOG\" L where \"operation\" in ('INVITE','SEND_INVITE') )\n  AND COEX.DATE_UPDATED > (SELECT LAST_RUN FROM CES_REF.ADF.COEX_EXT_PIPELINE_LAST_RUN)",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "IF_NEW_USERS_TO_INVITE",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Check if any new data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(activity('Check if any new data').output.resultSetCount,0)",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "AD_invite_user",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_invite_user_ext",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"TABLE_USER_HEADER": {
+										"value": "@pipeline().parameters.TABLE_USER_HEADER",
+										"type": "Expression"
+									},
+									"COOLDOWN_DELETE": {
+										"value": "@pipeline().parameters.DELETE_COOL_DOWN",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Check if any new users to add",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "IF_NEW_USERS_TO_INVITE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "SELECT DISTINCT AD.ID AS USER_ID\n    ,CONCAT('https://graph.microsoft.com/v1.0/directoryObjects/', AD.ID) AS USER_LINK\n  FROM @{pipeline().parameters.TABLE_USER_HEADER} COEX\n  LEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_USERS\" AS AD\n    ON lower(COEX.LOGIN_ID) = lower(AD.MAIL)\n  LEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_GROUP_MEMBERS\" AS ADG\n    ON AD.ID = ADG.USER_ID\n  WHERE\n     COEX.ACTIVE = 1\n    AND lower(COEX.LOGIN_ID) NOT IN (SELECT DISTINCT lower(MAIL) FROM RAW_PROD.CES_ADF.AD_GROUP_MEMBERS ADG WHERE GROUP_ID = '3b8e9bda-66bd-49a9-979e-5fc53c61cc94' AND MAIL IS NOT NULL )\n    AND AD.EXTERNALUSERSTATE = 'Accepted'",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "IF_NEW_USERS_TO_ADD",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Check if any new users to add",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@not(equals(activity('Check if any new users to add').output.resultSetCount,0))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Execute AD_group_add_users",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_group_add_users_ext",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": false,
+								"parameters": {
+									"TABLE_USER_HEADER": {
+										"value": "@pipeline().parameters.TABLE_USER_HEADER",
+										"type": "Expression"
+									},
+									"COOLDOWN_DELETE": {
+										"value": "@pipeline().parameters.DELETE_COOL_DOWN",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "AD_send_link",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Execute AD_group_add_users",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_send_link_ext",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"TABLE_USER_HEADER": {
+										"value": "@pipeline().parameters.TABLE_USER_HEADER",
+										"type": "Expression"
+									},
+									"COOLDOWN_DELETE": {
+										"value": "@pipeline().parameters.DELETE_COOL_DOWN",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Check if any users to remove",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "IF_NEW_USERS_TO_ADD",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "SELECT DISTINCT\nAD.ID AS USER_ID\nFROM @{pipeline().parameters.TABLE_USER_HEADER} COEX\nLEFT JOIN RAW_PROD.CES_ADF.AD_USERS AS AD\nON lower(COEX.LOGIN_ID) = lower(AD.MAIL)\nLEFT JOIN RAW_PROD.CES_ADF.AD_GROUP_MEMBERS AS ADG\nON AD.ID = ADG.USER_ID\nWHERE \nDATEDIFF(DAY,COEX.DATE_UPDATED,CURRENT_TIMESTAMP()) > @{pipeline().parameters.DELETE_COOL_DOWN}\nAND COEX.ACTIVE != 1\nAND AD.MAIL IS NOT NULL\nAND ADG.GROUP_ID = '3b8e9bda-66bd-49a9-979e-5fc53c61cc94'",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "IF_USERS_TO_REMOVE",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Check if any users to remove",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(activity('Check if any users to remove').output.resultSetCount,0)",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Execute AD_group_remove_users_copy1",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_group_remove_users_ext",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"TABLE_USER_HEADER": {
+										"value": "@pipeline().parameters.TABLE_USER_HEADER",
+										"type": "Expression"
+									},
+									"COOLDOWN_DELETE": {
+										"value": "@pipeline().parameters.DELETE_COOL_DOWN",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Check if any users to update",
+				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "IF_USERS_TO_REMOVE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "SELECT DISTINCT\n    AD.ID AS USER_ID\n    ,LOGIN_ID\n    ,CASE WHEN COEX.ACTIVE = 1 THEN 'ACTIVATE USER' ELSE 'DEACTIVATE USER' END AS OPERATION\n    ,OBJECT_CONSTRUCT(\n      'accountEnabled', CASE WHEN COEX.ACTIVE = 1 THEN TRUE ELSE FALSE END\n    ) AS API_BODY\nFROM COEX_DEV.COEX_AGILOFT.AG_PARTNER_SECURITY_MAPPING_TESTING COEX\nLEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_USERS\" AS AD\n    ON lower(COEX.LOGIN_ID) = lower(AD.MAIL)\nWHERE COEX.DATE_UPDATED >= DATEADD(DAY ,-7,  CURRENT_DATE())",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "IF_USERS_TO_UPDATE",
+				"type": "IfCondition",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Check if any users to update",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Get current time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@and(greater(activity('Check if any users to update').output.resultSetCount,0),\nand(greaterOrEquals(int(variables('current_time')),12)\n,lessOrEquals(int(variables('current_time')),2)))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Execute AD_update_user_status_copy1_copy1",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_update_user_status_ext",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"TABLE_USER_HEADER": {
+										"value": "@pipeline().parameters.TABLE_USER_HEADER",
+										"type": "Expression"
+									},
+									"COOLDOWN_DELETE": {
+										"value": "@pipeline().parameters.DELETE_COOL_DOWN",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get current time",
+				"type": "SetVariable",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "IF_USERS_TO_REMOVE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "current_time",
+					"value": {
+						"value": "@substring(convertTimeZone(pipeline().TriggerTime,'UTC','AUS Eastern Standard Time'),11,2)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Update last run timestamp",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "IF_USERS_TO_UPDATE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "UPDATE CES_REF.ADF.COEX_EXT_PIPELINE_LAST_RUN\nSET LAST_RUN = current_timestamp"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"TABLE_USER_HEADER": {
+				"type": "string",
+				"defaultValue": "RAW_DEV.TEST.COEX_EXT_ORG_SECURITY_MAPPING_HDR_TEST "
+			},
+			"DELETE_COOL_DOWN": {
+				"type": "int",
+				"defaultValue": 0
+			},
+			"INVITE_DAYS_SUBSTRACT_LAST_RUN": {
+				"type": "int",
+				"defaultValue": 0
+			}
+		},
+		"variables": {
+			"current_time": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "AD/COEX_External Partners/wf"
+		},
+		"annotations": []
+	}
+}

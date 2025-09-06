@@ -1,0 +1,156 @@
+{
+	"name": "Tempo_team_members",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 1,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"headers": {
+						"Authorization": {
+							"value": "Bearer @{variables('Access_token')}",
+							"type": "Expression"
+						}
+					},
+					"url": "https://api.tempo.io/4/teams"
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Web1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Web1').output.results",
+						"type": "Expression"
+					},
+					"batchCount": 1,
+					"activities": [
+						{
+							"name": "Set API url",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "API_URL",
+								"value": {
+									"value": "@replace(item().members.self,'https://api.tempo.io','')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Copy data into mainblob",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Set API url",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "GET",
+									"paginationRules": {
+										"AbsoluteUrl": "$.metadata.next"
+									}
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Tempo_api_lvar_PARAM_PROD",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "CES_tempo_blob_team_members_PARAM_DEV",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"API_Name": {
+				"type": "string",
+				"defaultValue": "TEAM_MEMBERS"
+			}
+		},
+		"variables": {
+			"Access_token": {
+				"type": "String",
+				"defaultValue": "s4N39S2ciSz5tMOOVOM4wjWKoPiK6o-us"
+			},
+			"API_URL": {
+				"type": "String"
+			},
+			"run_count": {
+				"type": "String"
+			},
+			"test": {
+				"type": "String"
+			},
+			"test_2": {
+				"type": "String"
+			},
+			"Payload": {
+				"type": "Array"
+			},
+			"Payload_String": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Tempo"
+		},
+		"annotations": []
+	}
+}

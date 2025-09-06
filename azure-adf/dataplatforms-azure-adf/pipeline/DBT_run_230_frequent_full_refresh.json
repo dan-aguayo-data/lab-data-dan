@@ -1,0 +1,90 @@
+{
+	"name": "DBT_run_230_frequent_full_refresh",
+	"properties": {
+		"activities": [
+			{
+				"name": "DBT_FULL_COLLECTIONS_RUN",
+				"description": "",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "DBT_RAW_RUN_FREQUENT_COLLECTIONS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DBT_GENERIC_RUN",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"dbt_job_id": {
+							"value": "@pipeline().globalParameters.P_DBT_JOBID_COMMON_FREQFULLREFRESH_PARAM_DEV",
+							"type": "Expression"
+						},
+						"dbt_account_id": {
+							"value": "@pipeline().globalParameters.dbt_account_id",
+							"type": "Expression"
+						},
+						"key_vault_name": {
+							"value": "@pipeline().globalParameters.Key_Vault_Name",
+							"type": "Expression"
+						},
+						"dbt_service_token_name": {
+							"value": "@pipeline().globalParameters.dbt_service_token_name",
+							"type": "Expression"
+						},
+						"reference_name": "Common Prod Full Refresh Collections"
+					}
+				}
+			},
+			{
+				"name": "DBT_RAW_RUN_FREQUENT_COLLECTIONS",
+				"description": "Added 03/02/2025 to avoid COLLECTIONS error based on 2 hr delta specified in the dbt model",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DBT_GENERIC_RUN_FREQUENT",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"dbt_job_id": {
+							"value": "@pipeline().globalParameters.P_DBT_JOBID_RAW_FREQUENT_PARAM_DEV",
+							"type": "Expression"
+						},
+						"dbt_account_id": {
+							"value": "@pipeline().globalParameters.dbt_account_id",
+							"type": "Expression"
+						},
+						"key_vault_name": {
+							"value": "@pipeline().globalParameters.Key_Vault_Name",
+							"type": "Expression"
+						},
+						"dbt_service_token_name": {
+							"value": "@pipeline().globalParameters.dbt_service_token_name",
+							"type": "Expression"
+						},
+						"reference_name": "Raw Prod Run Frequent"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "DBT_PBI_FLOWS/DBT"
+		},
+		"annotations": []
+	}
+}

@@ -1,0 +1,222 @@
+{
+	"name": "Scheduler_CES_Paypal",
+	"properties": {
+		"activities": [
+			{
+				"name": "SelectScheme",
+				"type": "Switch",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"on": {
+						"value": "@pipeline().parameters.SchemeName",
+						"type": "Expression"
+					},
+					"cases": [
+						{
+							"value": "VICRETURN",
+							"activities": [
+								{
+									"name": "Paypal_dbt_run_copy1",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Paypal_VR_daily_report_filter_child",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Paypal_all_dbt_run",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true
+									}
+								},
+								{
+									"name": "Paypal_VR_daily_report_filter_child",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "VR_Paypal_VR_daily_report_filter",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"ReportName": {
+												"value": "@pipeline().parameters.ReportName",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						},
+						{
+							"value": "WARRRL",
+							"activities": [
+								{
+									"name": "WA_Paypal_WA_daily_report_filter_child",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "WA_Paypal_WA_daily_report_filter",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"ReportName": {
+												"value": "@pipeline().parameters.ReportName",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Paypal_all_dbt_run_child",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "WA_Paypal_WA_daily_report_filter_child",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Paypal_all_dbt_run",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true
+									}
+								}
+							]
+						},
+						{
+							"value": "COEX",
+							"activities": [
+								{
+									"name": "COEX_Paypal_daily_report_filter_child",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "COEX_Paypal_daily_report_filter",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"ReportName": {
+												"value": "@pipeline().parameters.ReportName",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Paypal_all_dbt_run_child_COEX",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "COEX_Paypal_daily_report_filter_child",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Paypal_all_dbt_run",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SelectScheme",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"pipelineName": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"pipelineTriggerName": {
+							"value": "@pipeline().TriggerName",
+							"type": "Expression"
+						},
+						"pipelineTriggerTime": {
+							"value": "@pipeline().TriggerTime",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"SchemeName": {
+				"type": "string",
+				"defaultValue": "VICRETURN"
+			},
+			"ReportName": {
+				"type": "string",
+				"defaultValue": "STL"
+			}
+		},
+		"folder": {
+			"name": "Workflows"
+		},
+		"annotations": []
+	}
+}

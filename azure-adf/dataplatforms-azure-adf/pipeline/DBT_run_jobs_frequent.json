@@ -1,0 +1,99 @@
+{
+	"name": "DBT_run_jobs_frequent",
+	"properties": {
+		"activities": [
+			{
+				"name": "DBT_RAW_RUN_FREQUENT",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DBT_GENERIC_RUN_FREQUENT",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"dbt_job_id": {
+							"value": "@pipeline().globalParameters.P_DBT_JOBID_RAW_FREQUENT_PARAM_DEV",
+							"type": "Expression"
+						},
+						"dbt_account_id": {
+							"value": "@pipeline().globalParameters.dbt_account_id",
+							"type": "Expression"
+						},
+						"key_vault_name": {
+							"value": "@pipeline().globalParameters.Key_Vault_Name",
+							"type": "Expression"
+						},
+						"dbt_service_token_name": {
+							"value": "@pipeline().globalParameters.dbt_service_token_name",
+							"type": "Expression"
+						},
+						"reference_name": "Raw Prod Run Frequent"
+					}
+				}
+			},
+			{
+				"name": "DBT_COMMON_RUN_FREQUENT_copy1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "DBT_RAW_RUN_FREQUENT",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DBT_GENERIC_RUN_FREQUENT",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"dbt_job_id": {
+							"value": "@pipeline().globalParameters.P_DBT_JOBID_COMMON_FREQUENT_PARAM_DEV",
+							"type": "Expression"
+						},
+						"dbt_account_id": {
+							"value": "@pipeline().globalParameters.dbt_account_id",
+							"type": "Expression"
+						},
+						"key_vault_name": {
+							"value": "@pipeline().globalParameters.Key_Vault_Name",
+							"type": "Expression"
+						},
+						"dbt_service_token_name": {
+							"value": "@pipeline().globalParameters.dbt_service_token_name",
+							"type": "Expression"
+						},
+						"reference_name": "Common Prod Run Frequent"
+					}
+				}
+			}
+		],
+		"variables": {
+			"account_id": {
+				"type": "String"
+			},
+			"run_id": {
+				"type": "String"
+			},
+			"run_complete": {
+				"type": "Boolean"
+			}
+		},
+		"folder": {
+			"name": "DBT_PBI_FLOWS/DBT"
+		},
+		"annotations": []
+	}
+}

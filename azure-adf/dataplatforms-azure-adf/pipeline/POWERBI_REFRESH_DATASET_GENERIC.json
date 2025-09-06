@@ -1,0 +1,53 @@
+{
+	"name": "POWERBI_REFRESH_DATASET_GENERIC",
+	"properties": {
+		"description": "Generic Pipeline to refresh Power BI by specifying DatasetID and WorkspaceID",
+		"activities": [
+			{
+				"name": "REFRESH_POWERBI_GENERIC",
+				"description": "Generic Web Activity to trigger Logic App that refreshes Power BI based on a Dataset ID and Workspace ID. ",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.00:10:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": {
+						"value": "@pipeline().globalParameters.lapp_generic_refresh_pbi_PARAM_DEV",
+						"type": "Expression"
+					},
+					"body": {
+						"value": "{\n    \"DatasetID\": \"@{pipeline().parameters.DatasetID}\",\n    \"WorkspaceID\": \"@{pipeline().parameters.WorkspaceID}\",\n    \"NameRef\": \"@{pipeline().parameters.NameReference}\",\n    \"PipelineRef\": \"@{pipeline().parameters.PipelineReference}\"\n}",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"WorkspaceID": {
+				"type": "string",
+				"defaultValue": "08212b56-9593-4d96-a735-a0eb9577192e"
+			},
+			"DatasetID": {
+				"type": "string",
+				"defaultValue": "abe809cf-be3b-4588-97c4-b7d99dbf23fc"
+			},
+			"NameReference": {
+				"type": "string"
+			},
+			"PipelineReference": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Generic"
+		},
+		"annotations": []
+	}
+}

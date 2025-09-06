@@ -1,0 +1,562 @@
+{
+	"name": "Tempo_cost_tracker_labour",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get first 100",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "token",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 1,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"headers": {
+						"Authorization": {
+							"value": "@variables('bearer_token')",
+							"type": "Expression"
+						}
+					},
+					"url": {
+						"value": "https://api.tempo.io/cost-tracker/1/projects?offset=0&limit=100",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get first 100",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get first 100').output.results",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Set project_id",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Project_id",
+								"value": {
+									"value": "@item().id",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Extract Data into Blob",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Set api_url",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "GET",
+									"paginationRules": {
+										"AbsoluteUrl": "$.metadata.next"
+									}
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings",
+										"copyBehavior": "FlattenHierarchy"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings",
+										"filePattern": "arrayOfObjects"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Tempo_api_lvar_PARAM_PROD",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "CES_tempo_blob_cost_tracker_labour_PARAM_DEV",
+									"type": "DatasetReference",
+									"parameters": {
+										"project_id": {
+											"value": "@variables('Project_id')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Set api_url",
+							"description": "https://apidocs.tempo.io/cost-tracker/#tag/Cost/operation/getExpensesActuals",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Set project_id",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "API_url",
+								"value": {
+									"value": "https://api.tempo.io/cost-tracker/1/projects/@{variables('Project_id')}/actuals/labor?limit=500",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get 100 to 200",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "token",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 1,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"headers": {
+						"Authorization": {
+							"value": "@variables('bearer_token')",
+							"type": "Expression"
+						}
+					},
+					"url": {
+						"value": "https://api.tempo.io/cost-tracker/1/projects?offset=101&limit=100",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ForEach_2",
+				"description": "Note: \nin case it is neeeded due to nulls    \"value\": \"@if(greater(length(activity('Get project list').output.results), 0), activity('Get project list').output.results, json('[]'))\",",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get 100 to 200",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get 100 to 200').output.results",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Set project_id_2",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Project_id_2",
+								"value": {
+									"value": "@item().id",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Extract Data into Blob_2",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Set api_url_2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "GET",
+									"paginationRules": {
+										"AbsoluteUrl": "$.metadata.next"
+									}
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings",
+										"copyBehavior": "FlattenHierarchy"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings",
+										"filePattern": "arrayOfObjects"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Tempo_api_lvar_PARAM_PROD",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "CES_tempo_blob_cost_tracker_labour_PARAM_DEV",
+									"type": "DatasetReference",
+									"parameters": {
+										"project_id": {
+											"value": "@variables('Project_id_2')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Set api_url_2",
+							"description": "https://apidocs.tempo.io/cost-tracker/#tag/Cost/operation/getExpensesActuals",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Set project_id_2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "API_url",
+								"value": {
+									"value": "https://api.tempo.io/cost-tracker/1/projects/@{variables('Project_id_2')}/actuals/labor?limit=500",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get rest",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "token",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 1,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"headers": {
+						"Authorization": {
+							"value": "@variables('bearer_token')",
+							"type": "Expression"
+						}
+					},
+					"url": {
+						"value": "https://api.tempo.io/cost-tracker/1/projects?offset=201&limit=1000",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ForEach_3",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get rest",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get rest').output.results",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Set project_id_3",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Project_id_3",
+								"value": {
+									"value": "@item().id",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Extract Data into Blob_3",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Set api_url_3",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "GET",
+									"paginationRules": {
+										"AbsoluteUrl": "$.metadata.next"
+									}
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings",
+										"copyBehavior": "FlattenHierarchy"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings",
+										"filePattern": "arrayOfObjects"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Tempo_api_lvar_PARAM_PROD",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "CES_tempo_blob_cost_tracker_labour_PARAM_DEV",
+									"type": "DatasetReference",
+									"parameters": {
+										"project_id": {
+											"value": "@variables('Project_id_3')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Set api_url_3",
+							"description": "https://apidocs.tempo.io/cost-tracker/#tag/Cost/operation/getExpensesActuals",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Set project_id_3",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "API_url",
+								"value": {
+									"value": "https://api.tempo.io/cost-tracker/1/projects/@{variables('Project_id_3')}/actuals/labor?limit=500",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Connect_to_tempo_key_vault",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": {
+						"value": "@pipeline().globalParameters.keyvault_tempo_bearer_token_link_PARAM_DEV",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
+					}
+				}
+			},
+			{
+				"name": "token",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Connect_to_tempo_key_vault",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "bearer_token",
+					"value": {
+						"value": "@activity('Connect_to_tempo_key_vault').output.value",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"concurrency": 4,
+		"parameters": {
+			"API_URL": {
+				"type": "string",
+				"defaultValue": "/cost-tracker/1/projects"
+			},
+			"API_Name": {
+				"type": "string",
+				"defaultValue": "LABOUR_ACTUALS"
+			}
+		},
+		"variables": {
+			"Project_id": {
+				"type": "String"
+			},
+			"API_url": {
+				"type": "String"
+			},
+			"Project_id_2": {
+				"type": "String"
+			},
+			"Project_id_3": {
+				"type": "String"
+			},
+			"bearer_token": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Tempo"
+		},
+		"annotations": []
+	}
+}

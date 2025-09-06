@@ -1,0 +1,82 @@
+{
+	"name": "Tempo_permission_roles",
+	"properties": {
+		"activities": [
+			{
+				"name": "Extract Data into Blob",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 1,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"AbsoluteUrl": "$.metadata.next"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings",
+							"filePattern": "arrayOfObjects"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Tempo_api_pvar_PARAM_PROD",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CES_tempo_blob_PARAM_DEV",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"parameters": {
+			"API_Name": {
+				"type": "string",
+				"defaultValue": "PERMISSION_ROLES"
+			},
+			"API_URL": {
+				"type": "string",
+				"defaultValue": "/4/permission-roles?limit=1000"
+			}
+		},
+		"variables": {
+			"test": {
+				"type": "String"
+			},
+			"test_2": {
+				"type": "String"
+			},
+			"Payload": {
+				"type": "Array"
+			},
+			"Payload_String": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Tempo"
+		},
+		"annotations": []
+	}
+}

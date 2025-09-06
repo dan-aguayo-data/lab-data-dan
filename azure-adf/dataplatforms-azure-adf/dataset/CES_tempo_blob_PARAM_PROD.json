@@ -1,0 +1,35 @@
+{
+	"name": "CES_tempo_blob_PARAM_PROD",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cestempoprod",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Tempo"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@{pipeline().parameters.API_Name}_@{formatDateTime(convertFromUtc(utcnow(),'AUS Eastern Standard Time'),'yyyyMMddHHmmss')}",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@toLower(pipeline().parameters.API_Name)",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "cestempoprod",
+					"type": "Expression"
+				}
+			},
+			"compression": {
+				"type": "gzip"
+			}
+		},
+		"schema": {}
+	}
+}

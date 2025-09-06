@@ -1,0 +1,18 @@
+{
+	"name": "cesadfprod_matter_api",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"sasUri": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "CES_ADF_KEY_VAULT",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "ADF-BLOB-CESADF-SAS-WARRRLMATTERAPI-PROD"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
+}

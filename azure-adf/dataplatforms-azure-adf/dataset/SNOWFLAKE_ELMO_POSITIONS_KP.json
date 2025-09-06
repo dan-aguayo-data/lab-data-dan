@@ -1,0 +1,52 @@
+{
+	"name": "SNOWFLAKE_ELMO_POSITIONS_KP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SNOWFLAKE_ADF_CES_SEC_RAW_PROD",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Elmo"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "ID",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "TITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "PARENT",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "DELETED",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "POSITIONID",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "DESCRIPTION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "QUALIFICATIONS",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LANDED_DATETIME",
+				"type": "TIMESTAMP_NTZ"
+			}
+		],
+		"typeProperties": {
+			"schema": "CES_ELMO",
+			"table": "POSITIONS"
+		}
+	}
+}

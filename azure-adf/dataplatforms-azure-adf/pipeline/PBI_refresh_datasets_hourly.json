@@ -1,0 +1,339 @@
+{
+	"name": "PBI_refresh_datasets_hourly",
+	"properties": {
+		"activities": [
+			{
+				"name": "MasterData",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "POWERBI_REFRESH_DATASET_GENERIC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"WorkspaceID": {
+							"value": "@pipeline().globalParameters.P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_DEV",
+							"type": "Expression"
+						},
+						"DatasetID": {
+							"value": "@pipeline().globalParameters.P_PBI_DATASETID_CES_MASTERDATA_PARAM_DEV",
+							"type": "Expression"
+						},
+						"NameReference": "Master Data - PROD",
+						"PipelineReference": {
+							"value": "@pipeline().parameters.PipelineReference",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "MasterData-ReturnitVIC",
+				"description": "There is error in Dev dataset Data (Returnit VIC) - UAT as of 2025-05-07",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "POWERBI_REFRESH_DATASET_GENERIC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"WorkspaceID": {
+							"value": "@pipeline().globalParameters.P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_DEV",
+							"type": "Expression"
+						},
+						"DatasetID": {
+							"value": "@pipeline().globalParameters.P_PBI_DATASETID_CES_MASTERDATARETURNTIT_PARAM_DEV",
+							"type": "Expression"
+						},
+						"NameReference": "Master Data (Returnit VIC) - PROD",
+						"PipelineReference": {
+							"value": "@pipeline().parameters.PipelineReference",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "MasterData-VICReturn",
+				"description": "There is error in dataset Master Data (VICReturn) - UAT as of 2025-05-07",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "POWERBI_REFRESH_DATASET_GENERIC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"WorkspaceID": {
+							"value": "@pipeline().globalParameters.P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_DEV",
+							"type": "Expression"
+						},
+						"DatasetID": {
+							"value": "@pipeline().globalParameters.P_PBI_DATASETID_CES_MASTERDATAVIC_PARAM_DEV",
+							"type": "Expression"
+						},
+						"NameReference": "Master Data (VICReturn) - PROD",
+						"PipelineReference": {
+							"value": "@pipeline().parameters.PipelineReference",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "MasterData-ReturnitVIC-AUCTION",
+				"description": "Master Data (Returnit VIC) - UAT (AUCTION) dataset with error as of  2025-05-07",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "POWERBI_REFRESH_DATASET_GENERIC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"WorkspaceID": {
+							"value": "@pipeline().globalParameters.P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_DEV",
+							"type": "Expression"
+						},
+						"DatasetID": {
+							"value": "@pipeline().globalParameters.P_PBI_DATASETID_CES_MASTERDATA_AUCTION_RETURNIT_PARAM_DEV",
+							"type": "Expression"
+						},
+						"NameReference": "Master Data (Returnit VIC) - PROD (AUCTION)",
+						"PipelineReference": {
+							"value": "@pipeline().parameters.PipelineReference",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "MasterData-VICReturn-NOPClaim",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "POWERBI_REFRESH_DATASET_GENERIC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"WorkspaceID": {
+							"value": "@pipeline().globalParameters.P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_DEV",
+							"type": "Expression"
+						},
+						"DatasetID": {
+							"value": "@pipeline().globalParameters.P_PBI_DATASETID_CES_MASTERDATA_NOP_VIC_PARAM_DEV",
+							"type": "Expression"
+						},
+						"NameReference": "Master Data (VICReturn) - PROD (NOP Claim)",
+						"PipelineReference": {
+							"value": "@pipeline().parameters.PipelineReference",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Returnit-VIC-MasterData",
+				"description": "There is no DEVequivalent, so DEV it is referencing a dummy dataset that gives error  ERP Data - DEV\n\n",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "POWERBI_REFRESH_DATASET_GENERIC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"WorkspaceID": {
+							"value": "@pipeline().globalParameters.P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_DEV",
+							"type": "Expression"
+						},
+						"DatasetID": {
+							"value": "@pipeline().globalParameters.P_PBI_DATASETID_CES_RETURNITVIC_MASTERDATA_PARAM_DEV",
+							"type": "Expression"
+						},
+						"NameReference": "Returnit VIC Master Data - PROD",
+						"PipelineReference": {
+							"value": "@pipeline().parameters.PipelineReference",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "MasterData_Prod_Auction",
+				"description": "The dev dataset is failing as of 2025-05-07",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "POWERBI_REFRESH_DATASET_GENERIC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"WorkspaceID": {
+							"value": "@pipeline().globalParameters.P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_DEV",
+							"type": "Expression"
+						},
+						"DatasetID": {
+							"value": "@pipeline().globalParameters.P_PBI_DATASETID_CES_MASTERDATA_AUCTION_PARAM_DEV",
+							"type": "Expression"
+						},
+						"NameReference": "Master Data - PROD (AUCTION)",
+						"PipelineReference": {
+							"value": "@pipeline().parameters.PipelineReference",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Tas _data_PROD_FRS",
+				"description": "dev parameter points to Master Data (TAS) - UAT",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "POWERBI_REFRESH_DATASET_GENERIC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"WorkspaceID": {
+							"value": "@pipeline().globalParameters.P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_DEV",
+							"type": "Expression"
+						},
+						"DatasetID": {
+							"value": "@pipeline().globalParameters.P_PBI_DATASETID_TAS_FRS_PARAM_DEV",
+							"type": "Expression"
+						},
+						"NameReference": "TAS Data - PROD (FRS)",
+						"PipelineReference": {
+							"value": "@pipeline().parameters.PipelineReference",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Master Data - PROD CRP",
+				"description": "no dev dataset, so dev is pointing to the same as prod ef0a84bd-2460-4d67-908a-7ab232452ca4, causing a dev error\n",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "POWERBI_REFRESH_DATASET_GENERIC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"WorkspaceID": {
+							"value": "@pipeline().globalParameters.P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_DEV",
+							"type": "Expression"
+						},
+						"DatasetID": {
+							"value": "@pipeline().globalParameters.P_PBI_DATASETID_CES_MASTERDATA_CRP_PARAM_DEV",
+							"type": "Expression"
+						},
+						"NameReference": "Master Data - PROD (CRP)",
+						"PipelineReference": {
+							"value": "@pipeline().parameters.PipelineReference",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Master Data - PROD NOP_CLAIM",
+				"description": "No Dev equivalent so it will error here",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "POWERBI_REFRESH_DATASET_GENERIC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"WorkspaceID": {
+							"value": "@pipeline().globalParameters.P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_DEV",
+							"type": "Expression"
+						},
+						"DatasetID": {
+							"value": "@pipeline().globalParameters.P_PBI_DATASETID_CES_MASTERDATA_NOP_PARAM_DEV",
+							"type": "Expression"
+						},
+						"NameReference": "Master Data - PROD (NOP CLAIM)",
+						"PipelineReference": {
+							"value": "@pipeline().parameters.PipelineReference",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"TargetWorkspace": {
+				"type": "string",
+				"defaultValue": "ef85c0e9-4243-4056-9ad8-16aa8d885064"
+			},
+			"PipelineReference": {
+				"type": "string",
+				"defaultValue": "Scheduler_CES_hourly"
+			}
+		},
+		"folder": {
+			"name": "DBT_PBI_FLOWS/PBI/PBI Runs"
+		},
+		"annotations": []
+	}
+}

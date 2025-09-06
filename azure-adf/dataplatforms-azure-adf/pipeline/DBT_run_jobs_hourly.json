@@ -1,0 +1,101 @@
+{
+	"name": "DBT_run_jobs_hourly",
+	"properties": {
+		"activities": [
+			{
+				"name": "DBT_RAW_HOURLY_RUN",
+				"description": "",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DBT_GENERIC_RUN",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"dbt_job_id": {
+							"value": "@pipeline().globalParameters.P_DBT_JOBID_RAW_HOURLY_PARAM_DEV",
+							"type": "Expression"
+						},
+						"dbt_account_id": {
+							"value": "@pipeline().globalParameters.dbt_account_id",
+							"type": "Expression"
+						},
+						"key_vault_name": {
+							"value": "@pipeline().globalParameters.Key_Vault_Name",
+							"type": "Expression"
+						},
+						"dbt_service_token_name": {
+							"value": "@pipeline().globalParameters.dbt_service_token_name",
+							"type": "Expression"
+						},
+						"reference_name": "Raw Hourly Prod Run"
+					}
+				}
+			},
+			{
+				"name": "DBT_COMMON_HOURLY_RUN",
+				"description": "",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "DBT_RAW_HOURLY_RUN",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DBT_GENERIC_RUN",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"dbt_job_id": {
+							"value": "@pipeline().globalParameters.P_DBT_JOBID_COMMON_HOURLY_PARAM_DEV",
+							"type": "Expression"
+						},
+						"dbt_account_id": {
+							"value": "@pipeline().globalParameters.dbt_account_id",
+							"type": "Expression"
+						},
+						"key_vault_name": {
+							"value": "@pipeline().globalParameters.Key_Vault_Name",
+							"type": "Expression"
+						},
+						"dbt_service_token_name": {
+							"value": "@pipeline().globalParameters.dbt_service_token_name",
+							"type": "Expression"
+						},
+						"reference_name": "Common Hourly Prod Run"
+					}
+				}
+			}
+		],
+		"variables": {
+			"account_id": {
+				"type": "String"
+			},
+			"run_id": {
+				"type": "String"
+			},
+			"run_complete": {
+				"type": "Boolean"
+			}
+		},
+		"folder": {
+			"name": "DBT_PBI_FLOWS/DBT"
+		},
+		"annotations": []
+	}
+}

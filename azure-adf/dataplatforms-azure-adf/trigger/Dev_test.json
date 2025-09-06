@@ -1,0 +1,29 @@
+{
+	"name": "Dev_test",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "DBT_run_jobs_hourly",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2025-05-07T23:42:00",
+				"timeZone": "AUS Eastern Standard Time",
+				"schedule": {
+					"hours": [
+						4
+					]
+				}
+			}
+		}
+	}
+}

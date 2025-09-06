@@ -1,0 +1,22 @@
+{
+	"name": "Tempo_Allen",
+	"properties": {
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://api.tempo.io",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous",
+			"authHeaders": {
+				"Authorization": {
+					"type": "AzureKeyVaultSecret",
+					"store": {
+						"referenceName": "CES_ADF_KEY_VAULT",
+						"type": "LinkedServiceReference"
+					},
+					"secretName": "Tempo-Allen"
+				}
+			}
+		}
+	}
+}

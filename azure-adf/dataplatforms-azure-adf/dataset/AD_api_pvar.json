@@ -1,0 +1,21 @@
+{
+	"name": "AD_api_pvar",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CES_ADF_AD_Integration",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "AD"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@pipeline().parameters.API_URL",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	}
+}

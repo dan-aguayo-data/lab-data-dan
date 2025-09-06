@@ -1,0 +1,246 @@
+{
+	"name": "MATTER_API_DEVICES",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy into MATTER_DEVICES",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 3,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"additionalColumns": [
+							{
+								"name": "ADF_TIMESTAMP",
+								"value": {
+									"value": "@pipeline().TriggerTime",
+									"type": "Expression"
+								}
+							}
+						],
+						"httpRequestTimeout": "00:03:00",
+						"requestInterval": "00.00:00:00.500",
+						"requestMethod": "GET"
+					},
+					"sink": {
+						"type": "SnowflakeV2Sink",
+						"importSettings": {
+							"type": "SnowflakeImportCopyCommand"
+						}
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "cesadfprod_matter_api",
+							"type": "LinkedServiceReference"
+						},
+						"path": "ceswarrrlmatterapi"
+					},
+					"parallelCopies": 1,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "['device_id']"
+								},
+								"sink": {
+									"name": "DEVICE_ID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['device_system_name']"
+								},
+								"sink": {
+									"name": "DEVICE_SYSTEM_NAME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['device_custom_name']"
+								},
+								"sink": {
+									"name": "DEVICE_CUSTOM_NAME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['device_type']"
+								},
+								"sink": {
+									"name": "DEVICE_TYPE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['device_variant']"
+								},
+								"sink": {
+									"name": "DEVICE_VARIANT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['device_waste_type']"
+								},
+								"sink": {
+									"name": "DEVICE_WASTE_TYPE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['latitude']"
+								},
+								"sink": {
+									"name": "LATITUDE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['longitude']"
+								},
+								"sink": {
+									"name": "LONGITUDE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['install_timestamp']['formatted']"
+								},
+								"sink": {
+									"name": "FORMATTED_TIMESTAMP",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['install_timestamp']['timestamp']"
+								},
+								"sink": {
+									"name": "TIMESTAMP",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['level']['percentage_full']"
+								},
+								"sink": {
+									"name": "PERCENTAGE_FULL",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['level']['fill_level']['value']"
+								},
+								"sink": {
+									"name": "FILL_LEVEL_VALUE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['level']['fill_level']['unit']"
+								},
+								"sink": {
+									"name": "FILL_LEVEL_UNIT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['level']['temperature']['value']"
+								},
+								"sink": {
+									"name": "TEMPERATURE_VALUE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['level']['temperature']['unit']"
+								},
+								"sink": {
+									"name": "TEMPERATURE_UNIT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['level']['light_level']"
+								},
+								"sink": {
+									"name": "LIGHT_LEVEL",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['level']['timestamp']['formatted']"
+								},
+								"sink": {
+									"name": "LEVEL_FORMATTED_TIMESTAMP",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['level']['timestamp']['timestamp']"
+								},
+								"sink": {
+									"name": "LEVEL_TIMESTAMP",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['ADF_TIMESTAMP']"
+								},
+								"sink": {
+									"name": "ADF_TIMESTAMP",
+									"type": "DateTime"
+								}
+							}
+						],
+						"collectionReference": "$['data']",
+						"mapComplexValuesToString": true
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "WARRL_DEVICE_API_PARAM_PROD",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SNOWFLAKE_MATTERAPI_DEVICES_PARAM_DEV",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "WARRL/WARRL_MATTER_API"
+		},
+		"annotations": []
+	}
+}

@@ -1,0 +1,60 @@
+{
+	"name": "AD_audit_log",
+	"properties": {
+		"activities": [
+			{
+				"name": "Insert Audit data",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "INSERT INTO \"CES_REF\".\"ADF\".\"AD_AUDIT_LOG\"\nVALUES ('@{formatDateTime(convertTimeZone(utcnow(),'UTC','AUS Eastern Standard Time'),'yyyy-MM-dd HH:mm:ss')}', '@{pipeline().parameters.operation}', '@{pipeline().parameters.triggered_by}', '@{pipeline().parameters.user_id}', '@{pipeline().parameters.user_email}', '@{pipeline().parameters.group_id}', '@{pipeline().parameters.group_name}');",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"operation": {
+				"type": "string"
+			},
+			"triggered_by": {
+				"type": "string"
+			},
+			"user_id": {
+				"type": "string"
+			},
+			"user_email": {
+				"type": "string"
+			},
+			"group_id": {
+				"type": "string"
+			},
+			"group_name": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "AD"
+		},
+		"annotations": []
+	}
+}

@@ -1,0 +1,33 @@
+{
+	"name": "Prod_CES_dbt_FREQ_full_refresh_daily",
+	"properties": {
+		"description": "Mostly used for frequent common models, to avoid data loss in the 1-2 hrs incrementals",
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Scheduler_CES_dbt_230_full_refresh",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2024-01-22T10:19:00",
+				"timeZone": "AUS Eastern Standard Time",
+				"schedule": {
+					"minutes": [
+						30
+					],
+					"hours": [
+						2
+					]
+				}
+			}
+		}
+	}
+}

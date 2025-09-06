@@ -1,0 +1,446 @@
+{
+	"name": "COEX_AD_CRP_workflow",
+	"properties": {
+		"activities": [
+			{
+				"name": "IF_NEW_USER_SEND_INVITE",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Check if new user to invite",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(activity('Check if new user to invite').output.resultSetCount,0)",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Execute AD_invite_user_CRP_copy1",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Send_email pre-invite",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_invite_user_CRP",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"TABLE_USER_HEADER": {
+										"value": "@pipeline().parameters.TABLE_USER_HEADER",
+										"type": "Expression"
+									},
+									"DELETE_COOLDOWN": {
+										"value": "@pipeline().parameters.DELETE_COOLDOWN",
+										"type": "Expression"
+									},
+									"DAYS_DATEADD_LASTRUN": {
+										"value": "@pipeline().parameters.DAYS_DATEADD_LASTRUN",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Send_email pre-invite",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_send_pre_invite_message",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"TABLE_USER_HEADER": {
+										"value": "@pipeline().parameters.TABLE_USER_HEADER",
+										"type": "Expression"
+									},
+									"DELETE_COOLDOWN": {
+										"value": "@pipeline().parameters.DELETE_COOLDOWN",
+										"type": "Expression"
+									},
+									"DAYS_DATEADD_LASTRUN": {
+										"value": "@pipeline().parameters.DAYS_DATEADD_LASTRUN",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "IF_USER_TO_ADD_THEN_ADD_TO_AD_GROUP",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Check if user to add to AD group",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(activity('Check if user to add to AD group').output.resultSetCount,0)",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Execute AD_group_add_users_CRP",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_group_add_users_CRP",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"TABLE_USER_HEADER": {
+										"value": "@pipeline().parameters.TABLE_USER_HEADER",
+										"type": "Expression"
+									},
+									"DELETE_COOLDOWN": {
+										"value": "@pipeline().parameters.DELETE_COOLDOWN",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Check if user to add to AD group",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "IF_NEW_USER_SEND_INVITE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "SELECT DISTINCT CRP.LOGIN_ID,CRP.FULL_NAME,AD.ID\nFROM (SELECT LOGIN_ID, FULL_NAME, MAX(ACTIVE) AS ACTIVE, MAX(LAST_MODIFIED_ON_UTC) AS LAST_MODIFIED_ON_UTC FROM @{pipeline().parameters.TABLE_USER_HEADER}  GROUP BY ALL ) CRP\nLEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_USERS\" AS AD\nON lower(CRP.LOGIN_ID) = lower(AD.MAIL)\nLEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_GROUP_MEMBERS\" AS ADG\nON AD.ID = ADG.USER_ID\nWHERE \nCRP.ACTIVE = 1\nAND AD.EXTERNALUSERSTATE = 'Accepted'\nAND AD.ID IS NOT NULL\nAND lower(CRP.LOGIN_ID) NOT IN (SELECT DISTINCT lower(MAIL) AS MAIL FROM RAW_PROD.CES_ADF.AD_GROUP_MEMBERS ADG WHERE GROUP_ID = 'b3671d93-be47-4d38-bd09-fdabcd4f6a70' AND MAIL IS NOT NULL )",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Check if new user to invite",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "SELECT DISTINCT AD.ID AS USER_ID, CRP.FULL_NAME, CRP.LOGIN_ID, CRP.LAST_MODIFIED_ON_UTC\nFROM (SELECT LOGIN_ID, FULL_NAME, MAX(ACTIVE) AS ACTIVE, MAX(LAST_MODIFIED_ON_UTC) AS LAST_MODIFIED_ON_UTC FROM @{pipeline().parameters.TABLE_USER_HEADER} GROUP BY ALL ) CRP\nLEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_USERS\" AS AD\nON lower(CRP.LOGIN_ID) = lower(AD.MAIL)\nWHERE 1=1\nAND AD.ID IS NULL\nAND CRP.LOGIN_ID IS NOT NULL\nAND CRP.ACTIVE = 1\nAND CRP.LOGIN_ID NOT IN (SELECT \"user_email\" FROM \"CES_REF\".\"ADF\".\"AD_AUDIT_LOG\" L where \"operation\" in ('INVITE','SEND_INVITE') AND \"user_email\" IS NOT NULL )\nAND CRP.LAST_MODIFIED_ON_UTC > (SELECT DATEADD(DAY, @{pipeline().parameters.DAYS_DATEADD_LASTRUN} ,LAST_RUN) AS LAST_RUN FROM CES_REF.ADF.COEX_CRP_PIPELINE_LAST_RUN) ",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Check if any user to remove",
+				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "IF_USER_ON_LIST_SEND_INVITE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "SELECT DISTINCT\n    AD.USER_ID AS USER_ID\n    ,LOGIN_ID\n    ,'b3671d93-be47-4d38-bd09-fdabcd4f6a70' AS GROUP_ID\n    ,'Power BI - COEX External - Refund Point Operators' AS GROUP_NAME\n    ,'REMOVE' AS OPERATION\nFROM (SELECT LOGIN_ID,MAX(ACTIVE) AS ACTIVE,MAX(LAST_MODIFIED_ON_UTC) AS LAST_MODIFIED_ON_UTC FROM @{pipeline().parameters.TABLE_USER_HEADER}  GROUP BY ALL ) CRP\nLEFT JOIN (SELECT * FROM \"RAW_PROD\".\"CES_ADF\".\"AD_GROUP_MEMBERS\") AS AD\n    ON lower(CRP.LOGIN_ID) = lower(AD.MAIL)\nWHERE CRP.ACTIVE = 0\nAND AD.GROUP_ID = 'b3671d93-be47-4d38-bd09-fdabcd4f6a70'\nAND DATEDIFF(DAY,LAST_MODIFIED_ON_UTC,CURRENT_TIMESTAMP()) >= @{pipeline().parameters.DELETE_COOLDOWN} \n",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "IF_USERS_TO_REMOVE",
+				"type": "IfCondition",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Check if any user to remove",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(activity('Check if any user to remove').output.resultSetCount,0)",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "AD_group_remove_users_CRP",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_group_remove_users_CRP",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"TABLE_USER_HEADER": {
+										"value": "@pipeline().parameters.TABLE_USER_HEADER",
+										"type": "Expression"
+									},
+									"DELETE_COOLDOWN": {
+										"value": "@pipeline().parameters.DELETE_COOLDOWN",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Update last run timestamp",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "IF_USERS_TO_REMOVE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "UPDATE CES_REF.ADF.COEX_CRP_PIPELINE_LAST_RUN\nSET LAST_RUN = current_timestamp"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Check if user requires invite",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "IF_USER_TO_ADD_THEN_ADD_TO_AD_GROUP",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "\n\nWITH CRP_USERS_INVITATION_ACCEPTED AS (\nSELECT DISTINCT CRP.LOGIN_ID,CRP.FULL_NAME,AD.ID\nFROM \n(SELECT LOGIN_ID, FULL_NAME, MAX(ACTIVE) AS ACTIVE, MAX(LAST_MODIFIED_ON_UTC) AS LAST_MODIFIED_ON_UTC \nFROM @{pipeline().parameters.TABLE_USER_HEADER}  \nGROUP BY ALL ) CRP  \nLEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_USERS\" AS AD\nON lower(CRP.LOGIN_ID) = lower(AD.MAIL)\nLEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_GROUP_MEMBERS\" AS ADG\nON AD.ID = ADG.USER_ID\nWHERE \nCRP.ACTIVE = 1\nAND AD.EXTERNALUSERSTATE = 'Accepted'\nAND AD.ID IS NOT NULL\nAND CRP.LAST_MODIFIED_ON_UTC > (SELECT DATEADD(DAY, @{pipeline().parameters.DAYS_DATEADD_LASTRUN},LAST_RUN) AS LAST_RUN FROM CES_REF.ADF.COEX_CRP_PIPELINE_LAST_RUN)  \n), USERS_IN_AD_GROUP AS (\n\nSELECT DISTINCT ADG.MAIL AS LOGIN_ID \nFROM RAW_PROD.CES_ADF.AD_USERS AD\n  LEFT JOIN RAW_PROD.CES_ADF.AD_GROUP_MEMBERS AS ADG\n    ON AD.ID = ADG.USER_ID \n    where ADG.GROUP_ID = 'b3671d93-be47-4d38-bd09-fdabcd4f6a70' \n), AUDIT_LOG AS (\n\nselect distinct \"user_email\" AS LOGIN_ID \nfrom CES_REF.ADF.AD_AUDIT_LOG \nwhere \"operation\" = 'SEND_CRP_REPORT_LINK' \n\n), AUDIT_LOG_AD_ADD AS (  \n\nselect distinct \"user_email\" AS LOGIN_ID \nfrom CES_REF.ADF.AD_AUDIT_LOG \nwhere \"operation\" = 'ADD_TO_CRP_GROUP' AND \"execution_datetime\" < DATEADD(hour, -1, CONVERT_TIMEZONE('UTC', 'Australia/Sydney', SYSDATE()))\n\n\n), USERS_IN_RLS AS (\n\nSELECT DISTINCT LOGIN_ID \nFROM @{pipeline().parameters.RLS_TABLE}  \nWHERE TAXONOMY = 'CRP' \nAND MULTI_SCHEME_ID = 10000\n\n)\n\nSELECT IA.LOGIN_ID \nFROM CRP_USERS_INVITATION_ACCEPTED IA \nLEFT JOIN USERS_IN_AD_GROUP AD\nON UPPER(IA.LOGIN_ID) = UPPER(AD.LOGIN_ID) \nLEFT JOIN USERS_IN_RLS RLS\nON UPPER(IA.LOGIN_ID) = UPPER(RLS.LOGIN_ID) \nLEFT JOIN AUDIT_LOG AL\nON UPPER(IA.LOGIN_ID) = UPPER(AL.LOGIN_ID) \nLEFT JOIN AUDIT_LOG_AD_ADD ADL\nON UPPER(IA.LOGIN_ID) = UPPER(ADL.LOGIN_ID) \nWHERE RLS.LOGIN_ID IS NOT NULL AND ADL.LOGIN_ID IS NOT NULL AND AL.LOGIN_ID IS NULL",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "IF_USER_ON_LIST_SEND_INVITE",
+				"description": "Checking that RLS was applied and user is ready to visualize report",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Check if user requires invite",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(activity('Check if user requires invite').output.resultSetCount,0)",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "AD_send_link",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_send_link_CRP",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"TABLE_USER_HEADER": {
+										"value": "@pipeline().parameters.TABLE_USER_HEADER",
+										"type": "Expression"
+									},
+									"DELETE_COOLDOWN": {
+										"value": "@pipeline().parameters.DELETE_COOLDOWN",
+										"type": "Expression"
+									},
+									"RLS_TABLE": {
+										"value": "@pipeline().parameters.RLS_TABLE",
+										"type": "Expression"
+									},
+									"DAYS_DATEADD_LASTRUN": {
+										"value": "@pipeline().parameters.DAYS_DATEADD_LASTRUN",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"TABLE_USER_HEADER": {
+				"type": "string",
+				"defaultValue": "RAW_DEV.TEST.COEX_CRP_ORG_SECURITY_MAPPING_HDR_TEST"
+			},
+			"DELETE_COOLDOWN": {
+				"type": "int",
+				"defaultValue": 7
+			},
+			"DAYS_DATEADD_LASTRUN": {
+				"type": "int",
+				"defaultValue": -10
+			},
+			"RLS_TABLE": {
+				"type": "string",
+				"defaultValue": "COMMON_PROD.DWH.ORG_SECURITY_MAPPING"
+			}
+		},
+		"variables": {
+			"current_time": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "AD/COEX_External CRP/wf"
+		},
+		"annotations": []
+	}
+}

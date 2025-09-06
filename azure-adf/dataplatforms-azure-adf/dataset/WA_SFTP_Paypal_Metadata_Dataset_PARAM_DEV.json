@@ -1,0 +1,25 @@
+{
+	"name": "WA_SFTP_Paypal_Metadata_Dataset_PARAM_DEV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SFTP_WARRRL_Paypal_PROD",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Paypal"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "SftpLocation",
+				"folderPath": "/ppreports/outgoing"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": false,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

@@ -1,0 +1,50 @@
+{
+	"name": "WARRRL_MATTER_API_workflow",
+	"properties": {
+		"activities": [
+			{
+				"name": "MATTER_API_SITES",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "MATTER_API_SITES",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "MATTER_API_DEVICES",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "MATTER_API_SITES",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "MATTER_API_DEVICES",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "WARRL/wf"
+		},
+		"annotations": []
+	}
+}

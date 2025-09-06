@@ -1,0 +1,272 @@
+{
+	"name": "AD_update_user_status_coex_int",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get User List and Status",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "WITH GROUP_TABLE AS (\n    SELECT ADG.ID AS GROUP_ID, ADGM.USER_ID, ADG.DISPLAYNAME FROM \"RAW_PROD\".\"CES_ADF\".\"AD_GROUPS\" AS ADG\n    LEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_GROUP_MEMBERS\" AS ADGM\n      ON ADG.ID = ADGM.GROUP_ID\n    WHERE ADG.DISPLAYNAME LIKE 'Power BI - COEX%'\n)\n,COEX AS (\n  SELECT * FROM \"COEX_PROD\".\"COEX_AGILOFT\".\"AG_COEX_EMPLOYEE_SECURITY_MAPPING\" COEX\n  QUALIFY row_number() OVER (PARTITION BY COEX_LOGIN_ID, AD_GROUP  ORDER BY DATE_UPDATED DESC) = 1\n)\nSELECT\n    AD.ID AS USER_ID\n    ,COEX_LOGIN_ID AS LOGIN_ID\n    ,CASE WHEN SUM(COEX.ACTIVE) >= 1 THEN 'ACTIVATE USER' ELSE 'DEACTIVATE USER' END AS OPERATION\n    ,OBJECT_CONSTRUCT(\n      'accountEnabled', CASE WHEN SUM(COEX.ACTIVE) >= 1 THEN TRUE ELSE FALSE END\n    ) AS API_BODY\nFROM COEX\nLEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_USERS\" AS AD\n  ON LOWER(COEX.COEX_LOGIN_ID) = LOWER(AD.MAIL)\nLEFT JOIN GROUP_TABLE AS GT\n  ON COEX.AD_GROUP = GT.DISPLAYNAME\nWHERE COEX.DATE_UPDATED >= DATEADD(DAY ,-1,  CURRENT_DATE())\n  AND AD.ID IS NOT NULL\n  AND GROUP_ID IS NOT NULL\nGROUP BY AD.ID, LOGIN_ID",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get User List and Status",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set triggered_by",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get User List and Status').output.resultSets[0].rows",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "If Condition1",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().OPERATION,'DEACTIVATE USER')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Set operation",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "operation",
+											"value": {
+												"value": "@item().OPERATION",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set user_id",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "user_id",
+											"value": {
+												"value": "@item().USER_ID",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set user_email",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "user_email",
+											"value": {
+												"value": "@item().LOGIN_ID",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Update User Status",
+										"type": "WebActivity",
+										"dependsOn": [
+											{
+												"activity": "Set operation",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											},
+											{
+												"activity": "Set user_id",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											},
+											{
+												"activity": "Set user_email",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"method": "PATCH",
+											"url": {
+												"value": "https://graph.microsoft.com/v1.0/users/@{item().USER_ID}",
+												"type": "Expression"
+											},
+											"body": {
+												"value": "@item().API_BODY",
+												"type": "Expression"
+											},
+											"authentication": {
+												"resource": "https://graph.microsoft.com",
+												"credential": {
+													"referenceName": "ADF-AD-INTEGRATION",
+													"type": "CredentialReference"
+												},
+												"userTenant": "abf0de66-3ab3-4ea3-b35e-502502be1261",
+												"username": "2118d493-c18b-44eb-8f35-adc880193c22",
+												"password": {
+													"type": "AzureKeyVaultSecret",
+													"store": {
+														"referenceName": "CES_ADF_KEY_VAULT",
+														"type": "LinkedServiceReference"
+													},
+													"secretName": "ADF-AD-Integration"
+												}
+											}
+										}
+									},
+									{
+										"name": "Execute AD_audit_log",
+										"type": "ExecutePipeline",
+										"dependsOn": [
+											{
+												"activity": "Update User Status",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "AD_audit_log_coex_int",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true,
+											"parameters": {
+												"operation": {
+													"value": "@variables('operation')",
+													"type": "Expression"
+												},
+												"triggered_by": {
+													"value": "@variables('triggered_by')",
+													"type": "Expression"
+												},
+												"user_id": {
+													"value": "@variables('user_id')",
+													"type": "Expression"
+												},
+												"user_email": {
+													"value": "@variables('user_email')",
+													"type": "Expression"
+												}
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Set triggered_by",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "triggered_by",
+					"value": {
+						"value": "@pipeline().Pipeline",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"Num_groups": {
+				"type": "String"
+			},
+			"operation": {
+				"type": "String",
+				"defaultValue": "TEST"
+			},
+			"user_id": {
+				"type": "String"
+			},
+			"user_email": {
+				"type": "String"
+			},
+			"site_scheme_id": {
+				"type": "String"
+			},
+			"triggered_by": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "AD/COEX_Internal"
+		},
+		"annotations": []
+	}
+}

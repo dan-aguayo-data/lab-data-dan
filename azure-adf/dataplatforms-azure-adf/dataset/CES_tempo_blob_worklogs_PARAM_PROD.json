@@ -1,0 +1,28 @@
+{
+	"name": "CES_tempo_blob_worklogs_PARAM_PROD",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cestempoprod",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Tempo"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "WORKLOGS_@{formatDateTime(convertFromUtc(utcnow(),'AUS Eastern Standard Time'),'yyyyMMddHHmmss')}",
+					"type": "Expression"
+				},
+				"container": "worklogs"
+			},
+			"compression": {
+				"type": "gzip"
+			}
+		},
+		"schema": {}
+	}
+}

@@ -1,0 +1,122 @@
+{
+	"name": "Scheduler_frequent_child",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get current time",
+				"description": "",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "current_time_frequent",
+					"value": {
+						"value": "@substring(convertTimeZone(pipeline().TriggerTime,'UTC','AUS Eastern Standard Time'),11,2)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "If_this_runs_At_night_do_nothing",
+				"description": "",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get current time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(int(variables('current_time_frequent')), 0)",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Execute DBT_run_jobs_frequent",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "DBT_run_jobs_frequent",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						},
+						{
+							"name": "Execute PBI_refresh_datasets_frequent",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Execute DBT_run_jobs_frequent",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "PBI_refresh_datasets_frequent",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Do Nothin dbt frequent child",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						}
+					]
+				}
+			}
+		],
+		"concurrency": 1,
+		"variables": {
+			"asString": {
+				"type": "String"
+			},
+			"Component": {
+				"type": "String"
+			},
+			"asArray": {
+				"type": "Array"
+			},
+			"run_id": {
+				"type": "String"
+			},
+			"run_complete": {
+				"type": "Boolean"
+			},
+			"current_time_frequent": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "DBT_PBI_FLOWS"
+		},
+		"annotations": []
+	}
+}

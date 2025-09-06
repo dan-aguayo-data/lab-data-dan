@@ -1,0 +1,290 @@
+{
+	"name": "DBT_GENERIC_RUN",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web_Get_dbt_token",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": {
+						"value": "https://@{pipeline().parameters.key_vault_name}.vault.azure.net/secrets/@{pipeline().parameters.dbt_service_token_name}?api-version=7.0",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
+					}
+				}
+			},
+			{
+				"name": "run_dbt_job",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Web_Get_dbt_token",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Accept": "application/json",
+						"Authorization": {
+							"value": "Token @{activity('Web_Get_dbt_token').output.value}",
+							"type": "Expression"
+						}
+					},
+					"url": {
+						"value": "https://cp616.us1.dbt.com/api/v2/accounts/@{pipeline().parameters.dbt_account_id}/jobs/@{pipeline().parameters.dbt_job_id}/run/",
+						"type": "Expression"
+					},
+					"body": {
+						"value": "{\"cause\":\"ADF triggered Run\"}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "get_dbt_run_id",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "run_dbt_job",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "run_id",
+					"value": {
+						"value": "@string(activity('run_dbt_job').output.data.id)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Until run is completed",
+				"type": "Until",
+				"dependsOn": [
+					{
+						"activity": "get_dbt_run_id",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@OR(variables('run_complete'),variables('run_error'))",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Wait 30 seconds",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 30
+							}
+						},
+						{
+							"name": "get_dbt_run_status",
+							"type": "WebActivity",
+							"dependsOn": [
+								{
+									"activity": "Wait 30 seconds",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "GET",
+								"headers": {
+									"Authorization": {
+										"value": "Token @{activity('Web_Get_dbt_token').output.value}",
+										"type": "Expression"
+									}
+								},
+								"url": {
+									"value": "https://cloud.getdbt.com/api/v2/accounts/@{pipeline().parameters.dbt_account_id}/runs/@{variables('run_id')}/",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "run_complete_update",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "get_dbt_run_status",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "run_complete",
+								"value": {
+									"value": "@activity('get_dbt_run_status').output.data.is_success\n",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "run_error_update",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "get_dbt_run_status",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "run_error",
+								"value": {
+									"value": "@activity('get_dbt_run_status').output.data.is_error\n",
+									"type": "Expression"
+								}
+							}
+						}
+					],
+					"timeout": "0.02:00:00"
+				}
+			},
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Until run is completed",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@variables('run_error')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "SEND_EMAIL_GENERIC",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "SEND_EMAIL_GENERIC",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"Email": {
+										"value": "@pipeline().globalParameters.DataTeam_Email",
+										"type": "Expression"
+									},
+									"Subject": "ADF Notification - dbt Refresh Failure",
+									"Body": {
+										"value": "@concat('Hello, </br> </br> this is an automated email to inform that the dbt run ', pipeline().parameters.reference_name,' triggered by pipeline ', pipeline()?.TriggeredByPipelineName, ' has failed, please review dbt logs to assess root cause. </br></br></br> Thank you,')",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"dbt_job_id": {
+				"type": "string",
+				"defaultValue": "106168"
+			},
+			"dbt_account_id": {
+				"type": "string",
+				"defaultValue": "22457"
+			},
+			"key_vault_name": {
+				"type": "string",
+				"defaultValue": "CES-SNOWFLAKE-KEYS"
+			},
+			"dbt_service_token_name": {
+				"type": "string",
+				"defaultValue": "ADF-DBT-SERVICE-TOKEN"
+			},
+			"reference_name": {
+				"type": "string",
+				"defaultValue": "Place reference name here"
+			}
+		},
+		"variables": {
+			"run_id": {
+				"type": "String"
+			},
+			"run_complete": {
+				"type": "Boolean"
+			},
+			"run_error": {
+				"type": "Boolean"
+			}
+		},
+		"folder": {
+			"name": "Generic"
+		},
+		"annotations": []
+	}
+}

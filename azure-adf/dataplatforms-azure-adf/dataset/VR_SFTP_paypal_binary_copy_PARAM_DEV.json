@@ -1,0 +1,29 @@
+{
+	"name": "VR_SFTP_paypal_binary_copy_PARAM_DEV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SFTP_VICReturn_Paypal_PROD",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"file_name": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Paypal"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "SftpLocation",
+				"fileName": {
+					"value": "@dataset().file_name",
+					"type": "Expression"
+				},
+				"folderPath": "/ppreports/outgoing"
+			}
+		}
+	}
+}

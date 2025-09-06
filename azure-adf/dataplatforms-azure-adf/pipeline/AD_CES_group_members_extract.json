@@ -1,0 +1,132 @@
+{
+	"name": "AD_CES_group_members_extract",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get List of Groups",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SnowflakeV2Source",
+						"query": "SELECT ID FROM  \"RAW_PROD\".\"CES_ADF\".\"AD_GROUPS\"\nWHERE DISPLAYNAME LIKE 'Power BI%'\nOR DISPLAYNAME LIKE 'SF%'\nOR DISPLAYNAME LIKE '%COEX%'\nOR DISPLAYNAME LIKE '%CES All Company%'",
+						"exportSettings": {
+							"type": "SnowflakeExportCopyCommand"
+						}
+					},
+					"dataset": {
+						"referenceName": "SNOWFLAKE_GENERIC_PARAM_DEV",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "For Each ID",
+				"description": "Get member list of each group ids",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get List of Groups",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get List of Groups').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 4,
+					"activities": [
+						{
+							"name": "Copy group member into blob",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 1,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "GET",
+									"paginationRules": {
+										"AbsoluteUrl": "$['@odata.nextLink']"
+									}
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "AD_api_lvar",
+									"type": "DatasetReference",
+									"parameters": {
+										"realtive_url": "groups/@{item().ID}/members?$top=999&$count=true&ConsistencyLevel=eventual"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "AD_blob_plvar_PARAM_DEV",
+									"type": "DatasetReference",
+									"parameters": {
+										"group_id": "@{item().ID}"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"concurrency": 4,
+		"parameters": {
+			"API_Name": {
+				"type": "string",
+				"defaultValue": "group_members"
+			}
+		},
+		"variables": {
+			"API_URL": {
+				"type": "String"
+			},
+			"Group ID": {
+				"type": "String"
+			},
+			"URL_API": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "AD/CES_AD_Extracts"
+		},
+		"annotations": []
+	}
+}

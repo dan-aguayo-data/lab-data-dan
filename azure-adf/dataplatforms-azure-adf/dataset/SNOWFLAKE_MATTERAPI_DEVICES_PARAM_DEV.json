@@ -1,0 +1,92 @@
+{
+	"name": "SNOWFLAKE_MATTERAPI_DEVICES_PARAM_DEV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SNOWFLAKE_WARRL_REF",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "WARRRL"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "DEVICE_ID",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "DEVICE_SYSTEM_NAME",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "DEVICE_CUSTOM_NAME",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "DEVICE_TYPE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "DEVICE_VARIANT",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "DEVICE_WASTE_TYPE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LATITUDE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LONGITUDE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "FORMATTED_TIMESTAMP",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "TIMESTAMP",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "PERCENTAGE_FULL",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "FILL_LEVEL_VALUE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "FILL_LEVEL_UNIT",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "TEMPERATURE_VALUE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "TEMPERATURE_UNIT",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LIGHT_LEVEL",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LEVEL_FORMATTED_TIMESTAMP",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LEVEL_TIMESTAMP",
+				"type": "VARCHAR"
+			}
+		],
+		"typeProperties": {
+			"schema": "TEST",
+			"table": "MATTER_DEVICES"
+		}
+	}
+}

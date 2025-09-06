@@ -1,0 +1,21 @@
+{
+	"name": "Tempo_api_lvar_PARAM_PROD",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Tempo_Allen",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Tempo"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@{variables('API_URL')}",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	}
+}

@@ -1,0 +1,75 @@
+{
+	"name": "AD_CES_users_extract",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy User Data",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 2,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"AbsoluteUrl": {
+								"value": "$['@odata.nextLink']",
+								"type": "Expression"
+							}
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "AD_api_pvar",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AD_blob_PARAM_DEV",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"parameters": {
+			"API_URL": {
+				"type": "string",
+				"defaultValue": "users?$select=   id,externalUserState,displayName     ,givenName     ,surname     ,businessPhones     ,jobTitle     ,mail     ,mobilePhone     ,officeLocation     ,preferredLanguage     ,userPrincipalName"
+			},
+			"API_Name": {
+				"type": "string",
+				"defaultValue": "users"
+			}
+		},
+		"variables": {
+			"Group ID": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "AD/CES_AD_Extracts"
+		},
+		"annotations": []
+	}
+}

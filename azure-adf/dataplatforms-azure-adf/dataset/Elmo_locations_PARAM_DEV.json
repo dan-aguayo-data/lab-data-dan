@@ -1,0 +1,15 @@
+{
+	"name": "Elmo_locations_PARAM_DEV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Elmo_locations",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Elmo"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	}
+}

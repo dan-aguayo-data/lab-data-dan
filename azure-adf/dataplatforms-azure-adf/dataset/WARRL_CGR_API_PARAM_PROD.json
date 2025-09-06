@@ -1,0 +1,15 @@
+{
+	"name": "WARRL_CGR_API_PARAM_PROD",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WARRRL_CGR",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "WARRRL"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	}
+}

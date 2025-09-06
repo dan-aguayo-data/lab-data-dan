@@ -1,0 +1,245 @@
+{
+	"name": "AD_invite_user_ext",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get JSON Payload",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "WITH NEW_DATA AS (\n  SELECT DISTINCT AD.ID AS USER_ID, FULL_NAME, LOGIN_ID \n  FROM @{pipeline().parameters.TABLE_USER_HEADER} AS COEX\n  LEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_USERS\" AS AD\n      ON lower(COEX.LOGIN_ID) = lower(AD.MAIL)\n  WHERE AD.MAIL IS NULL\n  AND COEX.ACTIVE = 1\n  AND COEX.DATE_UPDATED  > (SELECT LAST_RUN FROM CES_REF.ADF.COEX_EXT_PIPELINE_LAST_RUN)\n)\nSELECT \nUSER_ID\n,LOGIN_ID\n,'INVITE' AS OPERATION\n,OBJECT_CONSTRUCT (\n  'invitedUserDisplayName', FULL_NAME,\n  'invitedUserEmailAddress', LOGIN_ID,\n  'invitedUserMessageInfo', OBJECT_CONSTRUCT (\n    'ccRecipients', [OBJECT_CONSTRUCT (\n      'emailAddress', OBJECT_CONSTRUCT (\n        'address', 'ismail@edgered.com.au',\n        'name', 'Ismail'\n      ))],\n    'customizedMessageBody', 'This email is an invitation from Containers for Change.\n\nAs a CfC Partner you should have already received notification about the new reporting system.\n\nPlease only act on and accept this invitation if you are a representative of the organisation below.'\n  ),\n  'sendInvitationMessage', True,\n  'inviteRedirectUrl', 'https://containerexchange.com.au/',\n  'status', 'PendingAcceptance',\n  'invitedUserType', 'Guest'\n) as api_body\nFROM NEW_DATA",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Set operation",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set Pipeline Name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get JSON Payload').output.resultSets[0].rows",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Set User Email",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "user_email",
+								"value": {
+									"value": "@item().LOGIN_ID",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Execute AD_audit_log",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Set User Email",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Send User Invite Email",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_audit_log",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"operation": {
+										"value": "@variables('operation')",
+										"type": "Expression"
+									},
+									"triggered_by": {
+										"value": "@variables('triggered_by')",
+										"type": "Expression"
+									},
+									"user_email": {
+										"value": "@variables('user_email')",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Send User Invite Email",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "POST",
+								"headers": {
+									"Content-Type": "application/json"
+								},
+								"url": "https://graph.microsoft.com/v1.0/invitations/",
+								"body": {
+									"value": "@item().API_BODY",
+									"type": "Expression"
+								},
+								"authentication": {
+									"resource": "https://graph.microsoft.com",
+									"credential": {
+										"referenceName": "ADF-AD-INTEGRATION",
+										"type": "CredentialReference"
+									},
+									"userTenant": "abf0de66-3ab3-4ea3-b35e-502502be1261",
+									"username": "2118d493-c18b-44eb-8f35-adc880193c22",
+									"password": {
+										"type": "AzureKeyVaultSecret",
+										"store": {
+											"referenceName": "CES_ADF_KEY_VAULT",
+											"type": "LinkedServiceReference"
+										},
+										"secretName": "ADF-AD-Integration"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Set operation",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Get JSON Payload",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "operation",
+					"value": {
+						"value": "@activity('Get JSON Payload').output.resultSets[0].rows[0].OPERATION",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set Pipeline Name",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Get JSON Payload",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "triggered_by",
+					"value": {
+						"value": "@pipeline().Pipeline",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"TABLE_USER_HEADER": {
+				"type": "string",
+				"defaultValue": "RAW_PROD.CES_AD_INVITE.COEX_EXT_ORG_SECURITY_MAPPING_HDR "
+			},
+			"COOLDOWN_DELETE": {
+				"type": "string",
+				"defaultValue": "7"
+			}
+		},
+		"variables": {
+			"operation": {
+				"type": "String",
+				"defaultValue": "INVITE"
+			},
+			"user_email": {
+				"type": "String"
+			},
+			"triggered_by": {
+				"type": "String"
+			},
+			"group_name": {
+				"type": "String"
+			},
+			"group_id": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "AD/COEX_External Partners"
+		},
+		"annotations": []
+	}
+}

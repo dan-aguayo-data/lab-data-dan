@@ -1,0 +1,314 @@
+{
+	"name": "ELMO_users",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"additionalColumns": [
+							{
+								"name": "LANDED_DATETIME",
+								"value": {
+									"value": "@pipeline().TriggerTime",
+									"type": "Expression"
+								}
+							}
+						],
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET"
+					},
+					"sink": {
+						"type": "SnowflakeV2Sink",
+						"importSettings": {
+							"type": "SnowflakeImportCopyCommand"
+						}
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "Elmo_blob_storage",
+							"type": "LinkedServiceReference"
+						},
+						"path": "elmo"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['id']"
+								},
+								"sink": {
+									"name": "ID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['identifier']"
+								},
+								"sink": {
+									"name": "IDENTIFIER",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['firstName']"
+								},
+								"sink": {
+									"name": "FIRSTNAME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['lastName']"
+								},
+								"sink": {
+									"name": "LASTNAME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['username']"
+								},
+								"sink": {
+									"name": "USERNAME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['email']"
+								},
+								"sink": {
+									"name": "EMAIL",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['dateOfBirth']"
+								},
+								"sink": {
+									"name": "DATEOFBIRTH",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['employeeNumber']"
+								},
+								"sink": {
+									"name": "EMPLOYEENUMBER",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['manager']"
+								},
+								"sink": {
+									"name": "MANAGER",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['startDate']"
+								},
+								"sink": {
+									"name": "STARTDATE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['endDate']"
+								},
+								"sink": {
+									"name": "ENDDATE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['expiryDate']"
+								},
+								"sink": {
+									"name": "EXPIRYDATE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['mobile']"
+								},
+								"sink": {
+									"name": "MOBILE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['country']"
+								},
+								"sink": {
+									"name": "COUNTRY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['state']"
+								},
+								"sink": {
+									"name": "STATE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['timezone']"
+								},
+								"sink": {
+									"name": "TIMEZONE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['active']"
+								},
+								"sink": {
+									"name": "ACTIVE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['position']"
+								},
+								"sink": {
+									"name": "POSITION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['location']"
+								},
+								"sink": {
+									"name": "LOCATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['department']"
+								},
+								"sink": {
+									"name": "DEPARTMENT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['legalEntity']"
+								},
+								"sink": {
+									"name": "LEGALENTITY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['role']"
+								},
+								"sink": {
+									"name": "ROLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['serviceStartDate']"
+								},
+								"sink": {
+									"name": "SERVICESTARTDATE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['logs']"
+								},
+								"sink": {
+									"name": "LOGS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['responseCode']"
+								},
+								"sink": {
+									"name": "RESPONSECODE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['summary']"
+								},
+								"sink": {
+									"name": "SUMMARY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LANDED_DATETIME']"
+								},
+								"sink": {
+									"name": "LANDED_DATETIME"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Elmo_PARAM_DEV",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SNOWFLAKE_ELMO_USER_KP",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "ELMO"
+		},
+		"annotations": []
+	}
+}

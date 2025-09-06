@@ -1,0 +1,201 @@
+{
+	"name": "ELMO_locations",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"additionalColumns": [
+							{
+								"name": "LANDED_DATETIME",
+								"value": {
+									"value": "@pipeline().TriggerTime",
+									"type": "Expression"
+								}
+							}
+						],
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"supportRFC5988": "true"
+						}
+					},
+					"sink": {
+						"type": "SnowflakeV2Sink",
+						"importSettings": {
+							"type": "SnowflakeImportCopyCommand"
+						}
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "Elmo_blob_storage",
+							"type": "LinkedServiceReference"
+						},
+						"path": "elmo"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['id']"
+								},
+								"sink": {
+									"name": "ID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['parent']"
+								},
+								"sink": {
+									"name": "PARENT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['title']"
+								},
+								"sink": {
+									"name": "TITLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['locationId']"
+								},
+								"sink": {
+									"name": "LOCATIONID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['description']"
+								},
+								"sink": {
+									"name": "DESCRIPTION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['addressLine1']"
+								},
+								"sink": {
+									"name": "ADDRESSLINE1",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['addressLine2']"
+								},
+								"sink": {
+									"name": "ADDRESSLINE2",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['suburb']"
+								},
+								"sink": {
+									"name": "SUBURB",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['state']"
+								},
+								"sink": {
+									"name": "STATE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['postcode']"
+								},
+								"sink": {
+									"name": "POSTCODE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['country']"
+								},
+								"sink": {
+									"name": "COUNTRY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['path']"
+								},
+								"sink": {
+									"name": "PATH",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['deleted']"
+								},
+								"sink": {
+									"name": "DELETED",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LANDED_DATETIME']"
+								},
+								"sink": {
+									"name": "LANDED_DATETIME"
+								}
+							}
+						],
+						"collectionReference": ""
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Elmo_locations_PARAM_DEV",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SNOWFLAKE_ELMO_LOCATIONS_KP",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "ELMO"
+		},
+		"annotations": []
+	}
+}

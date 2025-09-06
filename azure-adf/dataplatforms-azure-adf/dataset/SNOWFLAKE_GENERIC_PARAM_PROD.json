@@ -1,0 +1,15 @@
+{
+	"name": "SNOWFLAKE_GENERIC_PARAM_PROD",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Snowflake Generic"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": []
+	}
+}

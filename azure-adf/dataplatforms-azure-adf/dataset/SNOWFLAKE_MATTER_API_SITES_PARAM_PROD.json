@@ -1,0 +1,84 @@
+{
+	"name": "SNOWFLAKE_MATTER_API_SITES_PARAM_PROD",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SNOWFLAKE_WARRL_REF",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "WARRRL"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "SITE_ID",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "SITE_NAME",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "SITE_TYPE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "POLYGON_ID",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "POLYGON_TYPE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "AREA_TYPE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "AREA_PROPERTIES_GID",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "AREA_PROPERTIES_ADMINLEVEL",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "AREA_PROPERTIES_BOUNDARY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "AREA_PROPERTIES_NAME",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "AREA_PROPERTIES_PLACE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "AREA_PROPERTIES_POPULATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "AREA_PROPERTIES_REF",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "AREA_PROPERTIES_ZORDER",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "AREA_PROPERTIES_WAYAREA",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "AREA_GEOMETRY_TYPE",
+				"type": "VARCHAR"
+			}
+		],
+		"typeProperties": {
+			"schema": "MATTER_API_WARRRL",
+			"table": "MATTER_SITES"
+		}
+	}
+}

@@ -1,0 +1,341 @@
+{
+	"name": "dataplatforms-adf-dev",
+	"properties": {
+		"globalParameters": {
+			"Key_Vault_Name": {
+				"type": "string",
+				"value": "CES-SNOWFLAKE-KEYS"
+			},
+			"dbt_account_id": {
+				"type": "string",
+				"value": "22457"
+			},
+			"dbt_service_token_name": {
+				"type": "string",
+				"value": "ADF-DBT-SERVICE-TOKEN"
+			},
+			"DataTeam_Email": {
+				"type": "string",
+				"value": "data-team@coexservices.com.au"
+			},
+			"lapp_generic_send_email_PARAM_PROD": {
+				"type": "string",
+				"value": "https://prod-26.australiaeast.logic.azure.com:443/workflows/a3478c2649b64d45ba51c6bd5a2b3479/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=zYGE3s6ZLm4Y0KGuX5A-wfUuE_ZO79FqnaDRbfAwLb8"
+			},
+			"lapp_ad_crp_ext_send_email_PARAM_PROD": {
+				"type": "string",
+				"value": "https://prod-10.australiaeast.logic.azure.com:443/workflows/92080186c617447aa7c7c0cb12f92a73/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=6LxPFc0X4sSZzUeGFJhBhIqrk77YiJnJQSwxXWF_euA"
+			},
+			"lapp_ad_crp_ext_send_email_PARAM_DEV": {
+				"type": "string",
+				"value": "https://prod-10.australiaeast.logic.azure.com:443/workflows/92080186c617447aa7c7c0cb12f92a73/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=6LxPFc0X4sSZzUeGFJhBhIqrk77YiJnJQSwxXWF_euA"
+			},
+			"keyvault_tempo_bearer_token_link_PARAM_PROD": {
+				"type": "string",
+				"value": "https://ces-snowflake-keys.vault.azure.net/secrets/Tempo-Allen/3a92cdf91fdd40839b154db834e6d5b1?api-version=7.1"
+			},
+			"keyvault_tempo_bearer_token_link_PARAM_DEV": {
+				"type": "string",
+				"value": "https://ces-snowflake-keys.vault.azure.net/secrets/Tempo-Allen/3a92cdf91fdd40839b154db834e6d5b1?api-version=7.1"
+			},
+			"P_WARRRL_CGR_TABLE_PATH_PARAM_PROD": {
+				"type": "string",
+				"value": "WARRRL_REF.CGR_API_DATA.CGR_API_DATA"
+			},
+			"P_WARRRL_CGR_TABLE_PATH_PARAM_DEV": {
+				"type": "string",
+				"value": "WARRRL_REF.TEST.CGR_API_DATA"
+			},
+			"P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_PROD": {
+				"type": "string",
+				"value": "ef85c0e9-4243-4056-9ad8-16aa8d885064"
+			},
+			"P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_DEV": {
+				"type": "string",
+				"value": "08212b56-9593-4d96-a735-a0eb9577192e"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATA_PARAM_PROD": {
+				"type": "string",
+				"value": "83cce79a-a17c-4195-894a-3e1321c46525"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATA_PARAM_DEV": {
+				"type": "string",
+				"value": "fe1f3850-4ca7-46f3-9fdc-1cc589b607ac"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATARETURNTIT_PARAM_PROD": {
+				"type": "string",
+				"value": "1b96d159-5219-4d0e-aad8-516aee40ad22"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATARETURNTIT_PARAM_DEV": {
+				"type": "string",
+				"value": "abe809cf-be3b-4588-97c4-b7d99dbf23fc"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATAVIC_PARAM_PROD": {
+				"type": "string",
+				"value": "2bc6f6f7-063b-4b8e-9c25-75e6c59d262b"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATAVIC_PARAM_DEV": {
+				"type": "string",
+				"value": "f036d64f-4a32-414a-8f03-964a464ef1e0"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATA_AUCTION_RETURNIT_PARAM_PROD": {
+				"type": "string",
+				"value": "09c18321-3a46-499e-9b0b-3c2be5b2097e"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATA_AUCTION_RETURNIT_PARAM_DEV": {
+				"type": "string",
+				"value": "f9e0eb8e-27b2-440d-b63e-900c4aaa67b4"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATA_NOP_VIC_PARAM_PROD": {
+				"type": "string",
+				"value": "bc3194b7-bec5-4a2c-bbf9-8b3c556a266e"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATA_NOP_VIC_PARAM_DEV": {
+				"type": "string",
+				"value": "1598420a-ec40-4ea7-ad1f-0fe66465bb53"
+			},
+			"P_PBI_DATASETID_CES_RETURNITVIC_MASTERDATA_PARAM_PROD": {
+				"type": "string",
+				"value": "fab2da89-14fa-4c39-9748-3eb2079e273f"
+			},
+			"P_PBI_DATASETID_CES_RETURNITVIC_MASTERDATA_PARAM_DEV": {
+				"type": "string",
+				"value": "fc626292-719e-459a-8d50-845ce8250782"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATA_AUCTION_PARAM_PROD": {
+				"type": "string",
+				"value": "957836c6-cfc3-48dd-826f-d74d48e8a0de"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATA_AUCTION_PARAM_DEV": {
+				"type": "string",
+				"value": "59269691-7e96-438f-a312-f9edf12080aa"
+			},
+			"P_PBI_DATASETID_TAS_FRS_PARAM_PROD": {
+				"type": "string",
+				"value": "2fb80625-7ae7-4719-94d8-14e56c8c3186"
+			},
+			"P_PBI_DATASETID_TAS_FRS_PARAM_DEV": {
+				"type": "string",
+				"value": "27feb379-a414-4799-a876-bab0f4c861c4"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATA_CRP_PARAM_PROD": {
+				"type": "string",
+				"value": "ef0a84bd-2460-4d67-908a-7ab232452ca4"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATA_CRP_PARAM_DEV": {
+				"type": "string",
+				"value": "ef0a84bd-2460-4d67-908a-7ab232452ca4"
+			},
+			"P_PBI_DATASETNAME_MASTERDATA_FIN_PARAM_PROD": {
+				"type": "string",
+				"value": "Master Data - PROD (FIN)"
+			},
+			"P_PBI_DATASETNAME_MASTERDATA_FIN_PARAM_DEV": {
+				"type": "string",
+				"value": "Master Data - UAT (FIN)"
+			},
+			"P_PBI_DATASETNAME_MASTERDATA_FIN_RETURNIT_PARAM_PROD": {
+				"type": "string",
+				"value": "Master Data (Returnit VIC) - PROD (FIN)"
+			},
+			"P_PBI_DATASETNAME_MASTERDATA_FIN_RETURNIT_PARAM_DEV": {
+				"type": "string",
+				"value": "Master Data (Returnit VIC) - UAT (FIN)"
+			},
+			"P_PBI_DATASETNAME_MASTERDATA_FIN_VIC_PARAM_PROD": {
+				"type": "string",
+				"value": "Master Data (VICReturn) - PROD (FIN)"
+			},
+			"P_PBI_DATASETNAME_MASTERDATA_FIN_VIC_PARAM_DEV": {
+				"type": "string",
+				"value": "9f4cedf9-c4f4-4bcc-a002-41b8c23453eb"
+			},
+			"P_PBI_DATASETNAME_CES_MASTERDATA_PARAM_PROD": {
+				"type": "string",
+				"value": "Master Data - PROD"
+			},
+			"P_PBI_DATASETNAME_CES_MASTERDATA_PARAM_DEV": {
+				"type": "string",
+				"value": "Master Data - UAT"
+			},
+			"P_PBI_DATASETNAME_CES_MASTERDATA_NOP_VIC_PARAM_PROD": {
+				"type": "string",
+				"value": "Master Data (VICReturn) - PROD (NOP Claim)"
+			},
+			"P_PBI_DATASETNAME_CES_MASTERDATA_NOP_VIC_PARAM_DEV": {
+				"type": "string",
+				"value": "Master Data (VICReturn) - UAT (NOP CLAIM)"
+			},
+			"P_PBI_DATASETNAME_CES_MASTERDATAVIC_PARAM_PROD": {
+				"type": "string",
+				"value": "Master Data (VICReturn) - PROD"
+			},
+			"P_PBI_DATASETNAME_CES_MASTERDATAVIC_PARAM_DEV": {
+				"type": "string",
+				"value": "Master Data (VICReturn) - UAT"
+			},
+			"P_PBI_DATASETNAME_CES_MASTERDATARETURNTIT_PARAM_PROD": {
+				"type": "string",
+				"value": "Master Data (Returnit VIC) - PROD"
+			},
+			"P_PBI_DATASETNAME_CES_MASTERDATARETURNTIT_PARAM_DEV": {
+				"type": "string",
+				"value": "Master Data (Returnit VIC) - UAT"
+			},
+			"P_PBI_DATASETNAME_CES_WARRL_MASTERDATA_PARAM_PROD": {
+				"type": "string",
+				"value": "WARRRL Master Data - PROD"
+			},
+			"P_PBI_DATASETNAME_CES_WARRL_MASTERDATA_PARAM_DEV": {
+				"type": "string",
+				"value": "WARRRL Master Data - PROD"
+			},
+			"P_ALERT_GENERIC_EMAIL_PARAM_PROD": {
+				"type": "string",
+				"value": "data-team@coexservices.com.au"
+			},
+			"P_ALERT_GENERIC_EMAIL_PARAM_DEV": {
+				"type": "string",
+				"value": "daniel.aguayo@cesystems.com"
+			},
+			"lapp_generic_refresh_pbi_PARAM_PROD": {
+				"type": "string",
+				"value": "https://prod-28.australiaeast.logic.azure.com:443/workflows/8b994f346977464fb812d7f7b7a40180/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=qaLThSKZ8NmR3C6pDZNCsHePOm5J5kEjsl0HN4S3jxg"
+			},
+			"lapp_generic_refresh_pbi_PARAM_DEV": {
+				"type": "string",
+				"value": "https://prod-17.australiaeast.logic.azure.com:443/workflows/76386e6ad1ca4c65b24be88b46ba033e/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=tCL_UODuKzBF4kiV-eg7Fi5AvyiLmXXeu1sO7S_MwH8"
+			},
+			"lapp_generic_send_email_PARAM_DEV": {
+				"type": "string",
+				"value": "https://prod-26.australiaeast.logic.azure.com:443/workflows/a3478c2649b64d45ba51c6bd5a2b3479/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=zYGE3s6ZLm4Y0KGuX5A-wfUuE_ZO79FqnaDRbfAwLb8"
+			},
+			"P_DBT_JOBID_PAYPAL_PARAM_PROD": {
+				"type": "string",
+				"value": "701465"
+			},
+			"P_DBT_JOBID_PAYPAL_PARAM_DEV": {
+				"type": "string",
+				"value": "861773"
+			},
+			"P_DBT_JOBID_RAW_HOURLY_PARAM_PROD": {
+				"type": "string",
+				"value": "45026"
+			},
+			"P_DBT_JOBID_RAW_HOURLY_PARAM_DEV": {
+				"type": "string",
+				"value": "673093"
+			},
+			"P_DBT_JOBID_COMMON_HOURLY_PARAM_PROD": {
+				"type": "string",
+				"value": "36410"
+			},
+			"P_DBT_JOBID_COMMON_HOURLY_PARAM_DEV": {
+				"type": "string",
+				"value": "861782"
+			},
+			"P_DBT_JOBID_RAW_FREQUENT_PARAM_PROD": {
+				"type": "string",
+				"value": "117249"
+			},
+			"P_DBT_JOBID_RAW_FREQUENT_PARAM_DEV": {
+				"type": "string",
+				"value": "673093"
+			},
+			"P_DBT_JOBID_COMMON_FREQUENT_PARAM_PROD": {
+				"type": "string",
+				"value": "106168"
+			},
+			"P_DBT_JOBID_COMMON_FREQUENT_PARAM_DEV": {
+				"type": "string",
+				"value": "861783"
+			},
+			"P_DBT_JOBID_RAW_FULLREFRESH_PARAM_PROD": {
+				"type": "string",
+				"value": "117249"
+			},
+			"P_DBT_JOBID_RAW_FULLREFRESH_PARAM_DEV": {
+				"type": "string",
+				"value": "673089"
+			},
+			"P_DBT_JOBID_COMMON_FULLREFRESH_PARAM_PROD": {
+				"type": "string",
+				"value": "36659"
+			},
+			"P_DBT_JOBID_COMMON_FULLREFRESH_PARAM_DEV": {
+				"type": "string",
+				"value": "723010"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATA_FINRTP_PARAM_PROD": {
+				"type": "string",
+				"value": "2fd69dbd-7643-429a-b9e0-0ebf5c5e8ffe"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATA_FINRTP_PARAM_DEV": {
+				"type": "string",
+				"value": "8a2d7365-3d38-4baf-a08b-25a702e61153"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATA_FINRTP_KAFKA_PARAM_PROD": {
+				"type": "string",
+				"value": "7399581e-abd1-4fe1-bc98-ef599f22a3a0"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATA_FINRTP_KAFKA_PARAM_DEV": {
+				"type": "string",
+				"value": "06d92d8b-260a-4160-8a4d-f6ae62c7d93d"
+			},
+			"P_DBT_JOBID_RAW_ADEXTRACTS_PARAM_PROD": {
+				"type": "string",
+				"value": "790605"
+			},
+			"P_DBT_JOBID_RAW_ADEXTRACTS_PARAM_DEV": {
+				"type": "string",
+				"value": "861790"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATA_NOP_PARAM_PROD": {
+				"type": "string",
+				"value": "36e35e79-00bc-4a05-ac0e-a52ed097b63f"
+			},
+			"P_PBI_DATASETID_CES_MASTERDATA_NOP_PARAM_DEV": {
+				"type": "string",
+				"value": "bc3194b7-bec5-4a2c-bbf9-8b3c556a266e"
+			},
+			"P_DBT_JOBID_COMMON_FREQFULLREFRESH_PARAM_PROD": {
+				"type": "string",
+				"value": "507080"
+			},
+			"P_DBT_JOBID_COMMON_FREQFULLREFRESH_PARAM_DEV": {
+				"type": "string",
+				"value": "861783"
+			},
+			"P_SLACK_ALERT_DATATEAM_CHANNEL_PARAM_DEV": {
+				"type": "string",
+				"value": "https://hooks.slack.com/services/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"
+			},
+			"P_SLACK_ALERT_DATATEAM_CHANNEL_PARAM_PROD": {
+				"type": "string",
+				"value": "https://hooks.slack.com/services/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"
+			},
+			"P_ADF_GLOBAL_FACTORY_NAME_PARAM_DEV": {
+				"type": "string",
+				"value": "dataplatforms-adf-dev"
+			},
+			"P_ADF_GLOBAL_FACTORY_NAME_PARAM_PROD": {
+				"type": "string",
+				"value": "dataplatforms-adf-prod"
+			},
+			"P_DBT_JOBID_ERP_FULLREFRESH_PARAM_DEV": {
+				"type": "string",
+				"value": "70437463715548"
+			},
+			"P_DBT_JOBID_ERP_FULLREFRESH_PARAM_PROD": {
+				"type": "string",
+				"value": "70437463715482"
+			}
+		}
+	},
+	"location": "australiaeast",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "faaed410-2c79-4019-be69-00e9df32a303",
+		"tenantId": "abf0de66-3ab3-4ea3-b35e-502502be1261"
+	}
+}

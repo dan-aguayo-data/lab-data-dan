@@ -1,0 +1,892 @@
+{
+	"name": "SNOWFLAKE_CGR_PARAM_DEV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SNOWFLAKE_WARRL_REF",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "WARRRL"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "ID",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "TYPE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CLOSE_AT",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CREATED_AT",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CUSTOM_FIELDS_15",
+				"type": "VARIANT"
+			},
+			{
+				"name": "CUSTOM_FIELDS_18",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CUSTOM_FIELDS_19",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CUSTOM_FIELDS_23",
+				"type": "VARIANT"
+			},
+			{
+				"name": "CUSTOM_FIELDS_25",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CUSTOM_FIELDS_26",
+				"type": "VARIANT"
+			},
+			{
+				"name": "CUSTOM_FIELDS_31",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CUSTOM_FIELDS_32",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CUSTOM_FIELDS_40",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CUSTOM_FIELDS_43",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CUSTOM_FIELDS_63",
+				"type": "VARIANT"
+			},
+			{
+				"name": "CUSTOM_FIELDS_88",
+				"type": "VARIANT"
+			},
+			{
+				"name": "CUSTOM_FIELDS_94",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CUSTOM_FIELDS_110",
+				"type": "VARIANT"
+			},
+			{
+				"name": "CUSTOM_FIELDS_126",
+				"type": "VARIANT"
+			},
+			{
+				"name": "CUSTOM_FIELDS_127",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "IMMEDIATE_ACTIONS",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LONG_DESCCRIPTION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "OCCURRED_AT",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "REPORTED_AT",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "SENSITIVITY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "TARGET_CLOSE_DATE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "TITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "UPDATED_AT",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "UUID",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_25_TEXT",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_31_TEXT",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_15_LOOKUP_COLOR",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_15_LOOKUP_DEPTH",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_15_LOOKUP_HIERARCHY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_15_LOOKUP_ICON",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_15_LOOKUP_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_15_LOOKUP_ORDER_CACHE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_15_LOOKUP_POSITION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_15_LOOKUP_SUBTITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_15_LOOKUP_TITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_15_LOOKUP_DISABLED",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_122_LOOKUP_COLOR",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_122_LOOKUP_DEPTH",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_122_LOOKUP_HIERARCHY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_122_LOOKUP_ICON",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_122_LOOKUP_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_122_LOOKUP_ORDER_CACHE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_122_LOOKUP_POSITION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_122_LOOKUP_SUBTITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_122_LOOKUP_TITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_122_LOOKUP_DISABLED",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_18_STRING",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_19_STRING",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_23_LOOKUP_COLOR",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_23_LOOKUP_DEPTH",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_23_LOOKUP_HIERARCHY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_23_LOOKUP_ICON",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_23_LOOKUP_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_23_LOOKUP_ORDER_CACHE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_23_LOOKUP_POSITION",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_23_LOOKUP_SUBTITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_23_LOOKUP_TITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_23_LOOKUP_DISABLED",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_32_STRING",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_40_STRING",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_63_LOOKUP_COLOR",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_63_LOOKUP_DEPTH",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_63_LOOKUP_HIERARCHY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_63_LOOKUP_ICON",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_63_LOOKUP_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_63_LOOKUP_ORDER_CACHE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_63_LOOKUP_POSITION",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_63_LOOKUP_SUBTITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_63_LOOKUP_TITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_63_LOOKUP_DISABLED",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_88_LOOKUP_COLOR",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_88_LOOKUP_DEPTH",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_88_LOOKUP_HIERARCHY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_88_LOOKUP_ICON",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_88_LOOKUP_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_88_LOOKUP_ORDER_CACHE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_88_LOOKUP_POSITION",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_88_LOOKUP_SUBTITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_88_LOOKUP_TITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_88_LOOKUP_DISABLED",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_127_STRING",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_43_BOOLEAN",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "CD_94_BOOLEAN",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "CD_26_LOOKUP_COLOR",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_26_LOOKUP_DEPTH",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_26_LOOKUP_HIERARCHY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_26_LOOKUP_ICON",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_26_LOOKUP_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_26_LOOKUP_ORDER_CACHE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_26_LOOKUP_POSITION",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_26_LOOKUP_SUBTITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_26_LOOKUP_TITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_26_LOOKUP_DISABLED",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_110_LOOKUP_COLOR",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_110_LOOKUP_DEPTH",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_110_LOOKUP_HIERARCHY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_110_LOOKUP_ICON",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_110_LOOKUP_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_110_LOOKUP_ORDER_CACHE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_110_LOOKUP_POSITION",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_110_LOOKUP_SUBTITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_110_LOOKUP_TITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_110_LOOKUP_DISABLED",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_126_LOOKUP_COLOR",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_126_LOOKUP_DEPTH",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_126_LOOKUP_HIERARCHY",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_126_LOOKUP_ICON",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_126_LOOKUP_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_126_LOOKUP_ORDER_CACHE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_126_LOOKUP_POSITION",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CD_126_LOOKUP_SUBTITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_126_LOOKUP_TITLE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CD_126_LOOKUP_DISABLED",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "HUMAN_ID",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "ACTUAL_CONSEQUENCE_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "ACTUAL_CONSEQUENCE_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "ASSIGNEE_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "ASSIGNEE_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "BUSINESS_UNIT_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "BUSINESS_UNIT_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CUSTOM_TYPE_DATA_ID",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CUSTOM_TYPE_DATA_TYPE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CUSTOM_TYPE_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "ENTERED_BY_DATA_ID",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "ENTERED_BY_DATA_TYPE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "ENTERED_BY_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LOCATION_DATA_ID",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LOCATION_DATA_TYPE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LOCATION_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "OWNER_DATA_ID",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "OWNER_DATA_TYPE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "OWNER_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "POTENTIAL_CONSEQUENCE_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "POTENTIAL_CONSEQUENCE_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "PROJECT_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "PROJECT_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "REPORTER_DATA_ID",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "REPORTER_DATA_TYPE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "REPORTER_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "STATE_DATA_ID",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "STATE_DATA_TYPE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "STATE_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "ASSIGNEES_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "ASSIGNEES_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "ATTACHMENTS_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "ATTACHMENTS_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "AUDITS_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "AUDITS_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "BLOCKED_USERS_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "BLOCKED_USERS_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "BUSINESS_OBJECTIVES_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "BUSINESS_OBJECTIVES_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "CUSTOM_FIELD_VALUES_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "CUSTOM_FIELD_VALUES_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "HAZARDS_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "HAZARDS_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "HISTORY_ACTIVITIES_DATA",
+				"type": "ARRAY"
+			},
+			{
+				"name": "HISTORY_ACTIVITIES_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "IMPACTS_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "IMPACTS_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "INCIDENT_TYPES_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "INCIDENT_TYPES_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "INCIDENTS_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "INCIDENTS_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "INDIVIDUALS_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "INDIVIDUALS_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "INVESTIGATIONS_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "INVESTIGATIONS_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LEARNINGS_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "LEARNINGS_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "PROGRESS_ACTIVITIES_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "PROGRESS_ACTIVITIES_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "RECOMMENDATIONS_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "RECOMMENDATIONS_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "RESOURCES_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "RESOURCES_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "TASKS_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "TASKS_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "SURVEY_RESPONSES_DATA",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "SURVEY_RESPONSES_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "TIMELINE_EVENT_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "TIMELINE_EVENTS_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "TREATMENT_PLANS_DATA",
+				"type": "VARIANT"
+			},
+			{
+				"name": "TREATMENT_PLANS_META_ASSOCIATION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LINKS_SELF_HREF",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "META_CAN_DELETE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "META_CAN_UPDATE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "META_CAN_MASS",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "META_CAN_MERGE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "META_CAN_TRANSITION",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "META_LINKED_STATUS_COUNT",
+				"type": "VARIANT"
+			},
+			{
+				"name": "LINKS_SELF",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LINKS_FIRST",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LINKS_PREV",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LINKS_NEXT",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LINKS_LAST",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "META_TIMESTAMP",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "META_NUM_PAGES",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "META_ORDERED_IDS",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "ORDERED_IDS",
+				"type": "VARIANT"
+			},
+			{
+				"name": "TOTAL_COUNT",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "TEST",
+			"table": "CGR_API_DATA"
+		}
+	}
+}

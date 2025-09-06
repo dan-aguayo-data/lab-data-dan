@@ -1,0 +1,31 @@
+{
+	"name": "SNOWFLAKE_ADF_CES_SEC_RAW_PROD",
+	"properties": {
+		"annotations": [],
+		"type": "SnowflakeV2",
+		"typeProperties": {
+			"authenticationType": "KeyPair",
+			"accountIdentifier": "bp43112-hr73515",
+			"user": "ADF_CES_SEC",
+			"database": "RAW_SEC_PROD",
+			"warehouse": "ETL_CES_ADF",
+			"role": "ADF_CES_SEC",
+			"privateKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "CES_ADF_KEY_VAULT",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "ADF-CES-SEC-SF"
+			},
+			"privateKeyPassphrase": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "CES_ADF_KEY_VAULT",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "ADF-CES-SEC-SF-passphrase"
+			}
+		}
+	}
+}

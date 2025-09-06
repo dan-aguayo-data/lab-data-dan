@@ -1,0 +1,21 @@
+{
+	"name": "COEX_BLOB_STORAGE_paypal_binary_sink_PARAM_DEV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cespaypaldev",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Paypal"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "SFTP_COEX",
+				"container": "landing"
+			}
+		}
+	}
+}

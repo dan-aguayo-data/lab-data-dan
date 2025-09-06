@@ -1,0 +1,321 @@
+{
+	"name": "AD_group_remove_users_ext",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get User List",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SNOWFLAKE_ADF_CES_GENERIC_PROD",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "SELECT DISTINCT\n    AD.ID AS USER_ID\n    ,LOGIN_ID\n    ,'3b8e9bda-66bd-49a9-979e-5fc53c61cc94' AS GROUP_ID\n    ,'Power BI - COEX External - Partners' AS GROUP_NAME\n    ,'REMOVE' AS OPERATION\nFROM @{pipeline().parameters.TABLE_USER_HEADER} COEX\nLEFT JOIN \"RAW_PROD\".\"CES_ADF\".\"AD_USERS\" AS AD\n    ON lower(COEX.LOGIN_ID) = lower(AD.MAIL)\n    LEFT JOIN RAW_PROD.CES_ADF.AD_GROUP_MEMBERS AS ADG\nON AD.ID = ADG.USER_ID\nWHERE\nDATEDIFF(DAY,COEX.DATE_UPDATED,CURRENT_TIMESTAMP()) > @{pipeline().parameters.COOLDOWN_DELETE}\nAND COEX.ACTIVE != 1\nAND AD.MAIL IS NOT NULL\nAND ADG.GROUP_ID = '3b8e9bda-66bd-49a9-979e-5fc53c61cc94'\n",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get User List",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get User List').output.resultSets[0].rows",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Delete User from Group",
+							"type": "WebActivity",
+							"dependsOn": [
+								{
+									"activity": "Set group_id",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "DELETE",
+								"url": {
+									"value": "https://graph.microsoft.com/v1.0/groups/@{variables('group_id')}/members/@{item().USER_ID}/$ref/",
+									"type": "Expression"
+								},
+								"authentication": {
+									"resource": "https://graph.microsoft.com",
+									"credential": {
+										"referenceName": "ADF-AD-INTEGRATION",
+										"type": "CredentialReference"
+									},
+									"userTenant": "abf0de66-3ab3-4ea3-b35e-502502be1261",
+									"username": "2118d493-c18b-44eb-8f35-adc880193c22",
+									"password": {
+										"type": "AzureKeyVaultSecret",
+										"store": {
+											"referenceName": "CES_ADF_KEY_VAULT",
+											"type": "LinkedServiceReference"
+										},
+										"secretName": "ADF-AD-Integration"
+									}
+								}
+							}
+						},
+						{
+							"name": "Set group_id",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "group_id",
+								"value": {
+									"value": "@item().GROUP_ID",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set user_id",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "user_id",
+								"value": {
+									"value": "@item().USER_ID",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set user_email",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "user_email",
+								"value": {
+									"value": "@item().LOGIN_ID",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set group_name",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "group_name",
+								"value": {
+									"value": "@item().GROUP_NAME",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Execute AD_audit_log",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Delete User from Group",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Set user_id",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Set user_email",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Set group_name",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Set Operation",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Set triggered_by",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "AD_audit_log",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"operation": {
+										"value": "@variables('operation')",
+										"type": "Expression"
+									},
+									"triggered_by": {
+										"value": "@variables('triggered_by')",
+										"type": "Expression"
+									},
+									"user_id": {
+										"value": "@variables('user_id')",
+										"type": "Expression"
+									},
+									"user_email": {
+										"value": "@variables('user_email')",
+										"type": "Expression"
+									},
+									"group_id": {
+										"value": "@variables('group_id')",
+										"type": "Expression"
+									},
+									"group_name": {
+										"value": "@variables('group_name')",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Set Operation",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "operation",
+								"value": {
+									"value": "REMOVE",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set triggered_by",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "triggered_by",
+								"value": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"TABLE_USER_HEADER": {
+				"type": "string",
+				"defaultValue": "RAW_PROD.CES_AD_INVITE.COEX_EXT_ORG_SECURITY_MAPPING_HDR "
+			},
+			"COOLDOWN_DELETE": {
+				"type": "string",
+				"defaultValue": "7"
+			}
+		},
+		"variables": {
+			"operation": {
+				"type": "String",
+				"defaultValue": "REMOVE"
+			},
+			"user_id": {
+				"type": "String"
+			},
+			"user_email": {
+				"type": "String"
+			},
+			"site_scheme_id": {
+				"type": "String"
+			},
+			"triggered_by": {
+				"type": "String"
+			},
+			"group_id": {
+				"type": "String"
+			},
+			"group_name": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "AD/COEX_External Partners"
+		},
+		"annotations": []
+	}
+}

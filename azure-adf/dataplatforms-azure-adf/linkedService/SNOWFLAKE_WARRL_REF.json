@@ -1,0 +1,32 @@
+{
+	"name": "SNOWFLAKE_WARRL_REF",
+	"properties": {
+		"annotations": [],
+		"type": "SnowflakeV2",
+		"typeProperties": {
+			"authenticationType": "KeyPair",
+			"accountIdentifier": "bp43112-hr73515",
+			"user": "ADF_CES",
+			"database": "WARRRL_REF",
+			"warehouse": "ETL_WARRRL",
+			"role": "SF_DEV_WARRRL",
+			"privateKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "CES_ADF_KEY_VAULT",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "ADF-CES-SF"
+			},
+			"privateKeyPassphrase": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "CES_ADF_KEY_VAULT",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "ADF-CES-SF-passphrase"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
+}

@@ -1,0 +1,27 @@
+{
+	"name": "AD_api_lvar",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CES_ADF_AD_Integration",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"realtive_url": {
+				"type": "string",
+				"defaultValue": "123"
+			}
+		},
+		"folder": {
+			"name": "AD"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@dataset().realtive_url",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	}
+}

@@ -1,0 +1,74 @@
+{
+	"name": "WA_Paypal_WA_daily_report_filter",
+	"properties": {
+		"activities": [
+			{
+				"name": "REPORT_FILTER",
+				"type": "Switch",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"on": {
+						"value": "@pipeline().parameters.ReportName",
+						"type": "Expression"
+					},
+					"cases": [
+						{
+							"value": "STL",
+							"activities": [
+								{
+									"name": "Paypal_WA_daily_STL_load_child",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "WA_Paypal_WA_daily_STL_load",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true
+									}
+								}
+							]
+						},
+						{
+							"value": "TRR",
+							"activities": [
+								{
+									"name": "Wait1",
+									"type": "Wait",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": 1
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"ReportName": {
+				"type": "string",
+				"defaultValue": "STL"
+			}
+		},
+		"variables": {
+			"STLDailyPath": {
+				"type": "String"
+			},
+			"TRRDailyPath": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "PayPal/WARRRL"
+		},
+		"annotations": []
+	}
+}

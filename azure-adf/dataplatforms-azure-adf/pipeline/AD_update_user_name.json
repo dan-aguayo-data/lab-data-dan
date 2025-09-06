@@ -1,0 +1,65 @@
+{
+	"name": "AD_update_user_name",
+	"properties": {
+		"activities": [
+			{
+				"name": "Update_user_name",
+				"description": "Use this to get format of API_BODY\nSELECT\n    null AS USER_ID\n    ,'gulfc4c@outlook.com' AS LOGIN_ID\n    ,OBJECT_CONSTRUCT(\n      'displayName', 'Anne Cork'\n    ) AS API_BODY\n",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "PATCH",
+					"url": {
+						"value": "@concat('https://graph.microsoft.com/v1.0/users/', pipeline().parameters.USER_ID)\r\n",
+						"type": "Expression"
+					},
+					"body": {
+						"value": "@pipeline().parameters.API_BODY",
+						"type": "Expression"
+					},
+					"authentication": {
+						"resource": "https://graph.microsoft.com",
+						"credential": {
+							"referenceName": "ADF-AD-INTEGRATION",
+							"type": "CredentialReference"
+						},
+						"userTenant": "abf0de66-3ab3-4ea3-b35e-502502be1261",
+						"username": "2118d493-c18b-44eb-8f35-adc880193c22",
+						"password": {
+							"type": "AzureKeyVaultSecret",
+							"store": {
+								"referenceName": "CES_ADF_KEY_VAULT",
+								"type": "LinkedServiceReference"
+							},
+							"secretName": "ADF-AD-Integration"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"USER_ID": {
+				"type": "string",
+				"defaultValue": "0a7f491c-d4fe-4a6d-b3f2-d3be7f192980"
+			},
+			"API_BODY": {
+				"type": "string",
+				"defaultValue": {
+					"displayName": "Chrissy Beresford"
+				}
+			}
+		},
+		"folder": {
+			"name": "AD"
+		},
+		"annotations": []
+	}
+}

@@ -1,0 +1,665 @@
+{
+	"name": "PBI_refresh_datasets_frequent",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get PBI Dataset IDs",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 3,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "groupId",
+						"value": "ef85c0e9-4243-4056-9ad8-16aa8d885064"
+					}
+				],
+				"typeProperties": {
+					"method": "GET",
+					"url": {
+						"value": "@concat('https://api.powerbi.com/v1.0/myorg/groups/',pipeline().globalParameters.P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_DEV,'/datasets')",
+						"type": "Expression"
+					},
+					"body": "",
+					"authentication": {
+						"resource": "https://analysis.windows.net/powerbi/api",
+						"credential": {
+							"referenceName": "ADF-POWERBI-CES-INTEGRATION",
+							"type": "CredentialReference"
+						},
+						"userTenant": "abf0de66-3ab3-4ea3-b35e-502502be1261",
+						"username": "108c255c-fcf1-431e-9e59-ea9ccc54fe03",
+						"password": {
+							"type": "AzureKeyVaultSecret",
+							"store": {
+								"referenceName": "CES_ADF_KEY_VAULT",
+								"type": "LinkedServiceReference"
+							},
+							"secretName": "KADA-PowerBI-API-Integration"
+						}
+					}
+				}
+			},
+			{
+				"name": "Filter for dataset id",
+				"description": "MASTERDATA_FIN",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Get PBI Dataset IDs",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get PBI Dataset IDs').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().name,pipeline().globalParameters.P_PBI_DATASETNAME_MASTERDATA_FIN_PARAM_DEV)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Filter for dataset id_2",
+				"description": "MASTERDATA_FIN_RETURNIT",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Get PBI Dataset IDs",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get PBI Dataset IDs').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().name,pipeline().globalParameters.P_PBI_DATASETNAME_MASTERDATA_FIN_RETURNIT_PARAM_DEV)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Filter for dataset id_3",
+				"description": "MASTERDATA_FIN_VIC, DEV EQUIVALENT MODEL DOESNT EXIST, SO IT WILL CAUSE ERROR",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Get PBI Dataset IDs",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get PBI Dataset IDs').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().name,pipeline().globalParameters.P_PBI_DATASETNAME_MASTERDATA_FIN_VIC_PARAM_DEV)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Trigger Dataset Refresh",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Filter for dataset id",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 3,
+					"retryIntervalInSeconds": 180,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": {
+						"value": "@concat('https://api.powerbi.com/v1.0/myorg/groups/',pipeline().globalParameters.P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_DEV,'/datasets/',activity('Filter for dataset id').output.value[0].id,'/refreshes')",
+						"type": "Expression"
+					},
+					"body": {
+						"type": "full",
+						"retryCount": 3,
+						"applyRefreshPolicy": true
+					},
+					"authentication": {
+						"resource": "https://analysis.windows.net/powerbi/api",
+						"credential": {
+							"referenceName": "ADF-POWERBI-CES-INTEGRATION",
+							"type": "CredentialReference"
+						},
+						"userTenant": "abf0de66-3ab3-4ea3-b35e-502502be1261",
+						"username": "108c255c-fcf1-431e-9e59-ea9ccc54fe03",
+						"password": {
+							"type": "AzureKeyVaultSecret",
+							"store": {
+								"referenceName": "CES_ADF_KEY_VAULT",
+								"type": "LinkedServiceReference"
+							},
+							"secretName": "KADA-PowerBI-API-Integration"
+						}
+					}
+				}
+			},
+			{
+				"name": "Trigger Dataset Refresh_2",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Filter for dataset id_2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 3,
+					"retryIntervalInSeconds": 180,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": {
+						"value": "@concat('https://api.powerbi.com/v1.0/myorg/groups/',pipeline().globalParameters.P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_DEV,'/datasets/',activity('Filter for dataset id_2').output.value[0].id,'/refreshes')",
+						"type": "Expression"
+					},
+					"body": {
+						"type": "full",
+						"retryCount": 3,
+						"applyRefreshPolicy": true
+					},
+					"authentication": {
+						"resource": "https://analysis.windows.net/powerbi/api",
+						"credential": {
+							"referenceName": "ADF-POWERBI-CES-INTEGRATION",
+							"type": "CredentialReference"
+						},
+						"userTenant": "abf0de66-3ab3-4ea3-b35e-502502be1261",
+						"username": "108c255c-fcf1-431e-9e59-ea9ccc54fe03",
+						"password": {
+							"type": "AzureKeyVaultSecret",
+							"store": {
+								"referenceName": "CES_ADF_KEY_VAULT",
+								"type": "LinkedServiceReference"
+							},
+							"secretName": "KADA-PowerBI-API-Integration"
+						}
+					}
+				}
+			},
+			{
+				"name": "Trigger Dataset Refresh_3",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Filter for dataset id_3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 3,
+					"retryIntervalInSeconds": 180,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": {
+						"value": "@concat('https://api.powerbi.com/v1.0/myorg/groups/',pipeline().globalParameters.P_TARGET_WORKSPACEID_POWERBI_CES_PARAM_DEV,'/datasets/',activity('Filter for dataset id_3').output.value[0].id,'/refreshes')",
+						"type": "Expression"
+					},
+					"body": {
+						"type": "full",
+						"retryCount": 3,
+						"applyRefreshPolicy": true
+					},
+					"authentication": {
+						"resource": "https://analysis.windows.net/powerbi/api",
+						"credential": {
+							"referenceName": "ADF-POWERBI-CES-INTEGRATION",
+							"type": "CredentialReference"
+						},
+						"userTenant": "abf0de66-3ab3-4ea3-b35e-502502be1261",
+						"username": "108c255c-fcf1-431e-9e59-ea9ccc54fe03",
+						"password": {
+							"type": "AzureKeyVaultSecret",
+							"store": {
+								"referenceName": "CES_ADF_KEY_VAULT",
+								"type": "LinkedServiceReference"
+							},
+							"secretName": "KADA-PowerBI-API-Integration"
+						}
+					}
+				}
+			},
+			{
+				"name": "PBI_Enhanced_Refresh_Check",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Trigger Dataset Refresh",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PBI_API_Refresh_Check",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"RefreshStatus": {
+							"value": "@activity('Trigger Dataset Refresh').output.extendedStatus",
+							"type": "Expression"
+						},
+						"Email": {
+							"value": "@pipeline().globalParameters.P_ALERT_GENERIC_EMAIL_PARAM_DEV",
+							"type": "Expression"
+						},
+						"Subject": {
+							"value": "@pipeline().parameters.EmailSubject",
+							"type": "Expression"
+						},
+						"Body": {
+							"value": "@concat('Hello, </br> </br> this is an automated email to inform that the Power BI full refresh activity in the pipeline ', activity('Filter for dataset id').output.Value[0].name, ' has failed. Please review error in Power BI Service to assess root cause. </br></br></br> PowerBI Dataset: Master Data - PROD (FIN) </br></br>Possible Error: Power BI Dataset, Authentication in PBI Service, etc </br></br></br> Thank you,')",
+							"type": "Expression"
+						},
+						"PipelineName": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"PipelineTriggerName": {
+							"value": "@pipeline().TriggerName",
+							"type": "Expression"
+						},
+						"PipelineTriggerTime": {
+							"value": "@pipeline().TriggerTime",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "SEND_EMAIL_GENERIC",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Trigger Dataset Refresh",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SEND_EMAIL_GENERIC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Email": {
+							"value": "@pipeline().globalParameters.P_ALERT_GENERIC_EMAIL_PARAM_DEV",
+							"type": "Expression"
+						},
+						"Subject": {
+							"value": "@pipeline().parameters.EmailSubject",
+							"type": "Expression"
+						},
+						"Body": {
+							"value": "@concat('Hello, </br> </br> this is an automated email to inform that the Power BI incremental hourly refresh activity in the pipeline ', activity('Filter for dataset id').output.Value[0].name, ' has failed due to to a unseccesfull API call or connectivity timeout, please review ADF to assess root cause. </br></br></br> PowerBI Dataset:  Master Data - PROD (FIN) </br></br>Error: API unseccessful call or connectivity timeout</br></br></br> Thank you,')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "PBI_Enhanced_Refresh_Check_2",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Trigger Dataset Refresh_2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PBI_API_Refresh_Check",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"RefreshStatus": {
+							"value": "@activity('Trigger Dataset Refresh_2').output.extendedStatus",
+							"type": "Expression"
+						},
+						"Email": {
+							"value": "@pipeline().globalParameters.P_ALERT_GENERIC_EMAIL_PARAM_DEV",
+							"type": "Expression"
+						},
+						"Subject": {
+							"value": "@pipeline().parameters.EmailSubject",
+							"type": "Expression"
+						},
+						"Body": {
+							"value": "@concat('Hello, </br> </br> this is an automated email to inform that the Power BI full refresh activity in the pipeline ', activity('Filter for dataset id_2').output.Value[0].name, ' has failed. Please review error in Power BI Service to assess root cause. </br></br></br> PowerBI Dataset:  Master Data (Returnit VIC) - PROD (FIN) </br></br>Possible Error: Power BI Dataset, Authentication in PBI Service, etc </br></br></br> Thank you,')",
+							"type": "Expression"
+						},
+						"PipelineName": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"PipelineTriggerName": {
+							"value": "@pipeline().TriggerName",
+							"type": "Expression"
+						},
+						"PipelineTriggerTime": {
+							"value": "@pipeline().TriggerTime",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "SEND_EMAIL_GENERIC_2",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Trigger Dataset Refresh_2",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SEND_EMAIL_GENERIC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Email": {
+							"value": "@pipeline().globalParameters.P_ALERT_GENERIC_EMAIL_PARAM_DEV",
+							"type": "Expression"
+						},
+						"Subject": {
+							"value": "@pipeline().parameters.EmailSubject",
+							"type": "Expression"
+						},
+						"Body": {
+							"value": "@concat('Hello, </br> </br> this is an automated email to inform that the Power BI incremental hourly refresh activity in the pipeline ', activity('Filter for dataset id_2').output.Value[0].name, ' has failed due to to a unseccesfull API call or connectivity timeout, please review ADF to assess root cause. </br></br></br> PowerBI Dataset:  Master Data (Returnit VIC) - PROD (FIN) </br></br>Error: API unseccessful call or connectivity timeout</br></br></br> Thank you,')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "PBI_Enhanced_Refresh_Check_3",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Trigger Dataset Refresh_3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PBI_API_Refresh_Check",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"RefreshStatus": {
+							"value": "@activity('Trigger Dataset Refresh_3').output.extendedStatus",
+							"type": "Expression"
+						},
+						"Email": {
+							"value": "@pipeline().globalParameters.P_ALERT_GENERIC_EMAIL_PARAM_DEV",
+							"type": "Expression"
+						},
+						"Subject": {
+							"value": "@pipeline().parameters.EmailSubject",
+							"type": "Expression"
+						},
+						"Body": {
+							"value": "@concat('Hello, </br> </br> this is an automated email to inform that the Power BI full refresh activity in the pipeline ', activity('Filter for dataset id_3').output.Value[0].name, ' has failed. Please review error in Power BI Service to assess root cause. </br></br></br> PowerBI Dataset:  Master Data (VICReturn) - PROD (FIN)</br></br>Possible Error: Power BI Dataset, Authentication in PBI Service, etc </br></br></br> Thank you,')",
+							"type": "Expression"
+						},
+						"PipelineName": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"PipelineTriggerName": {
+							"value": "@pipeline().TriggerName",
+							"type": "Expression"
+						},
+						"PipelineTriggerTime": {
+							"value": "@pipeline().TriggerTime",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "SEND_EMAIL_GENERIC_3",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Trigger Dataset Refresh_3",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SEND_EMAIL_GENERIC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Email": {
+							"value": "@pipeline().globalParameters.P_ALERT_GENERIC_EMAIL_PARAM_DEV",
+							"type": "Expression"
+						},
+						"Subject": {
+							"value": "@pipeline().parameters.EmailSubject",
+							"type": "Expression"
+						},
+						"Body": {
+							"value": "@concat('Hello, </br> </br> this is an automated email to inform that the Power BI incremental hourly refresh activity in the pipeline ', activity('Filter for dataset id_3').output.Value[0].name, ' has failed due to to a unseccesfull API call or connectivity timeout, please review ADF to assess root cause. </br></br></br> PowerBI Dataset: Master Data (VICReturn) - PROD (FIN) </br></br>Error: API unseccessful call or connectivity timeout</br></br></br> Thank you,')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SEND_EMAIL_GENERIC_3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"pipelineName": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"pipelineTriggerName": {
+							"value": "@pipeline().TriggerName",
+							"type": "Expression"
+						},
+						"pipelineTriggerTime": {
+							"value": "@pipeline().TriggerTime",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL_copy1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SEND_EMAIL_GENERIC_2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"pipelineName": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"pipelineTriggerName": {
+							"value": "@pipeline().TriggerName",
+							"type": "Expression"
+						},
+						"pipelineTriggerTime": {
+							"value": "@pipeline().TriggerTime",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL_copy1_copy1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SEND_EMAIL_GENERIC",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SLACK_FAIL_ALERT_DATA_TEAM_CHANNEL",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"pipelineName": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"pipelineTriggerName": {
+							"value": "@pipeline().TriggerName",
+							"type": "Expression"
+						},
+						"pipelineTriggerTime": {
+							"value": "@pipeline().TriggerTime",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"concurrency": 2,
+		"parameters": {
+			"Email": {
+				"type": "string",
+				"defaultValue": "data-team@coexservices.com.au"
+			},
+			"EmailSubject": {
+				"type": "string",
+				"defaultValue": "ADF Notification - Power BI Refresh Failure"
+			}
+		},
+		"folder": {
+			"name": "DBT_PBI_FLOWS/PBI/PBI Runs"
+		},
+		"annotations": []
+	}
+}

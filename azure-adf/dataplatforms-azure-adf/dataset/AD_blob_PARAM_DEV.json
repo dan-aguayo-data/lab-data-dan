@@ -1,0 +1,32 @@
+{
+	"name": "AD_blob_PARAM_DEV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cesadfdev",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "AD"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@{pipeline().parameters.API_Name}_@{formatDateTime(convertFromUtc(utcnow(),'AUS Eastern Standard Time'),'yyyyMMddHHmmss')}",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@{toLower(pipeline().parameters.API_Name)}/@{variables('Group ID')}",
+					"type": "Expression"
+				},
+				"container": "cesadfdev"
+			},
+			"compression": {
+				"type": "gzip"
+			}
+		},
+		"schema": {}
+	}
+}
