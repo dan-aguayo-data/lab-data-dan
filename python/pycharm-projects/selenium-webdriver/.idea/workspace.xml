@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="67418389-1a16-4bee-af38-83f4af133cd9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../python-learning-pongGame/ball.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../python-learning-pongGame/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../python-learning-pongGame/paddle.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../python-learning-pongGame/scoreboard.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/download_file_from_link.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../work-usecase/misc_find_words_in_specific_sql.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../work-usecase/misc_renamce_folder_files_replace.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../work-usecase/selenium_unzip_web_files.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../work-usecase/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../azure-functions/DBT_WEBHOOK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../azure-functions/HTTP_TRIGGER_L_APP" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../work-usecase/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../work-usecase/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/.idea/work-usecase.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../work-usecase/.idea/work-usecase.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/mis_convert_txt_file_to_sql.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-input/AWS common model data validation check.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-input/PVO_naming.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-input/SQL_Sources/AR_TRANSACTIONS_DTL.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-input/SQL_Sources/source_replacement.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-input/kada_snowflake_extractor_config.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-input/manual conversion table pvo.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-input/snowflake_hwm.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-input/tables.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-input/test.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_AP_BALANCES.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_AP_TRANSACTIONS.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_AR_TRANSACTIONS.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_AR_TRANSACTIONS_DUE.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_AR_TRANSACTIONS_DUE_APP.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_AR_TRANSACTIONS_DUE_SCHED.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_DST_ORORA_MANIFEST_RECON.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_GL_ACCOUNT.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_GL_BALANCES.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_GL_COST_CENTER.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_GL_CURRENCY.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_GL_ENTITY.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_GL_INTERCOMPANY.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_GL_JOURNALS.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_GL_LEDGER.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_GL_MATERIAL_TYPE.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_GL_PERIOD.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_GL_PROJECT.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_GL_SCHEME.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_GL_TRANSACTIONS_SUBLEDGER.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/DBT_SQLs/ERP_STAGE_KM_EXPENSES.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/output_sheet_names.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/rsa_key_b64.p8" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/sample_data.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../work-usecase/zz-output/sample_data.parquet" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 8
+}]]></component>
+  <component name="ProjectId" id="2zO852a8XcnOaLDu10dY3VpNul0" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.download_file_from_link.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-babbdf50b680-746f403e7f0c-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.15989.155" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="67418389-1a16-4bee-af38-83f4af133cd9" name="Changes" comment="" />
+      <created>1751590571755</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1751590571755</updated>
+    </task>
+    <servers />
+  </component>
+</project>
