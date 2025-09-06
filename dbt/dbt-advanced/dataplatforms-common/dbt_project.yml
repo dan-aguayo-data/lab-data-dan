@@ -1,0 +1,619 @@
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'dataplatform_common'
+version: '1.0.0'
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'coex'
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+seed-paths: ["data"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+    - "target"
+    - "dbt_modules"
+
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+# In this example config, we tell dbt to build all models in the example/ directory
+# as tables. These settings can be overridden in the individual model files
+# using the `{{ config(...) }}` macro.
+models:
+  dataplatform_common:
+    +transient: false
+    snowflake_warehouse: |
+      {%- if  target.name.upper() == "DEV" -%} ETL_CES_DEV
+      {%- elif target.name.upper() == "SIT"  -%} ETL_CES_SIT
+      {%- elif target.name.upper() == "UAT"  -%} ETL_CES_UAT
+      {%- elif target.name.upper() == "PROD"  -%} ETL_CES
+      {%- endif -%}
+    AGING:
+      snowflake_warehouse: |
+        {%- if  target.name.upper() == "DEV" -%} ETL_CES_DEV
+        {%- elif target.name.upper() == "SIT"  -%} ETL_CES_SIT
+        {%- elif target.name.upper() == "UAT"  -%} ETL_CES_UAT
+        {%- elif target.name.upper() == "PROD"  -%} ETL_CES_SMALL
+        {%- endif -%}
+      database: |
+        {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+        {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+        {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+        {%- else -%} COMMON_{{ target.name.upper() }}
+        {%- endif -%}
+      schema: DWH
+      materialized: table
+      tags: 
+        - DWH
+        - AGING
+        - UAT
+        - PROD
+        - DEV
+        - FULL_REFRESH
+    BANK:
+      snowflake_warehouse: |
+        {%- if  target.name.upper() == "DEV" -%} ETL_CES_DEV
+        {%- elif target.name.upper() == "SIT"  -%} ETL_CES_SIT
+        {%- elif target.name.upper() == "UAT"  -%} ETL_CES_UAT
+        {%- elif target.name.upper() == "PROD"  -%} ETL_CES_SMALL
+        {%- endif -%}
+      database: |
+        {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+        {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+        {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+        {%- else -%} COMMON_{{ target.name.upper() }}
+        {%- endif -%}
+      schema: DWH
+      materialized: table
+      tags: 
+        - DWH
+        - BANK
+        - HOURLY
+        - UAT
+        - PROD
+        - DEV
+        - FULL_REFRESH
+    BRAZE:
+      database: |
+        {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+        {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+        {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+        {%- else -%} COMMON_{{ target.name.upper() }}
+        {%- endif -%}
+      schema: DWH
+      materialized: table
+      tags: 
+        - DWH
+        - BRAZE
+        - UAT
+        - PROD
+        - DEV
+        - FULL_REFRESH
+    CRM: 
+      database: |
+        {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+        {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+        {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+        {%- else -%} COMMON_{{ target.name.upper() }}
+        {%- endif -%}
+      schema: DWH
+      materialized: table
+      tags: 
+        - DWH
+        - HOURLY
+        - CRM
+        - UAT
+        - PROD
+        - DEV
+        - FULL_REFRESH
+    DWH_DAILY:
+      database: |
+        {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+        {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+        {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+        {%- else -%} COMMON_{{ target.name.upper() }}
+        {%- endif -%}
+      schema: DWH
+      materialized: table
+      tags:
+        - DWH
+        - FULL_REFRESH
+        - UAT
+        - PROD
+        - DEV
+    DWH_HOURLY:
+      snowflake_warehouse: |
+        {%- if  target.name.upper() == "DEV" -%} ETL_CES_HOURLY_DEV
+        {%- elif target.name.upper() == "SIT"  -%} ETL_CES_HOURLY_SIT
+        {%- elif target.name.upper() == "UAT"  -%} ETL_CES_HOURLY_UAT
+        {%- elif target.name.upper() == "PROD"  -%} ETL_CES_HOURLY
+        {%- endif -%}
+      database: |
+        {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+        {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+        {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+        {%- else -%} COMMON_{{ target.name.upper() }}
+        {%- endif -%}
+      schema: DWH
+      materialized: table
+      tags: 
+        - DWH
+        - HOURLY
+        - UAT
+        - FULL_REFRESH
+        - PROD
+        - DEV
+    DWH_FREQUENT:
+      snowflake_warehouse: |
+        {%- if  target.name.upper() == "DEV" -%} "ETL_CES_FREQUENT_DEV"
+        {%- elif target.name.upper() == "SIT"  -%} "ETL_CES_FREQUENT_SIT"
+        {%- elif target.name.upper() == "UAT"  -%} "ETL_CES_FREQUENT_UAT"
+        {%- elif target.name.upper() == "PROD"  -%} "ETL_CES_FREQUENT"
+        {%- endif -%}
+      database: |
+        {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+        {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+        {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+        {%- else -%} COMMON_{{ target.name.upper() }}
+        {%- endif -%}
+      schema: DWH
+      materialized: table
+      tags: 
+        - DWH       
+        - DWH_FREQUENT
+        - UAT
+        - FULL_REFRESH
+        - DEV
+        - PROD
+    ERP:
+      schema: DWH
+      materialized: table
+      tags:
+        - DWH
+        - ERP
+        - FULL_REFRESH
+        - DEV
+        - PROD
+    EXT:
+      schema: DWH
+      database: EXT_{{ target.name.upper() }}
+      materialized: table
+      tags: 
+        - DWH
+        - EXT
+        - FULL_REFRESH
+        - DEV
+        - PROD
+    EXT_API:
+      schema: DWH_API
+      database: EXT_{{ target.name.upper() }}
+      materialized: table
+      tags: 
+        - DWH_API
+        - FULL_REFRESH
+        - DEV
+        - UAT
+        - PROD
+    QCP:
+      schema: DWH
+      materialized: table
+      snowflake_warehouse: |
+        {%- if  target.name.upper() == "DEV" -%} ETL_CES_DEV
+        {%- elif target.name.upper() == "SIT"  -%} ETL_CES_SIT
+        {%- elif target.name.upper() == "UAT"  -%} ETL_CES_UAT
+        {%- elif target.name.upper() == "PROD"  -%} ETL_CES_SMALL
+        {%- endif -%}
+      tags: 
+        - DWH
+        - QCP
+        - FULL_REFRESH
+        - PROD
+        - DEV
+    GE:
+      schema: DWH
+      materialized: table
+      tags: 
+        - DWH
+        - GE
+        - HOURLY
+        - FULL_REFRESH
+        - DEV
+        - PROD
+    REF:
+      REF_DAILY:
+        schema: REF
+        materialized: table
+        tags:
+          - REF
+          - FULL_REFRESH
+          - DEV
+          - PROD
+      REF_HOURLY: 
+        schema: REF
+        materialized: table
+        tags:
+          - REF
+          - HOURLY
+          - FULL_REFRESH
+          - DEV
+          - PROD
+    WARRRL:
+      schema: DWH
+      materialized: table
+      tags: 
+        - DWH
+        - WARRRL
+        - FULL_REFRESH
+        - DEV
+        - PROD
+    RETURNIT_VIC:
+      schema: DWH
+      materialized: table
+      tags: 
+        - DWH
+        - RETURNIT_VIC
+        - HOURLY
+        - FULL_REFRESH
+        - DEV
+        - PROD
+    EXT_BRAZE:
+        BRAZE_GENERAL:
+          snowflake_warehouse: "ETL_COEX_BRAZE"
+          database: |
+            {%- if target.name.upper() == "DEV" -%} EXT_DEV
+            {%- elif target.name.upper() == "UAT" -%} EXT_UAT
+            {%- elif target.name.upper() == "PROD" -%} EXT_PROD
+            {%- else -%} EXT_{{ target.name.upper() }}
+            {%- endif -%}
+          schema: DWH_BRAZE
+          materialized: table
+          tags: 
+            - DWH_BRAZE
+            - EXT_BRAZE
+            - UAT
+            - FULL_REFRESH
+            - DEV
+            - PROD
+        BRAZE_TRANSACTIONS:
+          snowflake_warehouse: "ETL_COEX_BRAZE"
+          database: |
+            {%- if target.name.upper() == "DEV" -%} EXT_DEV
+            {%- elif target.name.upper() == "UAT" -%} EXT_UAT
+            {%- elif target.name.upper() == "PROD" -%} EXT_PROD
+            {%- else -%} EXT_{{ target.name.upper() }}
+            {%- endif -%}
+          schema: DWH_BRAZE
+          materialized: table
+          tags: 
+            - DWH_BRAZE
+            - EXT_BRAZE
+            - UAT
+            - PROD
+            - DEV
+    EXT_BRAZE_FREQUENT:
+      snowflake_warehouse: "ETL_COEX_BRAZE"
+      database: |
+        {%- if target.name.upper() == "DEV" -%} EXT_DEV
+        {%- elif target.name.upper() == "UAT" -%} EXT_UAT
+        {%- elif target.name.upper() == "PROD" -%} EXT_PROD
+        {%- else -%} EXT_{{ target.name.upper() }}
+        {%- endif -%}
+      schema: DWH_BRAZE
+      materialized: table
+      tags: 
+        - DWH_BRAZE
+        - EXT_BRAZE
+        - EXT_BRAZE_FREQUENT
+        - UAT
+        - FULL_REFRESH
+        - DEV
+        - PROD
+    BRAZE_EXTERNAL:
+      BRAZE_GENERAL:
+        snowflake_warehouse: "ETL_COEX_BRAZE"
+        database: |
+          {%- if target.name.upper() == "DEV" -%} EXT_DEV
+          {%- elif target.name.upper() == "UAT" -%} EXT_UAT
+          {%- elif target.name.upper() == "PROD" -%} EXT_PROD
+          {%- endif -%}
+        schema: DWH_BRAZE_EXTERNAL
+        materialized: table
+        tags: 
+          - BRAZE_EXTERNAL
+          - FULL_REFRESH
+          - DEV
+          - PROD
+      BRAZE_TRANSACTIONS:
+        snowflake_warehouse: "ETL_COEX_BRAZE"
+        database: |
+          {%- if target.name.upper() == "DEV" -%} EXT_DEV
+          {%- elif target.name.upper() == "UAT" -%} EXT_UAT
+          {%- elif target.name.upper() == "PROD" -%} EXT_PROD
+          {%- endif -%}
+        schema: DWH_BRAZE_EXTERNAL
+        materialized: table
+        tags: 
+          - BRAZE_EXTERNAL
+          - DEV
+          - PROD
+    DWH_HOURLY_TMP:
+      schema: TEST
+      database: COMMON_DEV
+      materialized: table
+      tags: 
+        - COMMON_TEST
+        - DEV
+    BRAZE_EXTERNAL_FREQ:
+      snowflake_warehouse: "ETL_COEX_BRAZE"
+      database: |
+        {%- if target.name.upper() == "DEV" -%} EXT_DEV
+        {%- elif target.name.upper() == "UAT" -%} EXT_UAT
+        {%- elif target.name.upper() == "PROD" -%} EXT_PROD
+        {%- endif -%}
+      schema: DWH_BRAZE_EXTERNAL
+      materialized: table
+      tags: 
+        - BRAZE_EXTERNAL_FREQ
+        - FULL_REFRESH
+        - DEV
+        - PROD
+    EXT_ZENDESK:
+      schema: DWH_ZENDESK
+      database: EXT_{{ target.name.upper() }}
+      materialized: table
+      tags: 
+        - DWH_ZENDESK
+        - EXT_ZENDESK
+        - FULL_REFRESH
+        - DEV
+        - PROD
+    DWH_STATIC:
+      schema: DWH
+      materialized: table
+      tags: 
+        - STATIC   #RUNS AT FULL-REFRESH TIME BUT WITH INCREMENTAL REFRESH, EXCEPTION DUE THE LONG TIME IT TAKES ON FULL-REFRESH (OVER 1 HR)
+        - PROD
+        - DEV
+    EXT_VICRETURN:
+      schema: DWH_VICRETURN
+      database: EXT_{{ target.name.upper() }}
+      materialized: table
+      tags: 
+        - DWH_VICRETURN
+        - EXT_VICRETURN
+        - FULL_REFRESH
+        - DEV
+        - PROD
+    ERP_STAGE_HOURLY:
+      snowflake_warehouse: |
+        {%- if  target.name.upper() == "DEV" -%} "ETL_CES_ERP_COMMON_DEV"
+        {%- elif target.name.upper() == "SIT"  -%} "ETL_CES_ERP_COMMON_SIT"
+        {%- elif target.name.upper() == "UAT"  -%} "ETL_CES_ERP_COMMON_UAT"
+        {%- elif target.name.upper() == "PROD"  -%} "ETL_CES_ERP_COMMON"
+        {%- endif -%}
+      schema: ERP
+      database: COMMON_{{ target.name.upper() }}
+      materialized: table
+      tags:
+        - ERP_STAGE_HOURLY
+        - ERP_STAGE
+        - UAT
+        - PROD
+        - DEV
+    ERP_STAGE_DAILY:
+      snowflake_warehouse: |
+        {%- if  target.name.upper() == "DEV" -%} "ETL_CES_ERP_COMMON_DEV"
+        {%- elif target.name.upper() == "SIT"  -%} "ETL_CES_ERP_COMMON_SIT"
+        {%- elif target.name.upper() == "UAT"  -%} "ETL_CES_ERP_COMMON_UAT"
+        {%- elif target.name.upper() == "PROD"  -%} "ETL_CES_ERP_COMMON"
+        {%- endif -%}
+      schema: ERP
+      database: COMMON_{{ target.name.upper() }}
+      materialized: table
+      tags:
+        - ERP_STAGE_DAILY
+        - ERP_STAGE
+        - UAT
+        - PROD
+        - DEV
+    DWH_MARTS:
+      MARTS_DAILY:
+        snowflake_warehouse: |
+          {%- if  target.name.upper() == "DEV" -%} "CES_ETL_MARTS_DEV"
+          {%- elif target.name.upper() == "SIT"  -%} "CES_ETL_MARTS_SIT"
+          {%- elif target.name.upper() == "UAT"  -%} "CES_ETL_MARTS_UAT"
+          {%- elif target.name.upper() == "PROD"  -%} "CES_ETL_MARTS"
+          {%- endif -%}
+        database: |
+          {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+          {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+          {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+          {%- else -%} COMMON_{{ target.name.upper() }}
+          {%- endif -%}
+        schema: DWH_GOLD
+        materialized: table
+        tags: 
+          - DWH_MARTS
+          - DWH_MARTS_DAILY
+          - UAT
+          - PROD
+          - DEV
+          - FULL_REFRESH
+      MARTS_HOURLY:
+        snowflake_warehouse: |
+          {%- if  target.name.upper() == "DEV" -%} "CES_ETL_MARTS_DEV"
+          {%- elif target.name.upper() == "SIT"  -%} "CES_ETL_MARTS_SIT"
+          {%- elif target.name.upper() == "UAT"  -%} "CES_ETL_MARTS_UAT"
+          {%- elif target.name.upper() == "PROD"  -%} "CES_ETL_MARTS_HOURLY"
+          {%- endif -%}
+        database: |
+          {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+          {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+          {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+          {%- else -%} COMMON_{{ target.name.upper() }}
+          {%- endif -%}
+        schema: DWH_GOLD
+        materialized: table
+        tags: 
+          - DWH_MARTS
+          - DWH_MARTS_HOURLY
+          - HOURLY
+          - UAT
+          - PROD
+          - DEV
+          - FULL_REFRESH
+      MARTS_FREQUENT:
+        snowflake_warehouse: |
+          {%- if  target.name.upper() == "DEV" -%} "CES_ETL_MARTS_DEV"
+          {%- elif target.name.upper() == "SIT"  -%} "CES_ETL_MARTS_SIT"
+          {%- elif target.name.upper() == "UAT"  -%} "CES_ETL_MARTS_UAT"
+          {%- elif target.name.upper() == "PROD"  -%} "CES_ETL_MARTS_FREQUENT"
+          {%- endif -%}
+        database: |
+          {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+          {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+          {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+          {%- else -%} COMMON_{{ target.name.upper() }}
+          {%- endif -%}
+        schema: DWH_GOLD
+        materialized: table
+        tags: 
+          - DWH_MARTS
+          - DWH_MARTS_FREQUENT
+          #- DWH_FREQUENT #Enable Frequent when required
+          - HOURLY #Enabled until Frequent is required 
+          - UAT
+          - PROD
+          - DEV
+          - FULL_REFRESH
+      SCHEME_DATA_UPLOAD:
+        snowflake_warehouse: |
+          {%- if  target.name.upper() == "DEV" -%} "CES_ETL_MARTS_DEV"
+          {%- elif target.name.upper() == "SIT"  -%} "CES_ETL_MARTS_SIT"
+          {%- elif target.name.upper() == "UAT"  -%} "CES_ETL_MARTS_UAT"
+          {%- elif target.name.upper() == "PROD"  -%} "CES_ETL_MARTS"
+          {%- endif -%}
+        database: |
+          {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+          {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+          {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+          {%- else -%} COMMON_{{ target.name.upper() }}
+          {%- endif -%}
+        schema: SCHEME_DATA_UPLOAD
+        materialized: table
+        tags: 
+          - SCHEME_DATA_UPLOAD
+          - FULL_REFRESH
+          - DEV
+          - PROD
+    DWH_MARTS_STAGE:
+      MARTS_STAGE_DAILY:
+        snowflake_warehouse: |
+          {%- if  target.name.upper() == "DEV" -%} "CES_ETL_MARTS_DEV"
+          {%- elif target.name.upper() == "SIT"  -%} "CES_ETL_MARTS_SIT"
+          {%- elif target.name.upper() == "UAT"  -%} "CES_ETL_MARTS_UAT"
+          {%- elif target.name.upper() == "PROD"  -%} "CES_ETL_MARTS"
+          {%- endif -%}
+        database: |
+          {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+          {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+          {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+          {%- else -%} COMMON_{{ target.name.upper() }}
+          {%- endif -%}
+        schema: DWH_SILVER
+        materialized: table
+        tags: 
+          - DWH_MARTS_STAGE
+          - DWH_MARTS_STAGE_DAILY
+          - UAT
+          - PROD
+          - DEV
+    DWH_MARTS_TMP:
+      snowflake_warehouse: "CES_ETL_TESTS"
+      schema: DWH_GOLD_TMP
+      materialized: table
+      database: |
+        {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+        {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+        {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+        {%- endif -%}
+      tags: 
+        - DWH_MARTS_TMP
+        - DEV
+        - UAT
+        - PROD
+
+snapshots:
+  dataplatform_common:
+    EXT_BRAZE_SNAP:
+      snowflake_warehouse: "ETL_COEX_BRAZE"
+      target_schema: DWH_BRAZE_SNAPSHOT
+      target_database: EXT_{{ target.name.upper() }}
+      tags: 
+        - DWH_BRAZE
+        - EXT_BRAZE      
+        - EXT_BRAZE_SNAPSHOT
+        - DEV
+        - UAT
+        - PROD
+    BRAZE_EXTERNAL_SNAP:
+      snowflake_warehouse: "ETL_COEX_BRAZE"
+      target_schema: DWH_BRAZE_EXTERNAL_SNAPSHOT
+      target_database: |
+        {%- if target.name.upper() == "DEV" -%} EXT_DEV
+        {%- elif target.name.upper() == "UAT" -%} EXT_UAT
+        {%- elif target.name.upper() == "PROD" -%} EXT_PROD
+        {%- endif -%}
+      tags: 
+        - BRAZE_EXTERNAL_SNAP
+        - DEV
+        - UAT
+        - PROD
+    DWH_SNAP:
+      snowflake_warehouse: "CES_ETL_TESTS"
+      target_schema: DWH
+      database: |
+        {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+        {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+        {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+        {%- endif -%}
+      tags: 
+        - DWH_SNAP
+        - DEV
+        - UAT
+        - PROD
+
+
+on-run-end:
+  - "{{ grant_permission_to_schema(schemas, var('project_role'), var('branch')) }}"
+  - "{{ grant_select_to_schema(schemas, var('reporting_role'), var('branch')) }}"
+  - "{{ grant_to_external(var('external_databases'), var('external_schemas'), var('external_role'), var('branch')) }}"
+  #- "{{share_with_control_table(database_schemas) }}"
+  #- "{{ share_with_subsidiaries(var('share_with'),'DWH') }}"
+
+vars:
+  branch: ''
+  data_stages: [] # schemas to be cloned from prod and cleaned-up on test
+  src_clone_db: ''
+  external_schemas: ['DWH', 'DWH_BRAZE']
+  external_databases: ['EXT_PROD']
+  external_role: ['EXTERNAL']
+  project_role: ['SF_DEV_CES']
+  reporting_role: ['REPORTING_CES']
+  no_schema_update_branches: ['master','main']
+  #share_with: ['COEX','WARRRL']
+  share_dbt_project_name: 'COMMON'
+  erp_delta_load_days: -1
+  general_delta_load_hours: -4
+  general_delta_load_minutes: -30

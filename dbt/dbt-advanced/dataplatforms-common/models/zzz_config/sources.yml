@@ -1,0 +1,1302 @@
+version: 2
+
+sources:
+  - name: CES_MSCM
+    description: "Data engineering tables!"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_DEV
+      {%- elif target.name.upper() == "UAT" -%} RAW_UAT
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: CES_MSCM_ORACLE
+    tables:
+      - name: AUCTION_BID
+      - name: AUCTION_EVENT
+      - name: AUCTION_EVENT_LOT
+      - name: AUCTION_EVENT_HISTORY
+      - name: AUCTION_PROXY_BIDS
+      - name: CONSUMER
+      - name: CONSUMER_REFUND_TXN_DTL
+      - name: CONSUMER_REFUND_TXN_HDR
+      - name: CRP_BAG_DROP_LABEL
+      - name: CRP_CLAIM_DTL
+      - name: CRP_CLAIM_HDR
+      - name: CRP_INVENTORY_DTL
+      - name: CRP_INVENTORY_HDR
+      - name: CRP_REFUND_TXN_DTL
+      - name: CRP_REFUND_TXN_HDR
+      - name: CRP_SHIPPING_MANIFEST_DTL
+      - name: CRP_SHIPPING_MANIFEST_HDR
+      - name: CUSTOM_ROLE
+      - name: CUSTOM_USER
+      - name: DATE_DIMENSION
+      - name: DIRECT_SALE_CONTRACT
+      - name: EXPORT_VOLUME_DTL
+      - name: EXPORT_VOLUME_HDR
+      - name: HANDLING_FEE_REFERENCE
+      - name: INVOICE_AP_TXN_HDR
+      - name: INVOICE_AP_TXN_DTL
+      - name: INVOICE_AR_TRANSACTION_REC
+      - name: INV_AP_INVOICES_INT
+      - name: INV_AP_INVOICE_LINES_INT
+      - name: INV_AP_INVOICE_DIST_INT
+      - name: INV_PAYMENT_TERMS_LOV
+      - name: LOT_ITEM
+      - name: LOT_ITEM_DELIVERY
+      - name: LOT_ITEM_MANIFEST
+      - name: LOT_ITEM_MANIFEST_A
+      - name: MANUFACTURER
+      - name: MATERIAL_TYPE
+      - name: MDT_CONSUMER_PUBLIC_INFO
+      - name: MDT_CONTACT_ROLES
+      - name: MDT_CONTACTS
+      - name: MDT_CUSTOMER_UUID
+      - name: MDT_PARTICIPANT_SITE_USES
+      - name: MDT_PARTICIPANT_SITES
+      - name: MDT_PARTICIPANT_SITES_A
+      - name: MDT_PARTICIPANTS
+      - name: MDT_SCHEME_CONTRACT_ORGS
+      - name: MDT_SCHEME_CONTRACTS
+      - name: MDT_SITE_OPENING_HOURS
+      - name: MDT_SITE_OPENING_HOURS_A
+      - name: MFG_SALES_VOLUME_DTL
+      - name: MFG_SALES_VOLUME_HDR
+      - name: MFG_STAT_DEC_PERIOD_HDR
+      - name: MFG_STAT_DEC_PERIOD_DTL
+      - name: MFG_STATUTORY_DECLARATION
+      - name: MFG_STATUTORY_DECLARATION_DISCUSSION
+      - name: MFG_STAT_DEC_DOCS
+      - name: MRF_CLAIM_HDR
+      - name: MRF_CLAIM_DTL
+      - name: MRF_MATERIAL_TYPE
+      - name: MRF_MTL_BOM_REFERENCE_DTL
+      - name: MRF_MTL_BOM_REFERENCE_HDR
+      - name: MRF_VOLUME_HDR
+      - name: MRF_VOLUME_DTL
+      - name: PAYMENT_INVOICE_STATUS
+      - name: PAYMENT_TRANSACTION_REC
+      - name: PHOTO_ID_TYPE
+      - name: POS_DEVICE
+      - name: POS_DEVICE_HEARTBEAT
+      - name: POS_USER
+      - name: PROCESSED_VOLUME_DTL
+      - name: PROCESSED_VOLUME_HDR
+      - name: PROCESSING_FEE_REFERENCE
+      - name: PROCESSOR_CLAIM_DTL
+      - name: PROCESSOR_CLAIM_HDR
+      - name: PROCESSOR_INVENTORY_DTL
+      - name: PROCESSOR_INVENTORY_HDR
+      - name: PROCESSOR_RECEIPT_DTL
+      - name: PROCESSOR_RECEIPT_HDR
+      - name: PRODUCT
+      - name: PRODUCT_GROUP
+      - name: PRODUCT_STAGING
+      - name: PYMT_TRANSACTION_HEADERS
+      - name: PYMT_TRANSACTION_LINES
+      - name: PYMT_NOTIFICATIONS
+      - name: PYMT_APPROVALS
+      - name: PYMT_PAY_PARTY_PROFILES
+      - name: RECOVERY_FEE_REFERENCE
+      - name: BUYER_BLACKLIST
+      - name: REFUND_AMOUNT_REFERENCE
+      - name: REFUND_TXN_SURVEY
+      - name: RESERVE_PRICE_REFERENCE
+      - name: SCHEME
+      - name: SCHEME_PARTICIPANT_REL_DTL
+      - name: SCHEME_PARTICIPANT_REL_HDR
+      - name: SCHEME_PRICE_REFERENCE
+      - name: SCHEME_PRODUCT
+      - name: SCHEME_PRODUCT_A
+      - name: SCHEME_REF_CODES
+      - name: SEASONALITY_INDEX_REFERENCE
+      - name: SS_AUDIT_ADJUSTMENTS
+      - name: UOM_REFERENCE
+      - name: USER_SCHEME_PARTICIPANT
+      - name: PYMT_PAYMENT_STATUS
+      - name: FMT_LOCATION_DISTANCES
+      - name: FMT_LOCATIONS
+      - name: FMT_ORGANISATIONS
+      - name: FMT_PEOPLE
+      - name: FMT_SCHEME_REF_CODES
+      - name: FMT_TRIP_CLAIM_LINES
+      - name: FMT_TRIP_CLAIMS
+      - name: FMT_TRIP_LEG_ADJUSTMENTS
+      - name: FMT_TRIP_LEG_STATUS_LOGS
+      - name: FMT_TRIP_LEGS
+      - name: FMT_TRIP_STOPS
+      - name: FMT_TRIP_UNITS
+      - name: FMT_TRIPS
+      - name: FMT_VEHICLE_RATES
+      - name: FMT_VEHICLE_TYPES
+      - name: FMT_VEHICLES
+      - name: USER_ROLE
+      - name: MDT_RELATIONSHIPS
+
+  - name: RETURNIT_VOUCHER
+    description: "Returnit VIC voucher tables!"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_DEV
+      {%- elif target.name.upper() == "UAT" -%} RAW_UAT
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: RETURNIT_VOUCHER
+    tables:
+      - name: ANKER_ANDERSEN
+      - name: COLES_VOUCHER
+      - name: RVMS
+      - name: RVMS_REDEEMED
+      - name: WOOLWORTHS_VOUCHER
+
+  - name: CES_SECURE
+    description: "Bank account mapping table with mask account number. no UAT atm"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_DEV
+      {%- elif target.name.upper() == "UAT" -%} RAW_PROD
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: CES_SECURE
+    tables:
+      - name: BANK_ACCOUNTS_MASK
+
+  - name: LOOKUPS
+    description: "Mostly ABS reference tables! no UAT atm"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_DEV
+      {%- elif target.name.upper() == "UAT" -%} RAW_PROD
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: LOOKUPS
+    tables:
+      - name: MB_2016_AUST
+      - name: POA_2016_AUST
+      - name: SSC_2016_AUST
+      - name: LGA_2020_AUST
+      - name: REGION_QLD
+      - name: REGION_WA
+      - name: ERP_SA1_2020_AUST
+      - name: LSP_MONTHLY_COST
+      - name: BM_FORECAST
+      - name: LOCALITY_POA
+      - name: LOCALITY_LGA
+      - name: LOCALITY_STATE_SUBURB
+      - name: RAW_COLLECTION_INFRASTRUCTURE_WA_20201125
+      - name: AUSTRALIA_PUBLIC_HOLIDAYS
+      - name: DONATION_PARTNERS
+
+  - name: ABS
+    description: "Mostly ABS reference tables! And scheme region mapping tables."
+    database: REF
+    schema: ABS
+    tables:
+      - name: ADD_2021
+      - name: CED_2021
+      - name: DZN_SA2_2021
+      - name: ILOC_2021
+      - name: INDIGENOUS_STRUCTURE_ALLOCATION_2021
+      - name: LGA_2021
+      - name: MB_2021
+      - name: MB_CENTROID_2021
+      - name: MB_DZN_2021
+      - name: MESH_BLOCK_COUNTS_2021
+      - name: POA_2021
+      - name: SAL_2021
+      - name: SED_2021
+      - name: TR_2021
+      - name: ADDRESS_VIEW
+      - name: COEX_LGA_REGION_MAPPING_2021
+      - name: WARRRL_LGA_REGION_MAPPING_2021
+      - name: VW_COEX_GEOGRAPHY_2021
+
+  - name: CONTACT_SPACE
+    description: "Contact Space tables! no UAT atm"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_DEV
+      {%- elif target.name.upper() == "UAT" -%} RAW_PROD
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: CONTACT_SPACE
+    tables:
+      - name: AGENTEFFORTACTIVITY
+      - name: AGENTPAUSEREASON
+      - name: AGENT_CONTACT_ACTIVITY
+      - name: DAILYSERVICELEVEL
+      - name: DAILYSERVICELVLHR
+      - name: INITIATIVECONTACTACTIVITY
+      - name: INITIATIVEEFFORTACTIVITY
+
+  - name: CRM
+    description: "CRM tables! no UAT atm"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_DEV
+      {%- elif target.name.upper() == "UAT" -%} RAW_PROD
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: CRM
+    tables:
+      - name: EXPORTREPORTCATEGORIES
+      - name: EXPORTREPORTCONTACTS
+      - name: EXPORTREPORTINCIDENTS
+      - name: EXPORTREPORTPRODUCTS
+
+  - name: CES_ZENDESK
+    description: "Zendesk tables!"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_DEV
+      {%- elif target.name.upper() == "UAT" -%} RAW_UAT
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: CES_ZENDESK
+    tables:
+      - name: ADDRESS
+      - name: ALERT_RECIPIENT
+      - name: ARTICLE
+      - name: BRAND
+      - name: CALL_LEG
+      - name: CALL_LEG_QUALITY_ISSUE
+      - name: CALL_METRIC
+      - name: CUSTOM_ROLE
+      - name: DAYLIGHT_TIME
+      - name: DOMAIN_NAME
+      - name: FORUM_TOPIC
+      - name: GREETING
+      - name: GREETING_CATEGORY
+      - name: GROUP_MEMBER
+      - name: IVR
+      - name: IVR_MENU
+      - name: IVR_MENU_ROUTE
+      - name: LINE
+      - name: LINE_CATEGORISED_GREETING
+      - name: LINE_GREETING
+      - name: ORGANIZATION
+      - name: ORGANIZATION_MEMBER
+      - name: POST
+      - name: SCHEDULE
+      - name: SLA_POLICY_HISTORY
+      - name: SLA_POLICY_METRIC_HISTORY
+      - name: TICKET
+      - name: TICKET_ALERT
+      - name: TICKET_COMMENT
+      - name: TICKET_CUSTOM_FIELD
+      - name: TICKET_CUSTOM_STATUS
+      - name: TICKET_FIELD_HARDWARE_REQUESTS
+      - name: TICKET_FIELD_HISTORY
+      - name: TICKET_FIELD_OPTION
+      - name: TICKET_FIELD_SCHEME_SERVICES
+      - name: TICKET_FORM_HISTORY
+      - name: TICKET_MACRO_REFERENCE
+      - name: TICKET_SCHEDULE
+      - name: TICKET_SLA_POLICY
+      - name: TICKET_TAG
+      - name: TICKET_TAG_HISTORY
+      - name: TIME_ZONE
+      - name: USER
+      - name: USER_TAG
+      - name: ZENDESK_GROUP
+
+  - name: CES_GREAT_EXPECTATIONS
+    description: "Great expectations tables!"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_DEV
+      {%- elif target.name.upper() == "UAT" -%} RAW_UAT
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: CES_GREAT_EXPECTATIONS
+    tables:
+      - name: GE_TEST_RESULTS
+
+  - name: CES_ADF
+    description: "CES ADF tables!"
+    database: RAW_PROD
+    schema: CES_ADF
+    tables:
+      - name: AD_GROUP_MEMBERS_MONTHLY
+      - name: AD_GROUPS_MONTHLY
+
+  - name: CES_AUCTION
+    description: "CES auction tables!"
+    database: CES_REF
+    schema: CES_AUCTION
+    tables:
+      - name: AUCTION_MANIFEST_DATA_CLEANSED
+      - name: EXCHANGE_RATE
+
+  - name: CES_REFERENCE
+    description: "CES reference tables!"
+    database: CES_REF
+    schema: CES_REFERENCE
+    tables:
+      - name: JIRA_TEAM_COST_PER_DAY
+      - name: IP_WARMING_EMAILS
+      - name: NETWORK_FEE
+      - name: CRM_INCIDENTS_ORACLE
+
+  - name: RLS
+    description: "RLS tables!"
+    database: COMMON_PROD
+    schema: REF
+    tables:
+      - name: ORG_SECURITY_MAPPING_LANDING
+      - name: ORG_SECURITY_MAPPING_LANDING_ALL
+
+  - name: REF
+    description: "Reference tables!"
+    database: COMMON_PROD
+    schema: REF
+    tables:
+      - name: LINK_MAPPING
+
+  - name: REF_COEX
+    description: "COEX tables!"
+    database: COMMON_PROD
+    schema: REF
+    tables:
+      - name: GLASS_MASTER
+
+  - name: COMMON_DWH
+    description: "DWH table references"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+      {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+      {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+      {%- else -%} COMMON_DEV
+      {%- endif -%}
+    schema: DWH
+    tables:
+      - name: CRP_COLLECTION_HDR
+      - name: CRP_COLLECTION_DTL
+      - name: CONSUMER
+
+  - name: COMMON_DWH_GOLD
+    description: "DWH table references"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+      {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+      {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+      {%- else -%} COMMON_DEV
+      {%- endif -%}
+    schema: DWH_GOLD
+    tables:
+      - name: FACT_CRP_COLLECTION_AGG
+      - name: FACT_CRP_COLLECTION
+      - name: DIM_CONSUMER
+
+  - name: SCHEME_DATA_UPLOAD
+    description: "Scheme data upload table references"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} COMMON_DEV
+      {%- elif target.name.upper() == "UAT" -%} COMMON_UAT
+      {%- elif target.name.upper() == "PROD" -%} COMMON_PROD
+      {%- else -%} COMMON_DEV
+      {%- endif -%}
+    schema: SCHEME_DATA_UPLOAD
+    tables:
+      - name: MATERIAL_SALE
+      - name: SHIPMENT_MANIFEST
+      
+
+  - name: REF_DWH
+    description: "Reference tables!"
+    database: CES_REF
+    schema: DWH
+    tables:
+      - name: CRM_INCIDENTS_HISTORY
+      - name: ORG_SECURITY_MAPPING_LANDING_QLD_CRP
+
+  - name: COEX
+    description: "COEX tables!"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_DEV
+      {%- elif target.name.upper() == "UAT" -%} RAW_UAT
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: COEX_ESTRAPI
+    tables:
+      - name: STRAPI_CUSTOMER_SURVEY   
+      - name: RMC_REVIEW_SURVEY
+
+  - name: CES_DRUPAL
+    description: "Drupal tables! no DEV atm"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_PROD
+      {%- elif target.name.upper() == "UAT" -%} RAW_UAT
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: CES_DRUPAL_MEMBER
+    tables:
+      - name: CFC_GOAL
+      - name: CRC_OTP
+      - name: CFC_UUID
+      - name: CHARITY_CATEGORY
+      - name: CONSUMER_PUBLIC_INFO
+      - name: CONTACTS
+      - name: CONTACT_ROLES
+      - name: MARKETING_EMAIL_PREFERENCES
+      - name: PARTICIPANTS
+      - name: PARTICIPANT_SITES
+      - name: POSTCODE
+      - name: RELATIONSHIPS
+      - name: TRANSFER_GROUP_ADMIN
+      - name: USERS_DATA
+      - name: USERS_FIELD_DATA
+      - name: VOLUNTEER_LINK
+      - name: USERSDATA
+      - name: USERSFIELDDATA
+
+  - name: CES_DRUPAL_UAT
+    description: "Drupal tables!"
+    database: RAW_UAT
+    schema: CES_DRUPAL_MEMBER
+    tables:
+      - name: CFC_GOAL
+      - name: CRC_OTP
+      - name: CFC_UUID
+      - name: CHARITY_CATEGORY
+      - name: CONSUMER_PUBLIC_INFO
+      - name: CONTACTS
+      - name: CONTACT_ROLES
+      - name: MARKETING_EMAIL_PREFERENCES
+      - name: PARTICIPANTS
+      - name: PARTICIPANT_SITES
+      - name: POSTCODE
+      - name: RELATIONSHIPS
+      - name: TRANSFER_GROUP_ADMIN
+      - name: USERS_DATA
+      - name: USERS_FIELD_DATA
+      - name: VOLUNTEER_LINK
+
+  - name: CES_MSCM_KAFKA
+    description: "Kafka tables!"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_DEV
+      {%- elif target.name.upper() == "UAT" -%} RAW_UAT
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: |
+      {%- if target.name.upper() == "DEV" -%} CES_MSCM_KAFKA
+      {%- elif target.name.upper() == "UAT" -%} CES_MSCM_KAFKA
+      {%- elif target.name.upper() == "PROD" -%} CES_MSCM_KAFKA
+      {%- else -%} CES_MSCM_KAFKA
+      {%- endif -%}
+    tables:
+      - name: CONSUMER_WATCHLIST
+      - name: CRP_CLAIM
+      - name: CRP_CLAIM_ADJUSTMENT
+      - name: CRP_CLAIM_APPROVAL
+      - name: DONATION_PARTNERS
+      - name: INVOICINGEVENT_HEADER
+      - name: INVOICINGEVENT_LINES
+      - name: NOP_CLAIM
+      - name: NOP_CLAIM_ADJUSTMENT
+      - name: NOP_CLAIM_ADJ_DOCS
+      - name: NOP_CLAIM_ADJ_ITEMS
+      - name: NOP_CLAIM_REFUND
+      - name: NOP_CLAIM_REFUND_ITEMS
+      - name: REFUND_CLAIM
+      - name: REFUND_TRANSACTION
+      - name: REFUND_TRANSACTION_DTL
+      - name: REFUND_TRANSACTION_HDR
+      - name: PARTICIPANT_REGISTRATION
+      - name: PARTICIPANT_REGISTRATION_CONTACTS
+      - name: PARTICIPANT_REGISTRATION_CONTACTS_ROLE
+      - name: PARTICIPANT_REGISTRATION_DOCUMENTS
+      - name: PSF_AGREEMENT
+      - name: PYMT_EVENT
+      - name: PYMT_EVENT_AMT_TO_PAY
+      - name: PYMT_EVENT_EVALUATION
+      - name: PYMT_EVENT_REFUND_ITEMS
+      - name: PYMT_REATTEMPT
+      - name: PYMT_REATTEMPT_RELATIONSHIP
+      - name: PYMT_STEP_DOWN
+
+  - name: CES_MSCM_KAFKA_UAT
+    description: "Kafka tables!"
+    database: RAW_UAT
+    schema: CES_MSCM_KAFKA
+    tables:
+      - name: CONSUMER_WATCHLIST
+      - name: CRP_CLAIM
+      - name: CRP_CLAIM_ADJUSTMENT
+      - name: CRP_CLAIM_APPROVAL
+      - name: DONATION_PARTNERS
+      - name: NOP_CLAIM
+      - name: NOP_CLAIM_ADJUSTMENT
+      - name: NOP_CLAIM_ADJ_DOCS
+      - name: NOP_CLAIM_ADJ_ITEMS
+      - name: NOP_CLAIM_REFUND
+      - name: NOP_CLAIM_REFUND_ITEMS
+      - name: REFUND_CLAIM
+      - name: REFUND_TRANSACTION
+      - name: REFUND_TRANSACTION_DTL
+      - name: REFUND_TRANSACTION_HDR
+      - name: PARTICIPANT_REGISTRATION
+      - name: PSF_AGREEMENT
+      - name: PYMT_EVENT
+      - name: PYMT_EVENT_AMT_TO_PAY
+      - name: PYMT_EVENT_EVALUATION
+      - name: PYMT_EVENT_REFUND_ITEMS
+      - name: PYMT_STEP_DOWN
+
+  - name: CES_ERP
+    description: "ERP tables!"
+    database: COMMON_{{ target.name.upper() }}
+    schema: ERP
+    tables:
+      - name: AR_ADJUSTMENTS
+      - name: AR_TRANSACTIONS
+      - name: AR_TRANSACTIONS_DUE
+      - name: AR_TRANSACTIONS_DUE_APP
+      - name: AR_TRANSACTIONS_DUE_SCHED
+      - name: AR_TRANSACTIONS_LINE_DTL
+      - name: GL_ACCOUNT
+      - name: GL_BALANCES
+      - name: GL_COST_CENTER
+      - name: GL_CURRENCY
+      - name: GL_ENTITY
+      - name: GL_INTERCOMPANY
+      - name: GL_JOURNALS
+      - name: GL_LEDGER
+      - name: GL_MATERIAL_TYPE
+      - name: GL_PERIOD
+      - name: GL_PROJECT
+      - name: GL_SCHEME
+      - name: GL_TRANSACTIONS
+      - name: GL_TRANSACTIONS_SUBLEDGER
+      - name: KM_EXPENSES
+      - name: SUPPLIER_BANK_ACCOUNTS
+      - name: AP_BALANCES
+      - name: AP_TRANSACTIONS
+      - name: DST_ORORA_MANIFEST_RECON
+
+  - name: CES_ERP_DEV
+    description: "ERP tables!"
+    database: COMMON_DEV
+    schema: ERP
+    tables:
+      - name: AP_BALANCES
+      - name: AP_TRANSACTIONS
+      - name: AR_TRANSACTIONS
+      - name: AR_TRANSACTIONS_DUE
+      - name: AR_TRANSACTIONS_DUE_APP
+      - name: AR_TRANSACTIONS_DUE_SCHED
+      - name: AR_TRANSACTIONS_LINE_DTL     
+      - name: DST_ORORA_MANIFEST_RECON
+      - name: GL_ACCOUNT
+      - name: GL_BALANCES
+      - name: GL_COST_CENTER
+      - name: GL_CURRENCY
+      - name: GL_ENTITY
+      - name: GL_INTERCOMPANY
+      - name: GL_JOURNALS
+      - name: GL_LEDGER
+      - name: GL_MATERIAL_TYPE
+      - name: GL_PERIOD
+      - name: GL_PROJECT
+      - name: GL_SCHEME
+      - name: GL_TRANSACTIONS_SUBLEDGER
+      - name: KM_EXPENSES
+
+  - name: VICRETURN_REF
+    description: "VICReturn upload tables! no DEV/UAT atm"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_PROD
+      {%- elif target.name.upper() == "UAT" -%} RAW_PROD
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: VICRETURN_REF
+    tables:
+      - name: COMPLAINT_SUMMARY
+      - name: MATERIAL_SALES
+      - name: SHIPMENT_MANIFESTS
+      - name: SHIPPER_UNIT_TYPE
+
+  - name: CES_FINANCE
+    description: "Finance ref tables!"
+    database: CES_REF
+    schema: CES_FINANCE
+    tables:
+      - name: ACCOUNT_MAPPING
+      - name: AP_ADHOC_MANUAL_INPUT
+      - name: AP_ADHOC_MANUAL_INPUT_DEV
+      - name: BANK_REC_BANK_7_GROUPING
+      - name: BILLING_RATE_CARD
+      - name: BTR_PAY_REF_NUMBER_MAPPING
+      - name: BUDGETS_SCHEME
+      - name: CES_SERVICE_FEE_SUMMARY
+      - name: CES_SERVICE_FEE_SUMMARY_DEV
+      - name: COST_CENTRE_MAPPING
+      - name: ERP_GL_TRANSACTIONS_MAPPING
+      - name: ERP_REVENUE_MAPPING
+      - name: ERP_REVENUE_MAPPING_DEV
+      - name: ERP_REVENUE_MAPPING_FORECAST_DEV
+      - name: ERP_REVENUE_ANALYSIS_FORECAST
+      - name: ERP_REVENUE_ANALYSIS_FORECAST_DEV
+      - name: ERP_REVENUE_VARIANCE_ANALYSIS
+      - name: ERP_REVENUE_VARIANCE_ANALYSIS_DEV
+      - name: ERP_SUMMARY_FORECAST
+      - name: ERP_SUMMARY_FORECAST_DEV
+      - name: FORECASTS_SCHEME
+      - name: GL_JOURNALS_ADJUST
+      - name: JOURNALS_BANK_3
+      - name: JOURNALS_BANK_7
+      - name: QCP_COMPONENT_QCP_ID_MAPPING
+      - name: QCP_INACCURATE
+      - name: QCP_INACCURATE_MONTHLY
+      - name: QCP_PROVISIONS_FOR_DOUBTFUL_DEBTS
+      - name: QCP_SLA
+      - name: QCP_SLA_COMMENTARY
+      - name: QCP_SLA_COMMENTARY_MONTHLY
+      - name: QCP_SLA_OVERWRITE
+      - name: QCP_SLA_OVERWRITE_AUCTION_INVOICE
+      - name: QCP_SLA_OVERWRITE_CALL_CENTRE
+      - name: QCP_SLA_OVERWRITE_CALL_CENTRE_MONTHLY
+      - name: QCP_SLA_OVERWRITE_CUSTOMER_PAYMENT
+      - name: QCP_SLA_OVERWRITE_FMT_TIME
+      - name: QCP_SLA_TARGET
+      - name: QCP_SLA_TARGET_DEBTOR_PERCENT
+      - name: QCP_SLA_TARGET_MONTHLY
+      - name: QCP_SLA_UPLOAD
+      - name: QCP_SLA_UPLOAD_MONTHLY
+      - name: SERVICE_FEE_MANUAL_INPUT
+      - name: SERVICE_FEE_MANUAL_INPUT_DEV
+      
+      
+  - name: RAW_CES_FINANCE
+    description: "Bank tables!"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_DEV
+      {%- elif target.name.upper() == "UAT" -%} RAW_UAT
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: CES_FINANCE
+    tables:
+      - name: ANZ_BTR_HEADER
+      - name: ANZ_BTR_LINES
+      - name: ANZ_RTI_REC
+
+  - name: RAW_CES_PAYPAL
+    description: "Bank tables!"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_DEV
+      {%- elif target.name.upper() == "UAT" -%} RAW_UAT
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: CES_PAYPAL
+    tables:
+      - name: CES_PAYPAL_SETTLEMENT_COEX
+      - name: CES_PAYPAL_SETTLEMENT_VICRETURN
+      - name: CES_PAYPAL_SETTLEMENT_WARRRL
+
+  - name: CES_STATUSPAGE
+    description: "Statuspage tables!"
+    database: RAW_PROD
+    schema: CES_STATUSPAGE
+    tables:
+      - name: COMPONENT
+      - name: INCIDENT
+      - name: INCIDENT_COMPONENT
+
+  - name: RAW_COEX_AGILOFT
+    description: "COEX AGILOFT"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_DEV
+      {%- elif target.name.upper() == "UAT" -%} RAW_UAT
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: COEX_AGILOFT
+    tables:
+      - name: AG_LOCATION
+
+  - name: COEX_AGILOFT
+    description: "COEX AGILOFT tables!"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} COEX_DEV
+      {%- elif target.name.upper() == "UAT" -%} COEX_UAT
+      {%- elif target.name.upper() == "PROD" -%} COEX_PROD
+      {%- else -%} COEX_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: COEX_AGILOFT
+    tables:
+      - name: AG_SUBURB
+      - name: AG_EXTERNAL_USER
+      - name: AG_ENTITY
+      - name: AG_LOCATION
+
+  - name: COEX_AGILOFT
+    description: "COEX AGILOFT tables!, no UAT atm"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} COEX_DEV
+      {%- elif target.name.upper() == "UAT" -%} COEX_PROD
+      {%- elif target.name.upper() == "PROD" -%} COEX_PROD
+      {%- else -%} COEX_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: COEX_AGILOFT
+    tables:
+      - name: AG_COEX_EMPLOYEE_SECURITY_MAPPING_ALL
+      - name: AG_PARTNER_SECURITY_MAPPING
+
+  - name: COEX_COLLECT
+    description: "COEX COLLECT tables!"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} COEX_DEV
+      {%- elif target.name.upper() == "UAT" -%} COEX_UAT
+      {%- elif target.name.upper() == "PROD" -%} COEX_PROD
+      {%- else -%} COEX_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: COEX_COLLECT
+    tables:
+      - name: CONTAINER_COLLECT_BOOKINGS 
+      - name: CONTAINER_COLLECT_BOOKING_V2 
+      - name: CONTAINER_COLLECT_CONTACT_DETAILS_V2 
+
+  - name: COEX_COLLECT_UAT
+    description: "COEX COLLECT UAT tables!"
+    database: COEX_UAT
+    schema: COEX_COLLECT
+    tables:
+      - name: CONTAINER_COLLECT_BOOKINGS
+      - name: CONTAINER_COLLECT_BOOKING_V2 
+      - name: CONTAINER_COLLECT_CONTACT_DETAILS_V2
+      
+  - name: COEX_GLASS
+    description: "COEX GLASS tables!"
+    database: CES_REF
+    schema: COEX_GLASS
+    tables:
+      - name: MASTER_GLASS_SPREADSHEET
+
+  - name: CES_ABN
+    description: "ABR tables"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_DEV
+      {%- elif target.name.upper() == "UAT" -%} RAW_UAT
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: CES_ABN
+    tables:
+      - name: ABN_EXTRACT
+
+  - name: CES_JIRA
+    description: "Jira tables"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_PROD
+      {%- elif target.name.upper() == "UAT" -%} RAW_PROD
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: CES_JIRA
+    tables:
+      - name: ISSUE
+      - name: ISSUE_TYPE
+      - name: ISSUE_FIELD_HISTORY 
+      - name: ISSUE_MULTISELECT_HISTORY 
+      - name: FIELD_OPTION 
+      - name: PROJECT
+      - name: USER
+
+  - name: CES_TEMPO
+    description: "Tempo tables"
+    database: |
+      {%- if target.name.upper() == "DEV" -%} RAW_DEV
+      {%- elif target.name.upper() == "UAT" -%} RAW_UAT
+      {%- elif target.name.upper() == "PROD" -%} RAW_PROD
+      {%- else -%} RAW_{{ target.name.upper() }}
+      {%- endif -%}
+    schema: CES_TEMPO
+    tables:
+      - name: TEMPO_CUSTOMERS
+      - name: TEMPO_PERMISSION_ROLES
+      - name: TEMPO_ROLES
+      - name: TEMPO_TEAMS
+      - name: TEMPO_TEAM_MEMBERS
+      - name: TEMPO_TEAM_MEMBERS_HISTORY
+      - name: TEMPO_WORKLOAD_SCHEMES
+      - name: TEMPO_WORKLOGS
+      
+
+  - name: REF_CES_TEMPO
+    description: "Manually maintained tempo tables"
+    database: CES_REF
+    schema: CES_TEMPO
+    tables:
+      - name: TEMPO_HOURLY_RATE
+      - name: TEMPO_INI_LIST
+
+  - name: COEX_ALL_IN_ONE_DATASET
+    description: "Manually maintained tempo tables"
+    database: COEX_DEV
+    schema: ALL_IN_ONE_DATASET
+    tables:
+      - name: MATERIAL_TYPE
+      - name: REF_ENVIRONMENTAL_BENEFITS_KILO
+
+  - name: COEX_ACTUALS
+    description: "COEX ACTUALS"
+    database: COEX_DEV
+    schema: ACTUALS
+    tables:
+      - name: MRF_VOLUMES_REGION
+      - name: MV_CLAIM_VOLUMES_DAILY      
+
+  - name: WARRRL_OPERATIONS
+    description: "WARRRL REF OPERATIONS"
+    database: WARRRL_REF
+    schema: OPERATIONS
+    tables:
+      - name: MRF_MATERIAL_TYPE_BREAKDOWN
+
+  - name: COEX_BRAZE
+    description: "Adhoc emails"
+    database: CES_REF
+    schema: COEX_BRAZE
+    tables:
+      - name: BRAZE_ADHOC_EMAILS_IMPORT
+
+  - name: BRAZE
+    description: "Braze Datalake Data"
+    database: BRAZE
+    schema: DATALAKE_SHARING
+    tables:
+      - name: CHANGELOGS_CAMPAIGN_SHARED
+      - name: CHANGELOGS_CANVAS_SHARED
+      - name: SNAPSHOTS_APP_SHARED
+      - name: SNAPSHOTS_CAMPAIGN_MESSAGE_VARIATION_SHARED
+      - name: SNAPSHOTS_CANVAS_STEP_SHARED
+      - name: SNAPSHOTS_CANVAS_VARIATION_SHARED
+      - name: SNAPSHOTS_EXPERIMENT_STEP_SHARED
+      - name: USERS_BEHAVIORS_APP_FIRSTSESSION_SHARED
+      - name: USERS_BEHAVIORS_APP_NEWSFEEDIMPRESSION_SHARED
+      - name: USERS_BEHAVIORS_APP_SESSIONEND_SHARED
+      - name: USERS_BEHAVIORS_APP_SESSIONSTART_SHARED
+      - name: USERS_BEHAVIORS_CUSTOMEVENT_SHARED
+      - name: USERS_BEHAVIORS_GEOFENCE_DATAEVENT_SHARED
+      - name: USERS_BEHAVIORS_GEOFENCE_RECORDEVENT_SHARED
+      - name: USERS_BEHAVIORS_INSTALLATTRIBUTION_SHARED
+      - name: USERS_BEHAVIORS_LOCATION_SHARED
+      - name: USERS_BEHAVIORS_PURCHASE_SHARED
+      - name: USERS_BEHAVIORS_SUBSCRIPTION_GLOBALSTATECHANGE_SHARED
+      - name: USERS_BEHAVIORS_SUBSCRIPTIONGROUP_STATECHANGE_SHARED
+      - name: USERS_BEHAVIORS_UNINSTALL_SHARED
+      - name: USERS_BEHAVIORS_UPGRADEDAPP_SHARED
+      - name: USERS_CAMPAIGNS_CONVERSION_SHARED
+      - name: USERS_CAMPAIGNS_ENROLLINCONTROL_SHARED
+      - name: USERS_CAMPAIGNS_FREQUENCYCAP_SHARED
+      - name: USERS_CAMPAIGNS_REVENUE_SHARED
+      - name: USERS_CANVAS_CONVERSION_SHARED
+      - name: USERS_CANVAS_ENTRY_SHARED
+      - name: USERS_CANVAS_EXIT_MATCHEDAUDIENCE_SHARED
+      - name: USERS_CANVAS_EXIT_PERFORMEDEVENT_SHARED
+      - name: USERS_CANVAS_EXPERIMENTSTEP_CONVERSION_SHARED
+      - name: USERS_CANVAS_EXPERIMENTSTEP_SPLITENTRY_SHARED
+      - name: USERS_CANVAS_FREQUENCYCAP_SHARED
+      - name: USERS_CANVAS_REVENUE_SHARED
+      - name: USERS_MESSAGES_CONTENTCARD_ABORT_SHARED
+      - name: USERS_MESSAGES_CONTENTCARD_CLICK_SHARED
+      - name: USERS_MESSAGES_CONTENTCARD_DISMISS_SHARED
+      - name: USERS_MESSAGES_CONTENTCARD_IMPRESSION_SHARED
+      - name: USERS_MESSAGES_CONTENTCARD_SEND_SHARED
+      - name: USERS_MESSAGES_EMAIL_ABORT_SHARED
+      - name: USERS_MESSAGES_EMAIL_BOUNCE_SHARED
+      - name: USERS_MESSAGES_EMAIL_CLICK_SHARED
+      - name: USERS_MESSAGES_EMAIL_DELIVERY_SHARED
+      - name: USERS_MESSAGES_EMAIL_MARKASSPAM_SHARED
+      - name: USERS_MESSAGES_EMAIL_OPEN_SHARED
+      - name: USERS_MESSAGES_EMAIL_SEND_SHARED
+      - name: USERS_MESSAGES_EMAIL_SOFTBOUNCE_SHARED
+      - name: USERS_MESSAGES_EMAIL_UNSUBSCRIBE_SHARED
+      - name: USERS_MESSAGES_INAPPMESSAGE_ABORT_SHARED
+      - name: USERS_MESSAGES_INAPPMESSAGE_CLICK_SHARED
+      - name: USERS_MESSAGES_INAPPMESSAGE_IMPRESSION_SHARED
+      - name: USERS_MESSAGES_NEWSFEEDCARD_ABORT_SHARED
+      - name: USERS_MESSAGES_NEWSFEEDCARD_CLICK_SHARED
+      - name: USERS_MESSAGES_NEWSFEEDCARD_IMPRESSION_SHARED
+      - name: USERS_MESSAGES_PUSHNOTIFICATION_ABORT_SHARED
+      - name: USERS_MESSAGES_PUSHNOTIFICATION_BOUNCE_SHARED
+      - name: USERS_MESSAGES_PUSHNOTIFICATION_INFLUENCEDOPEN_SHARED
+      - name: USERS_MESSAGES_PUSHNOTIFICATION_IOSFOREGROUND_SHARED
+      - name: USERS_MESSAGES_PUSHNOTIFICATION_OPEN_SHARED
+      - name: USERS_MESSAGES_PUSHNOTIFICATION_RETRYSEND_SHARED
+      - name: USERS_MESSAGES_PUSHNOTIFICATION_SEND_SHARED
+      - name: USERS_MESSAGES_SMS_ABORT_SHARED
+      - name: USERS_MESSAGES_SMS_CARRIERSEND_SHARED
+      - name: USERS_MESSAGES_SMS_DELIVERY_SHARED
+      - name: USERS_MESSAGES_SMS_DELIVERYFAILURE_SHARED
+      - name: USERS_MESSAGES_SMS_INBOUNDRECEIVE_SHARED
+      - name: USERS_MESSAGES_SMS_REJECTION_SHARED
+      - name: USERS_MESSAGES_SMS_SEND_SHARED
+      - name: USERS_MESSAGES_SMS_SHORTLINKCLICK_SHARED
+      - name: USERS_MESSAGES_WEBHOOK_ABORT_SHARED
+      - name: USERS_MESSAGES_WEBHOOK_SEND_SHARED
+      - name: USERS_MESSAGES_WHATSAPP_ABORT_SHARED
+      - name: USERS_MESSAGES_WHATSAPP_DELIVERY_SHARED
+      - name: USERS_MESSAGES_WHATSAPP_FAILURE_SHARED
+      - name: USERS_MESSAGES_WHATSAPP_INBOUNDRECEIVE_SHARED
+      - name: USERS_MESSAGES_WHATSAPP_READ_SHARED
+      - name: USERS_MESSAGES_WHATSAPP_SEND_SHARED
+      - name: USERS_RANDOMBUCKETNUMBERUPDATE_SHARED
+      - name: USERS_USERDELETEREQUEST_SHARED
+      - name: USERS_USERORPHAN_SHARED
+
+  - name: WARRRL_ANALYTICS
+    description: "WARRRL tables"
+    database: WARRRL_PROD
+    schema: ANALYTICS
+    tables:
+      - name: DIM_LSP_FORTNIGHTLY_PATTERN
+      - name: DIM_LSP_SCHEDULES_FINAL
+
+  - name: DWH_WARRRL
+    description: "WARRRL tables"
+    database: WARRRL_PROD
+    schema: DWH_WARRRL
+    tables:
+      - name: RLS_USER_CRP_SITE
+
+  - name: SCHEME_PARTICIPANT
+    description: "VICReturn tables"
+    database: VICRETURN_PROD
+    schema: SCHEME_PARTICIPANT
+    tables:
+      - name: CRP_SITES
+      - name: CRP_SITE_HOURS 
+
+  - name: CRPO
+    description: "VICReturn tables"
+    database: VICRETURN_PROD
+    schema: CRPO
+    tables:
+      - name: CRP_COLLECTION_HDR
+
+  - name: APPROVED_CONTAINER
+    description: "VICReturn tables"
+    database: VICRETURN_PROD
+    schema: APPROVED_CONTAINER
+    tables:
+      - name: REF_PRODUCT
+  
+  - name: CES_ERP_BIP_FSCM_CE
+    description: "BIP_FSCM_PROD_CE tables"
+    database: CES_ERP
+    schema: BIP_FSCM_PROD_CE
+    tables:
+      - name: CE_INDEX_BANKS
+      - name: CE_INDEX_BANK_BRANCHES
+
+  - name: CES_ERP_BIP_FSCM_HZ
+    description: "BIP_FSCM_PROD_HZ tables"
+    database: CES_ERP
+    schema: BIP_FSCM_PROD_HZ
+    tables:
+      - name: HZ_PARTIES
+
+  - name: CES_ERP_BIP_FSCM_IBY
+    description: "BIP_FSCM_PROD_IBY tables"
+    database: CES_ERP
+    schema: BIP_FSCM_PROD_IBY
+    tables:
+      - name: IBY_PMT_INSTR_USES_ALL
+      - name: IBY_EXT_BANK_ACCOUNTS
+      - name: IBY_EXTERNAL_PAYEES_ALL
+      - name: IBY_ACCOUNT_OWNERS
+
+  - name: CES_ERP_FREQ_FSCM_FINGLCALACC
+    description: "FREQ_FSCM_PROD_FINGLCALACC tables"
+    database: CES_ERP
+    schema: FREQ_FSCM_PROD_FINGLCALACC
+    tables:
+      - name: GLFISCAL_PERIOD_PVO
+
+  - name: CES_ERP_FREQ_FSCM_FINGLINQUIRYBALANCES
+    description: "FREQ_FSCM_PROD_FINGLINQUIRYBALANCES tables"
+    database: CES_ERP
+    schema: FREQ_FSCM_PROD_FINGLINQUIRYBALANCES
+    tables:
+      - name: BALANCE_PVO
+
+  - name: CES_ERP_FREQ_FSCM_FINGLLEDGERDEFN
+    description: "FREQ_FSCM_PROD_FINGLLEDGERDEFN tables"
+    database: CES_ERP
+    schema: FREQ_FSCM_PROD_FINGLLEDGERDEFN
+    tables:
+      - name: LEDGER_PVO
+
+  - name: CES_ERP_FSCM_ANALYTICSSERVICE
+    description: "FSCM_PROD_ANALYTICSSERVICE tables"
+    database: CES_ERP
+    schema: FSCM_PROD_ANALYTICSSERVICE
+    tables:
+      - name: VALUE_SET_VALUES_PVO
+      - name: FND_TREE_AND_VERSION_VO
+      - name: CURRENCIES_TLPVO
+      - name: VALUE_SET_TYPED_VALUES_PVO
+
+  - name: CES_ERP_FREQ_FSCM_ANALYTICSSERVICE
+    description: "FREQ_FSCM_PROD_ANALYTICSSERVICE tables"
+    database: CES_ERP
+    schema: FREQ_FSCM_PROD_ANALYTICSSERVICE
+    tables:
+      - name: LOOKUP_VALUES_TLPVO
+
+  - name: CES_ERP_FSCM_CONTRACTSCORE
+    description: "FSCM_PROD_CONTRACTSCORE tables"
+    database: CES_ERP
+    schema: FSCM_PROD_CONTRACTSCORE
+    tables:
+      - name: CONTRACT_CUSTOMER_ACCOUNT_P
+
+  - name: CES_ERP_FSCM_FINAPSHAREDCORE
+    description: "FSCM_PROD_FINAPSHAREDCORE tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINAPSHAREDCORE
+    tables:
+      - name: INVOICE_PAYMENT_LOOKUP_PVO
+      - name: INVOICE_TYPE_LOOKUP_PVO
+      - name: SOURCE_LOOKUP_PVO
+
+  - name: CES_ERP_FSCM_FINARCUSTOMERSPUBLICMODEL
+    description: "FSCM_PROD_FINARCUSTOMERSPUBLICMODEL tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINARCUSTOMERSPUBLICMODEL
+    tables:
+      - name: SITE_BANK_ACCOUNT
+
+  - name: CES_ERP_FSCM_FINARTOPPUBLICMODEL
+    description: "FSCM_PROD_FINARTOPPUBLICMODEL tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINARTOPPUBLICMODEL
+    tables:
+     - name: TRANSACTION_TYPE_PVO
+
+  - name: CES_ERP_FSCM_FINCEBANKRELATIONSHIPS
+    description: "FSCM_PROD_FINCEBANKRELATIONSHIPS tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINCEBANKRELATIONSHIPS
+    tables:
+      - name: BANK_ACCOUNT_PVO
+
+  - name: CES_ERP_FSCM_FINEXTRACT_APBICCEXTRACT
+    description: "FSCM_PROD_FINEXTRACT_APBICCEXTRACT tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINEXTRACT_APBICCEXTRACT
+    tables:
+      - name: DISBURSEMENT_HEADER_EXTRACT_PVO
+      - name: PAYMENT_TERM_HEADER_EXTRACT_PVO
+      - name: INVOICE_LINE_EXTRACT_PVO
+      - name: PAID_DISBURSEMENT_SCHEDULE_EXTRACT_PVO
+      - name: PAYMENT_TERM_HEADER_TRANSLATION_EXTRACT_PVO
+      - name: INVOICE_DISTRIBUTION_EXTRACT_PVO
+      - name: INVOICE_HEADER_EXTRACT_PVO
+      - name: INVOICE_PAYMENT_SCHEDULE_EXTRACT_PVO
+
+  - name: CES_ERP_FSCM_FINEXTRACT_ARBICCEXTRACT
+    description: "FSCM_PROD_FINEXTRACT_ARBICCEXTRACT tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINEXTRACT_ARBICCEXTRACT
+    tables:
+      - name: PAYMENT_TERM_TLEXTRACT_PVO
+      - name: TRANSACTION_DISTRIBUTION_EXTRACT_PVO
+      - name: PAYMENT_SCHEDULE_EXTRACT_PVO
+      - name: TRANSACTION_HEADER_EXTRACT_PVO
+      - name: TRANSACTION_LINE_EXTRACT_PVO
+      - name: PAYMENT_TERM_EXTRACT_PVO
+      - name: RECEIVABLE_APPLICATION_EXTRACT_PVO
+      - name: TRANSACTION_BATCH_SOURCE_EXTRACT_PVO
+      - name: TRANSACTION_TYPE_EXTRACT_PVO
+      - name: RECEIPT_HEADER_EXTRACT_PVO
+      - name: ADJUSTMENT_EXTRACT_PVO
+
+  - name: CES_ERP_FSCM_FINEXTRACT_EXMBICCEXTRACT
+    description: "FSCM_PROD_FINEXTRACT_EXMBICCEXTRACT tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINEXTRACT_EXMBICCEXTRACT
+    tables:
+      - name: EXPENSE_EXTRACT_PVO
+      - name: EXPENSE_TYPE_EXTRACT_PVO
+
+  - name: CES_ERP_FSCM_FINEXTRACT_FUNBICCEXTRACT
+    description: "FSCM_PROD_FINEXTRACT_FUNBICCEXTRACT tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINEXTRACT_FUNBICCEXTRACT
+    tables:
+      - name: BUSINESS_UNIT_EXTRACT_PVO
+
+  - name: CES_ERP_FSCM_FINEXTRACT_GLBICCEXTRACT
+    description: "FSCM_PROD_FINEXTRACT_GLBICCEXTRACT tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINEXTRACT_GLBICCEXTRACT
+    tables:
+      - name: JOURNAL_HEADER_EXTRACT_PVO
+      - name: JOURNAL_IMPORT_REFERENCE_EXTRACT_PVO
+      - name: JOURNAL_SOURCE_EXTRACT_PVO
+      - name: FISCAL_CALENDAR_EXTRACT_PVO
+      - name: JOURNAL_BATCH_EXTRACT_PVO
+      - name: BALANCE_EXTRACT_PVO
+      - name: LEDGER_EXTRACT_PVO
+      - name: SEGMENT_VALUE_HIERARCHY_EXTRACT_PVO
+      - name: DAILY_CONVERSION_TYPE_EXTRACT_PVO
+      - name: JOURNAL_LINE_EXTRACT_PVO
+      - name: JOURNAL_CATEGORY_EXTRACT_PVO
+
+  - name: CES_ERP_FSCM_FINEXTRACT_XLABICCEXTRACT
+    description: "FSCM_PROD_FINEXTRACT_XLABICCEXTRACT tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINEXTRACT_XLABICCEXTRACT
+    tables:
+      - name: SUBLEDGER_JOURNAL_DISTRIBUTION_EXTRACT_PVO
+      - name: SUBLEDGER_JOURNAL_TRANSACTION_ENTITY_EXTRACT_PVO
+      - name: SUBLEDGER_APPLICATION_EXTRACT_PVO
+      - name: EVENT_TYPE_TLEXTRACT_PVO
+      - name: SUBLEDGER_JOURNAL_HEADER_EXTRACT_PVO
+      - name: SUBLEDGER_JOURNAL_LINE_EXTRACT_PVO
+
+  - name: CES_ERP_FSCM_FINEXTRACT_XLEBICCEXTRACT
+    description: "FSCM_PROD_FINEXTRACT_XLEBICCEXTRACT tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINEXTRACT_XLEBICCEXTRACT
+    tables:
+     - name: LEGAL_ENTITY_EXTRACT_PVO
+
+  - name: CES_ERP_FSCM_FINFUNBUSINESSUNITS
+    description: "FSCM_PROD_FINFUNBUSINESSUNITS tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINFUNBUSINESSUNITS
+    tables:
+      - name: BUSINESS_UNIT_PVO
+
+  - name: CES_ERP_FSCM_FINGLCALACC
+    description: "FSCM_PROD_FINGLCALACC tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINGLCALACC
+    tables:
+      - name: FISCAL_DAY_PVO
+      - name: GLFISCAL_PERIOD_PVO
+      - name: PERIOD_STATUS_PVO
+
+  - name: CES_ERP_FSCM_FINGLJRNLENTRIES
+    description: "FSCM_PROD_FINGLJRNLENTRIES tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINGLJRNLENTRIES
+    tables:
+      - name: JOURNAL_ENCUMBRANCE_PVO
+
+  - name: CES_ERP_FSCM_FINGLJRNLSETUPCAT
+    description: "FSCM_PROD_FINGLJRNLSETUPCAT tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINGLJRNLSETUPCAT
+    tables:
+     - name: JOURNAL_CATEGORY_BPVO
+
+  - name: CES_ERP_FSCM_FINGLJRNLSETUPSRC
+    description: "FSCM_PROD_FINGLJRNLSETUPSRC tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINGLJRNLSETUPSRC
+    tables:
+     - name: JOURNAL_SOURCE_BPVO
+
+  - name: CES_ERP_FSCM_FINXLASHAREDOBJ
+    description: "FSCM_PROD_FINXLASHAREDOBJ tables"
+    database: CES_ERP
+    schema: FSCM_PROD_FINXLASHAREDOBJ
+    tables:
+      - name: ACCOUNTING_CLASS_CODE_LOOKUP_PVO
+
+  - name: CES_ERP_FSCM_LOCATION
+    description: "FSCM_PROD_LOCATION tables"
+    database: CES_ERP
+    schema: FSCM_PROD_LOCATION
+    tables:
+     - name: LOCATION_DETAILS_TRANSLATION_PVOVIEW_ALL
+
+  - name: CES_ERP_FSCM_ORGANIZATION
+    description: "FSCM_PROD_ORGANIZATION tables"
+    database: CES_ERP
+    schema: FSCM_PROD_ORGANIZATION
+    tables:
+      - name: ORGANIZATION_UNIT_PVO
+      - name: DEPARTMENT_MANAGER_PVO
+      - name: ORGANIZATION_UNIT_TRANSLATION_PVO
+
+  - name: CES_ERP_FSCM_PARTIESANALYTICS
+    description: "FSCM_PROD_PARTIESANALYTICS tables"
+    database: CES_ERP
+    schema: FSCM_PROD_PARTIESANALYTICS
+    tables:
+      - name: LOCATION
+      - name: CUST_ACCOUNT_SITE_USE
+      - name: PARTY_SITE
+      - name: ORGANIZATION
+      - name: PERSON
+      - name: CUST_ACCT_SITE_USE_LOC
+      - name: CUSTOMER_ACCOUNT
+
+  - name: CES_ERP_FSCM_PERSON
+    description: "FSCM_PROD_PERSON tables"
+    database: CES_ERP
+    schema: FSCM_PROD_PERSON
+    tables:
+      - name: PERSON_NAME_PVOVIEW_ALL
+      - name: GLOBAL_PERSON_PVOVIEW_ALL
+
+  - name: CES_ERP_FSCM_PRCEXTRACT_POZBICCEXTRACT
+    description: "FSCM_PROD_PRCEXTRACT_POZBICCEXTRACT tables"
+    database: CES_ERP
+    schema: FSCM_PROD_PRCEXTRACT_POZBICCEXTRACT
+    tables:
+      - name: SUPPLIER_SITE_ASSIGNMENT_EXTRACT_PVO
+      - name: SUPPLIER_SITE_EXTRACT_PVO
+      - name: SUPPLIER_EXTRACT_PVO
+
+  - name: CES_ERP_FSCM_PRCPOPUBLICVIEW
+    description: "FSCM_PROD_PRCPOPUBLICVIEW tables"
+    database: CES_ERP
+    schema: FSCM_PROD_PRCPOPUBLICVIEW
+    tables:
+     - name: PURCHASE_ORDER_HISTORY_PVO
+
+  - name: CES_ERP_FSCM_PRCPOZPUBLICVIEW
+    description: "FSCM_PROD_PRCPOZPUBLICVIEW tables"
+    database: CES_ERP
+    schema: FSCM_PROD_PRCPOZPUBLICVIEW
+    tables:
+      - name: SUPPLIER_ADDRESS_PVO
+      - name: SUPPLIER_PVO
+      - name: SUPPLIER_SITE_BANK_ACCOUNT_PVO
+      - name: SUPPLIER_FACT_LESS_FACT_PVO
+      - name: SUPPLIER_BANK_ACCOUNT_PVO
+      - name: SUPPLIER_SITE_PVO
+
+  - name: CES_ERP_FSCM_USER
+    description: "FSCM_PROD_USER tables"
+    database: CES_ERP
+    schema: FSCM_PROD_USER
+    tables:
+      - name: USER_PVO
+
+  - name: CES_ERP_FREQ_FSCM_FINEXTRACT_GLBICCEXTRACT
+    description: "FREQ_FSCM_PROD_FINEXTRACT_GLBICCEXTRACT tables"
+    database: CES_ERP
+    schema: FREQ_FSCM_PROD_FINEXTRACT_GLBICCEXTRACT
+    tables:
+      - name: CODE_COMBINATION_EXTRACT_PVO
+
+  - name: CES_AD_INVITE
+    description: "CES_AD_INVITE tables"
+    database: RAW_{{ target.name.upper() }}
+    schema: CES_AD_INVITE
+    tables:
+      - name: COEX_CRP_ORG_SECURITY_MAPPING_DTL

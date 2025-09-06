@@ -1,0 +1,28 @@
+{%- set trimmed_source_rel = model.name | replace("EXT_","") -%}
+
+{{
+    config(
+        alias=trimmed_source_rel
+    )
+}}
+
+SELECT
+P.POSTCODE AS "id"
+, CASE WHEN RPN.POSTCODE_NUM_RP IS NULL THEN 0 ELSE RPN.POSTCODE_NUM_RP END AS "postcode_num_rp"
+, CASE WHEN RPN.POSTCODE_NUM_RP IS NULL THEN 'FALSE' ELSE 'TRUE' END AS "refund_point_flag"
+, P.LATITUDE AS "latitude"
+, P.LONGITUDE AS "longitude"
+FROM 
+{{ ref('REF_LOCALITY_POA') }} AS P
+LEFT JOIN (
+      SELECT
+      RPN.POSTCODE,
+      COUNT(DISTINCT RPN.SITE_NUMBER) AS POSTCODE_NUM_RP
+      FROM
+      {{ ref('CRP_SITES') }} AS RPN
+      WHERE RPN.STATUS = 'Active' AND RPN.MULTI_SCHEME_ID = 10000
+      GROUP BY
+      RPN.POSTCODE
+) RPN
+ON P.POSTCODE = RPN.POSTCODE
+WHERE P.STATE = 'Queensland'

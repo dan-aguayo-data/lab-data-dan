@@ -1,0 +1,29 @@
+name: Email on Commit
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send email on push
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.office365.com
+          server_port: 587
+          secure: false  # use STARTTLS, not direct SSL
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "Git notification dbt Common - PR merged into main"
+          to: ${{ vars.EMAIL_RECIPIENTS }}
+          from: GitHub Bot <data-team@cesystems.com>
+          body: |
+            This is an automated e-mail notification. A PR merge into main has been performed on dataplatforms-common github repo. Details below:
+
+            Committer: ${{ github.actor }}
+            Message: ${{ github.event.head_commit.message }}
+            Commit URL: https://github.com/${{ github.repository }}/commit/${{ github.sha }}

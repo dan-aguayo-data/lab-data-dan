@@ -1,0 +1,58 @@
+{%- set trimmed_source_rel = model.name | replace("EXT_","") -%}
+
+
+--********* UAT *********--
+{% if target.name.upper() != 'PROD' %}
+
+{{
+    config(
+        alias=trimmed_source_rel,
+        materialized = 'incremental',
+        incremental_strategy = 'merge',
+        unique_key = '"id"'      
+    )
+}}
+
+{%- else -%}
+
+{{
+    config(
+        alias=trimmed_source_rel
+    )
+}}
+
+{% endif %}
+--********* UAT *********--
+
+
+SELECT
+PS.MULTI_SCHEME_ID AS MULTI_SCHEME_ID
+, SCHEME.NAME AS SCHEME
+, UUID.MARKETING_UUID AS "external_id"
+, P.CONSUMER_NUMBER || '-' || TO_CHAR(G.GOAL_START_DATE, 'YYYY-MM-DD') || '-' || G.GOAL_MEMBER_TYPE AS "id"
+, G.GOAL_D_ID AS "goal_d_id"
+, G.GOAL_NAME AS "goal_name"
+, G.GOAL_AMOUNT AS "goal_target_amount"
+, G.GOAL_AMOUNT * 10 AS "goal_target_qty"
+, CAST(G.GOAL_START_DATE AS TIMESTAMP) AS "goal_start_date"
+, CAST(G.GOAL_END_DATE AS TIMESTAMP) AS "goal_end_date"
+, P.CONSUMER_NUMBER AS "consumer_id"
+FROM
+{{ source('CES_DRUPAL', 'CFC_GOAL') }} AS G
+INNER JOIN {{ source('CES_DRUPAL', 'PARTICIPANT_SITES') }} AS PS
+ON G.PARTICIPANT_SITE_ID = PS.PARTICIPANT_SITE_ID AND PS._FIVETRAN_DELETED = FALSE
+INNER JOIN {{ source('CES_DRUPAL', 'PARTICIPANTS') }} AS P
+ON P.PARTICIPANT_ID = PS.PARTICIPANT_ID AND P._FIVETRAN_DELETED = FALSE
+INNER JOIN {{ source('CES_DRUPAL', 'CFC_UUID') }} AS UUID
+ON UUID.CONSUMER_NUMBER  = P.CONSUMER_NUMBER AND UUID.MULTI_SCHEME_ID = 10000 AND UUID.TYPE = 'individual' AND UUID._FIVETRAN_DELETED = FALSE
+INNER JOIN {{ source('CES_MSCM', 'SCHEME') }} AS SCHEME --ONLY REQUIRED FOR REPORTING PURPOSES
+ON PS.MULTI_SCHEME_ID = SCHEME.MULTI_SCHEME_ID
+WHERE G.GOAL_AMOUNT <> 0 AND G.GOAL_MEMBER_TYPE = 0 AND G._FIVETRAN_DELETED = 'FALSE' --INDIVIDUALS
+AND PS.MULTI_SCHEME_ID = 10000 --COEX
+AND PS.TAXONOMY_TYPE_ID = 'Consumer'
+AND P.PARTICIPANT_GROUP = 'IND_CONSUMER'--Just send to individual customers
+--AND (LOWER(PS.SITE_NAME) NOT LIKE '%pvt%' AND LOWER(PS.SITE_NAME) NOT LIKE'% test %') --Test sites
+AND PS.SITE_NUMBER <> 'C10625269' --2 customer with same info (exclude customer without transactions)
+AND PS.STATE = 'QLD' --Customer address is of another state
+AND TRUNC(G.GOAL_START_DATE, 'DAY') <> TRUNC(G.GOAL_END_DATE, 'DAY')
+QUALIFY ROW_NUMBER() OVER (PARTITION BY  P.CONSUMER_NUMBER || TRUNC("goal_start_date",'DAY') || G.GOAL_MEMBER_TYPE ORDER BY G.GOAL_D_ID DESC) = 1

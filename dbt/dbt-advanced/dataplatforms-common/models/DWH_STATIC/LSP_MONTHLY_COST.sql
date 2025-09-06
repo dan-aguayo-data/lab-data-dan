@@ -1,0 +1,4 @@
+SELECT
+*
+FROM
+{{ source('LOOKUPS', 'LSP_MONTHLY_COST') }}

@@ -1,0 +1,4 @@
+SELECT
+*
+FROM
+{{ source('LOOKUPS', 'LGA_2020_AUST') }}

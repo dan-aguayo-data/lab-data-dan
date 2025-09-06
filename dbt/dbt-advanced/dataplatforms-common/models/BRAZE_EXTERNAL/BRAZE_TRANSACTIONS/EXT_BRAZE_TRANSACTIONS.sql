@@ -1,0 +1,51 @@
+{%- set trimmed_source_rel = model.name | replace("EXT_","") -%}
+
+--********* UAT *********--
+{% if target.name.upper() != 'PROD' %}
+{{
+    config(
+        alias=trimmed_source_rel,
+        materialized = 'incremental',
+        incremental_strategy = 'merge',
+        unique_key = '"transaction_key"'      
+    )
+}}
+
+{%- else -%}
+
+{{
+    config(
+        alias=trimmed_source_rel
+    )
+}}
+
+{% endif %}
+--********* UAT *********--
+
+SELECT
+UUID.MARKETING_UUID||'~'||TO_CHAR(TRUNCATE(H.TRANSACTION_DATE,'DAY')) AS "transaction_key"
+, UUID.MARKETING_UUID AS "external_id"
+, TRUNCATE(H.TRANSACTION_DATE,'DAY') AS "transaction_date"
+, MIN(H.TRANSACTION_DATE_UTC) AS "first_transaction_date"
+, SUM(H.GROSS_AMOUNT) - SUM(CASE WHEN H.RECIPIENT_CONSUMER_ID <>  '-' AND H.CONSUMER_ID <> H.RECIPIENT_CONSUMER_ID THEN H.GROSS_AMOUNT ELSE 0 END) AS "refund_amount"
+, SUM(CASE WHEN H.RECIPIENT_CONSUMER_ID <>  '-' AND H.CONSUMER_ID <> H.RECIPIENT_CONSUMER_ID THEN H.GROSS_AMOUNT ELSE 0 END) AS "donation_amount"
+, SUM(H.COLLECTION_QTY) - SUM(CASE WHEN H.RECIPIENT_CONSUMER_ID <>  '-' AND H.CONSUMER_ID <> H.RECIPIENT_CONSUMER_ID THEN H.COLLECTION_QTY ELSE 0 END) AS "collection_qty"
+, SUM(CASE WHEN H.RECIPIENT_CONSUMER_ID <>  '-' AND H.CONSUMER_ID <> H.RECIPIENT_CONSUMER_ID THEN H.COLLECTION_QTY ELSE 0 END) AS "donation_qty"
+FROM
+{{ ref('CRP_COLLECTION_HDR') }} AS H
+INNER JOIN {{ source('CES_DRUPAL', 'PARTICIPANT_SITES') }} AS PS
+ON PS.SITE_NUMBER = H.CONSUMER_ID AND PS.TAXONOMY_TYPE_ID = 'Consumer' AND PS._FIVETRAN_DELETED = FALSE
+INNER JOIN {{ source('CES_DRUPAL', 'PARTICIPANTS') }} AS P 
+ON P.PARTICIPANT_ID = PS.PARTICIPANT_ID AND P.PARTICIPANT_GROUP = 'IND_CONSUMER' AND P._FIVETRAN_DELETED = FALSE
+LEFT JOIN {{ source('CES_DRUPAL', 'CFC_UUID') }} AS UUID
+ON UUID.CONSUMER_NUMBER  = P.CONSUMER_NUMBER AND UUID.MULTI_SCHEME_ID = 10000 AND UUID.TYPE = 'individual' AND UUID._FIVETRAN_DELETED = FALSE
+WHERE UUID.MARKETING_UUID IS NOT NULL
+AND TRUNCATE(H.TRANSACTION_DATE,'DAY') = dateadd(days, -1, TRUNCATE(CONVERT_TIMEZONE('UTC','Australia/Brisbane',CAST(SYSDATE() AS TIMESTAMP)),'DAY'))
+AND PS.MULTI_SCHEME_ID = 10000 --COEX
+AND PS.SITE_NUMBER <> 'C10625269' --2 customer with same info (exclude customer without transactions)
+AND PS.STATE = 'QLD' --Customer address is of another state
+AND H.COLLECTION_QTY <> 0 --Remove ineligible
+GROUP BY 
+UUID.MARKETING_UUID||'~'||TO_CHAR(TRUNCATE(H.TRANSACTION_DATE,'DAY')),
+TRUNCATE(H.TRANSACTION_DATE,'DAY'),
+UUID.MARKETING_UUID

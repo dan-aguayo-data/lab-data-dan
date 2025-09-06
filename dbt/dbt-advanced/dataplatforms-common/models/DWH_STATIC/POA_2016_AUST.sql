@@ -1,0 +1,4 @@
+SELECT
+*
+FROM
+{{ source('LOOKUPS', 'POA_2016_AUST') }}

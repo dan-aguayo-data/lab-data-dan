@@ -1,0 +1,4 @@
+SELECT
+*
+FROM
+{{ source('LOOKUPS', 'LOCALITY_POA') }}

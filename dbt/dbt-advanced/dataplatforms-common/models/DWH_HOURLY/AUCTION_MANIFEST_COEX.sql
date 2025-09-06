@@ -1,0 +1,25 @@
+SELECT
+NVL(LM.MULTI_SCHEME_ID, 10000) AS "Multi Scheme ID"
+, SCHEME.NAME AS SCHEME
+, LM.DOCKET_NO AS "Manifest ID"
+, '-' AS "Lot ID"
+, LM.BUYER_ID AS "Buyer ID"
+, LM.BUYER AS "Buyer Name"
+, LM.PROCESSSOR_ID AS "Seller ID"
+, LM.PROCESSOR AS "Seller Name"
+, LM.DELIVERY_DATE AS "Manifest Date"
+, LM.NET_WEIGHT AS "Manifest Weight in Tonnes"
+, LM.GROSS_WEIGHT*1000 AS "Total Truck Weight"
+, LM.TARE_WEIGHT*1000 AS "Empty Truck Weight"
+, LM.NET_WEIGHT*1000 AS "Manifest Weight Kgs"
+, NVL(LM.MATERIAL_TYPE_ID,'GLASSMIXED') AS "Material Type"
+, CASE WHEN NVL(LM.EXPORT,'N') = 'N' THEN 'No' ELSE 'Yes' END AS "Export?"
+, NVL(LM.DESTINATION,'AUSTRALIA') AS "Destination Country"
+, LM.EX_GST AS "Sale Price per Tonne"
+, 'COEX Glass Data' AS "Flag"
+, SYSDATE() AS INSERT_DATE_UTC
+FROM
+{{ source('REF_COEX', 'GLASS_MASTER') }} AS LM
+INNER JOIN {{ source('CES_MSCM', 'SCHEME') }} AS SCHEME
+ON NVL(LM.MULTI_SCHEME_ID, 10000) = SCHEME.MULTI_SCHEME_ID
+WHERE LM.DELIVERY_DATE IS NOT NULL

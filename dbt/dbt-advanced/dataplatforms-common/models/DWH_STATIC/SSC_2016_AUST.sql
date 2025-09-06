@@ -1,0 +1,4 @@
+SELECT
+*
+FROM
+{{ source('LOOKUPS', 'SSC_2016_AUST') }}

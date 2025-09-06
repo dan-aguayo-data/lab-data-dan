@@ -1,0 +1,100 @@
+WITH CRP_DETAILS AS (
+      SELECT 
+      U.ID
+      , U.SCHEME_PARTICIPANT_TYPE AS "participant_type" --''
+      , LISTAGG(DISTINCT L.CRP_TYPE,',') OVER (PARTITION BY CRP.ID) AS "crp_type" --''
+      , L.REGION AS "crp_sub_region"
+      , L.LOCAL_COUNCIL AS "lga"
+      , L.REGIONAL_MANAGER AS "regional_manager"
+      , L.BUSINESS_TYPE AS "business_type"
+      , L.ELECTORATE AS "electorate"
+      FROM(
+            SELECT 
+            U.ID,
+            SUBSTRING(S.VALUE,POSITION(' Q',S.VALUE,1)+1,10) AS CRP_ID
+            FROM {{ source('COEX_AGILOFT', 'AG_EXTERNAL_USER') }} AS U
+            LEFT JOIN LATERAL flatten(INPUT => U.VALUE:site_access_crp) S
+      ) CRP
+      LEFT JOIN {{ source('COEX_AGILOFT', 'AG_LOCATION') }} AS L
+      ON CRP.CRP_ID = L.SCHEME_SITE_ID  AND NOT(NVL(L.INACTIVE_DATE,TO_DATE('01-01-9999','DD-MM-YYYY')) < SYSDATE())--INACTIVE DATE IN THE FUTURE OR NULL
+      FULL JOIN {{ source('COEX_AGILOFT', 'AG_EXTERNAL_USER') }} AS U
+      ON U.ID = CRP.ID
+)
+SELECT
+UPPER(UUID_STRING('7050bc7c-1309-4172-9d6f-f551bdf7a8c8', U.ID)) AS "external_id"
+, U.EMAIL AS "email"
+, U.FIRST_NAME AS "first_name"
+, U.LAST_NAME AS "last_name"
+, CASE WHEN REPLACE(U.DIRECT_PHONE, ' ', '') LIKE '04%' AND LEN(REPLACE(U.DIRECT_PHONE, ' ', '')) = 10 THEN '61' || RIGHT(REPLACE(U.DIRECT_PHONE, ' ', ''),9) ELSE REPLACE(U.DIRECT_PHONE, ' ', '') END AS "phone"
+, E.ERP_ID AS "organisation_id"
+, MP.ALTERNATE_NAME AS "company_name"
+, E.MAIN_ZIP_OR_POSTAL_CODE AS "post_code"
+, E.MAIN_CITY AS "suburb"
+, E.LATEST_CONTRACT_STATUS AS "contract_status"
+, CT.CONTACT_TYPE AS "contact_type"
+, CT.TAXONOMY_SUB_TYPE AS "taxonomy_sub_type"
+, CT.TAXONOMY_SIZE AS "taxonomy_size"
+, CRP_TYPE.JSON_PARTICIPANT_TYPE AS "participant_type"
+, CASE WHEN U.ADD_TO_OPERATOR_COMMS = 'Yes' THEN 'TRUE' ELSE 'FALSE' END AS "operator_comms_flag"
+, CRP_TYPE.JSON_CRP_TYPE AS "crp_type"
+, CRP."crp_sub_region" AS "crp_sub_region"
+, CRP."lga" AS "lga"
+, CRP."regional_manager" AS "regional_manager"
+, CRP."business_type" AS "business_type"
+, CRP."electorate" AS "electorate"
+, U.DEACTIVATE_USER AS "ag_deactivate_user"
+, E.STATUS AS "status"
+FROM 
+{{ source('COEX_AGILOFT', 'AG_EXTERNAL_USER') }} AS U
+LEFT JOIN {{ source('COEX_AGILOFT', 'AG_ENTITY') }} AS E
+ON U.COMPANY_ID = E.ID
+LEFT JOIN {{ source('CES_MSCM', 'MDT_PARTICIPANTS') }} AS MP
+ON MP.PARTICIPANT_NUMBER = E.ERP_ID
+LEFT JOIN (
+      SELECT B2B.ID
+      , ARRAY_EXCEPT( ARRAY_DISTINCT(ARRAY_AGG(OBJECT_CONSTRUCT('crp_type', CASE WHEN trim(A.VALUE) = '' THEN NULL ELSE trim(A.VALUE) END))), [{}]) AS JSON_CRP_TYPE
+      , ARRAY_DISTINCT(ARRAY_AGG(OBJECT_CONSTRUCT('participant_type', CASE WHEN trim(G.VALUE) = '' THEN NULL ELSE trim(G.VALUE) END))) AS JSON_PARTICIPANT_TYPE
+      FROM CRP_DETAILS B2B
+      , LATERAL SPLIT_TO_TABLE(B2B."crp_type",',')A
+      , LATERAL SPLIT_TO_TABLE(B2B."participant_type",',')G
+     GROUP BY B2B.ID
+) CRP_TYPE
+ON CRP_TYPE.ID = U.ID
+LEFT JOIN (
+      SELECT B2B.ID
+      , ARRAY_EXCEPT( ARRAY_DISTINCT(ARRAY_AGG(OBJECT_CONSTRUCT('crp_sub_region', trim(B2B."crp_sub_region")))), [{}]) AS "crp_sub_region"
+      , ARRAY_EXCEPT( ARRAY_DISTINCT(ARRAY_AGG(OBJECT_CONSTRUCT('lga', trim(B2B."lga")))), [{}]) AS "lga"
+      , ARRAY_EXCEPT( ARRAY_DISTINCT(ARRAY_AGG(OBJECT_CONSTRUCT('regional_manager', trim(B2B."regional_manager")))), [{}]) AS "regional_manager"
+      , ARRAY_EXCEPT( ARRAY_DISTINCT(ARRAY_AGG(OBJECT_CONSTRUCT('business_type', trim(B2B."business_type")))), [{}]) AS "business_type"
+      , ARRAY_EXCEPT( ARRAY_DISTINCT(ARRAY_AGG(OBJECT_CONSTRUCT('electorate', trim(B2B."electorate")))), [{}]) AS "electorate"
+      FROM CRP_DETAILS B2B GROUP BY B2B.ID
+) CRP
+ON CRP.ID = U.ID
+LEFT JOIN (
+    SELECT
+    C.EMAIL
+    ,ARRAY_EXCEPT( ARRAY_DISTINCT(ARRAY_AGG(OBJECT_CONSTRUCT('TAXONOMY_SUB_TYPE', PS.TAXONOMY_SUB_TYPE))), [{}]) AS TAXONOMY_SUB_TYPE
+    ,ARRAY_EXCEPT( ARRAY_DISTINCT(ARRAY_AGG(OBJECT_CONSTRUCT('TAXONOMY_SIZE', PS.TAXONOMY_SIZE))), [{}]) AS TAXONOMY_SIZE
+    ,ARRAY_EXCEPT( ARRAY_DISTINCT(ARRAY_AGG(OBJECT_CONSTRUCT('ROLE_TYPE_ID', CR.ROLE_TYPE_ID))), [{}]) AS ROLE_TYPE_ID
+    ,ARRAY_EXCEPT( ARRAY_DISTINCT(ARRAY_AGG(OBJECT_CONSTRUCT('contact_type', R_T.VALUE))), [{}]) AS CONTACT_TYPE
+    FROM 
+    {{ source('CES_MSCM', 'MDT_CONTACTS') }} AS C
+    INNER JOIN 
+    {{ source('CES_MSCM', 'MDT_CONTACT_ROLES') }} AS CR 
+    ON C.CONTACT_ID = CR.CONTACT_ID
+    INNER JOIN
+    {{ source('CES_MSCM', 'MDT_PARTICIPANT_SITES') }} AS PS
+    ON CR.PARTICIPANT_SITE_ID = PS.PARTICIPANT_SITE_ID
+    LEFT JOIN 
+    {{ source('CES_MSCM', 'SCHEME_REF_CODES') }} AS R_T
+    ON CR.ROLE_TYPE_ID = R_T.SCHEME_REF_CODES_ID
+    WHERE ROLE_TYPE_ID IN (1106,1947,1105,2189,1108,1101,1104,1102,2382,1103,2190,1107,2191)
+    AND PS.MULTI_SCHEME_ID = 10000
+    AND PS.SITE_TYPE_ID <> '1537'
+    AND C.ACTIVE = 1
+    AND CR.ACTIVE = 1
+    GROUP BY ALL
+) CT
+ON U.EMAIL = CT.EMAIL
+WHERE
+U.SCHEME_PARTICIPANT_TYPE IS NOT NULL 
