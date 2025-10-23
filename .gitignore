@@ -1,2 +1,25 @@
 **/.pbi/localSettings.json
 **/.pbi/cache.abf
+# --- Terraform build artifacts ---
+.terraform/                 # Local cache directory (contains provider executables)
+.terraform.lock.hcl         # (OPTIONAL) You can commit this if you want to lock provider versions
+terraform.tfstate
+terraform.tfstate.backup
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# --- Sensitive or local environment files ---
+*.tfvars
+*.tfvars.json
+*.auto.tfvars
+*.auto.tfvars.json
+
+# --- OS / Editor junk ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

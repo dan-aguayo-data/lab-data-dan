@@ -1,0 +1,4 @@
+project:
+    name: course
+postgres:
+    port: "5435"
