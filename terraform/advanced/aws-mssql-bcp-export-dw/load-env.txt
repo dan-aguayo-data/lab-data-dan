@@ -1,0 +1,51 @@
+# ============================================
+# MSSQL BCP Export - Environment Variables
+# ============================================
+# IMPORTANT: This file contains sensitive credentials.
+# - NEVER commit this file to Git (already in .gitignore)
+# - Store securely (e.g., password manager, secure vault)
+# - Rotate credentials regularly
+
+# Usage: 
+# 1. Fill in your actual values below
+# 2. Run: .\load-env.ps1
+# 3. Verify: echo $env:TF_VAR_us_mssql_host
+
+Write-Host "Loading MSSQL BCP Export environment variables..." -ForegroundColor Cyan
+
+# ============================================
+# US Database Credentials
+# ============================================
+$env:TF_VAR_us_mssql_host     = "10.0.1.149"    # UPDATE: US MSSQL hostname/IP
+$env:TF_VAR_us_mssql_user     = "SVC_DATA_MSSQL"                 # UPDATE: US MSSQL username
+$env:TF_VAR_us_mssql_password = "ChangeMe123!"   # UPDATE: US MSSQL password
+
+# ============================================
+# AU Database Credentials
+# ============================================
+$env:TF_VAR_au_mssql_host     = "10.0.1.149"    # UPDATE: AU MSSQL hostname/IP
+$env:TF_VAR_au_mssql_user     = "SVC_DATA_MSSQL"                 # UPDATE: AU MSSQL username
+$env:TF_VAR_au_mssql_password = "ChangeMe123!"   # UPDATE: AU MSSQL password
+
+# ============================================
+# VPC Configuration (if not in terraform.tfvars)
+# ============================================
+# Uncomment and update if you prefer to set these via environment variables
+# $env:TF_VAR_vpc_id             = "vpc-xxxxx"
+# $env:TF_VAR_private_subnet_ids = '["subnet-xxxxx", "subnet-yyyyy"]'
+# $env:TF_VAR_alert_email        = "data-engineering@eftsure.com"
+
+$env:TF_VAR_vpc_id             = "vpc-093d79458ac5bce08"
+$env:TF_VAR_private_subnet_ids = '["subnet-05ede960c23f3fc36","subnet-05ede960c23f3fc36"]'
+$env:TF_VAR_route_table_ids    = '["rtb-0cc0c433db795a9f1"]'
+$env:TF_VAR_alert_email        = "data-team@eftsure.com"
+
+
+
+
+Write-Host " Environment variables loaded successfully!" -ForegroundColor Green
+Write-Host ""
+Write-Host "Verify settings:" -ForegroundColor Yellow
+Write-Host "  US Host: $env:TF_VAR_us_mssql_host"
+Write-Host "  AU Host: $env:TF_VAR_au_mssql_host"
+Write-Host ""

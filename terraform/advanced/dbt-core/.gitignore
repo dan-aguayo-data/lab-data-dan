@@ -1,0 +1,17 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+.terraform.lock.hcl
+
+# Sensitive - NEVER COMMIT
+**/load-env.ps1
+**/.env
+
+# Large files
+*.zip
+
+# OS
+.DS_Store
+Thumbs.db

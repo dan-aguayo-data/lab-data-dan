@@ -1,0 +1,9 @@
+# ════════════════════════════════════════════════════════
+# Load sensitive environment variables (not in git)
+# Run: . .\load-env.ps1
+# ════════════════════════════════════════════════════════
+
+$env:TF_VAR_sa_password = "hDQH-GEYi11!"  # Change this!
+
+Write-Host "Environment variables set" -ForegroundColor Green
+Write-Host "  SA Password: [set]" -ForegroundColor DarkGray

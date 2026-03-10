@@ -1,0 +1,14 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+*.md
+
+# Build artifacts
+*.log
+*.txt
+
+# Scripts not needed in container
+build-and-push.sh

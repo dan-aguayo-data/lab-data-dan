@@ -1,0 +1,49 @@
+# =============================================================================
+# .dockerignore
+# =============================================================================
+# Keep Docker build context small and secure
+
+# Git
+.git
+.gitignore
+
+# Secrets - CRITICAL
+*.p8
+*.pem
+*.key
+.env
+.env.*
+secrets/
+
+# dbt artifacts (will be generated fresh)
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
+dbt_project/.user.yml
+
+# Documentation
+*.md
+LICENSE
+
+# CI/CD
+.github/
+
+# IDE
+.idea/
+.vscode/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Terraform
+*.tf
+*.tfvars
+.terraform/

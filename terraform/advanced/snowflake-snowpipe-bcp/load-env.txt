@@ -1,0 +1,15 @@
+# load-env.ps1
+# Run with: . .\load-env.ps1
+
+# Snowflake
+$env:TF_VAR_snowflake_organization = "BXNRJRX"
+$env:TF_VAR_snowflake_account_name = "XQ57619"
+$env:TF_VAR_snowflake_account = "su73143.ap-southeast-2"
+$env:TF_VAR_snowflake_user = "SVC_DATA_TERRAFORM"
+$env:TF_VAR_snowflake_role = "SVC_ROLE_TERRAFORM_RW"
+
+# AWS
+$env:TF_VAR_aws_region = "ap-southeast-2"
+$env:TF_VAR_aws_account_id = "535586744073"
+
+Write-Host "Environment variables loaded for Terraform" -ForegroundColor Green
