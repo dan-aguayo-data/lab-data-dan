@@ -1,0 +1,41 @@
+# =================================================================================
+# SECRETS & SENSITIVE FILES
+# =================================================================================
+
+# Secret files
+*.secret
+*.secrets
+secrets.*
+*secret*
+
+# Private keys
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Environment files (general)
+.env
+.env.*
+*.env
+
+# PowerShell environment files
+*.env.ps1
+.env.ps1
+env.ps1
+*-env.ps1
+*local*.ps1
+*secrets*.ps1
+
+# Terraform-specific environment variables
+terraform.env
+terraform.env.ps1
+
+# AWS credentials
+.aws/
+aws-credentials.txt
+
+# SSH keys
+id_rsa
+id_dsa
+*.ppk

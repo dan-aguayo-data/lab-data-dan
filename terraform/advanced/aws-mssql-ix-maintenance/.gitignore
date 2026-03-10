@@ -1,0 +1,36 @@
+# =============================================================================
+# .gitignore - Terraform Index Maintenance
+# =============================================================================
+
+# Local environment variables (sensitive)
+*.ps1
+*.auto.tfvars
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+
+# Lambda build artifacts
+lambda_function.zip
+lambda_layer.zip
+.lambda-build/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets (never commit these)
+*.pem
+*.key
+secrets.tfvars

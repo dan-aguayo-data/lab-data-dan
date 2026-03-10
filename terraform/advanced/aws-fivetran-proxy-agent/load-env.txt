@@ -1,0 +1,71 @@
+# load-env-hvr.ps1
+# Load environment variables for Fivetran Proxy Agent (HVR) Terraform deployment
+
+Write-Host "Loading Fivetran Proxy Agent (HVR) environment variables..." -ForegroundColor Cyan
+
+# ============================================================================
+# Existing Network Configuration
+# ============================================================================
+# Your existing dev VPC and subnet from the MSSQL EC2 setup
+$env:AWS_REGION = "ap-southeast-2"
+$env:TF_VAR_aws_region = "ap-southeast-2"
+$env:TF_VAR_vpc_id    = "vpc-0af888fe04c0eba49"
+$env:TF_VAR_subnet_id = "subnet-06643253a9f6d721c"
+
+# ============================================================================
+# MSSQL Configuration
+# ============================================================================
+# Your dev MSSQL EC2 instance
+$env:TF_VAR_mssql_host = "10.50.1.187"
+$env:TF_VAR_mssql_port = "1433"
+
+# MSSQL EC2 security group ID
+$env:TF_VAR_mssql_security_group_id = "sg-03815a04beccf3a98"
+
+# ============================================================================
+# Instance Configuration
+# ============================================================================
+$env:TF_VAR_instance_type = "t3.medium"
+
+# ============================================================================
+# HVR Download Configuration
+# ============================================================================
+# Get this URL from: Fivetran Dashboard → Account Settings → Downloads → Linux x86 (6.1.0_94)
+# Right-click the download link and copy the URL
+$env:TF_VAR_hvr_version = "6.1.0_94"
+$env:TF_VAR_hvr_download_url = "https://fivetran-hvr-downloads.s3.us-east-2.amazonaws.com/hva/linux-x86/fivetran-6.1.0_94-hub_and_agent-linux_glibc2.12-x64-64bit_ga_patch.tar.gz?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260226T232625Z&X-Amz-SignedHeaders=host&X-Amz-Credential=AKIA4ESR5FO46CM5BUO5%2F20260226%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Expires=259200&X-Amz-Signature=b0d75147b9f3076c432d510f61fcc6c15cbe79ea953b10a3941ceb00139a42fb"
+
+
+# For devau
+#terraform init \
+#  -backend-config="bucket=eft-data-terraform-backend" \
+#  -backend-config="key=fivetran_proxy_agent/devau/terraform.tfstate" \
+#  -backend-config="region=ap-southeast-2"
+
+# For devus
+#terraform init \
+#  -backend-config="bucket=eft-data-terraform-backend" \
+#  -backend-config="key=fivetran_proxy_agent/devus/terraform.tfstate" \
+#  -backend-config="region=us-east-1"
+
+
+Write-Host "Environment variables loaded successfully!" -ForegroundColor Green
+Write-Host ""
+Write-Host "Configuration:" -ForegroundColor Yellow
+Write-Host "  VPC:          $($env:TF_VAR_vpc_id)" -ForegroundColor White
+Write-Host "  Subnet:       $($env:TF_VAR_subnet_id)" -ForegroundColor White
+Write-Host "  MSSQL Host:   $($env:TF_VAR_mssql_host):$($env:TF_VAR_mssql_port)" -ForegroundColor White
+Write-Host "  MSSQL SG:     $($env:TF_VAR_mssql_security_group_id)" -ForegroundColor White
+Write-Host "  Instance:     $($env:TF_VAR_instance_type)" -ForegroundColor White
+Write-Host "  HVR Version:  $($env:TF_VAR_hvr_version)" -ForegroundColor White
+Write-Host ""
+Write-Host "Configuration files:" -ForegroundColor Cyan
+Write-Host "  fivetran-proxy-config.json - Agent credentials from Fivetran" -ForegroundColor White
+Write-Host ""
+Write-Host "Next steps:" -ForegroundColor Cyan
+Write-Host "  1. Create fivetran-proxy-config.json with your agent config" -ForegroundColor White
+Write-Host "  2. Update hvr_download_url above with actual download link" -ForegroundColor White
+Write-Host "  3. Run: terraform init" -ForegroundColor White
+Write-Host "  4. Run: terraform plan" -ForegroundColor White
+Write-Host "  5. Run: terraform apply" -ForegroundColor White
+Write-Host ""

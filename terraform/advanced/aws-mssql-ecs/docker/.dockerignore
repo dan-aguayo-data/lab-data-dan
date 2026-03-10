@@ -1,0 +1,30 @@
+# Exclude terraform and AWS files from Docker build
+terraform/
+*.tf
+*.tfvars
+*.tfstate*
+.terraform/
+.terraform.lock.hcl
+
+# Exclude git files
+.git/
+.gitignore
+.gitattributes
+
+# Exclude documentation
+README.md
+*.md
+
+# Exclude test files
+test/
+*.test
+
+# Exclude IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Exclude lambda code
+lambda/

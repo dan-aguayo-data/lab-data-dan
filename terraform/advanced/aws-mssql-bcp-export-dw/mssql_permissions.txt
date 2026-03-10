@@ -1,0 +1,48 @@
+USE [master];
+GO
+
+-- Drop if exists
+IF EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'SVC_DATA_MSSQL')
+    DROP LOGIN [SVC_DATA_MSSQL];
+
+-- Create login - CHANGE THE PASSWORD!
+CREATE LOGIN [SVC_DATA_MSSQL] 
+WITH PASSWORD = 'ChangeMe123!',  -- ⚠️ CHANGE THIS!
+     DEFAULT_DATABASE = [EFTSURE_DEV2],
+     CHECK_EXPIRATION = OFF,
+     CHECK_POLICY = ON;
+
+PRINT '✓ Login created';
+
+-- ============================================
+-- Setup EFTSURE_DEV2
+-- ============================================
+USE [EFTSURE_DEV2];
+GO
+
+IF EXISTS (SELECT 1 FROM sys.database_principals WHERE name = 'SVC_DATA_MSSQL')
+    DROP USER [SVC_DATA_MSSQL];
+
+CREATE USER [SVC_DATA_MSSQL] FOR LOGIN [SVC_DATA_MSSQL];
+ALTER ROLE [db_datareader] ADD MEMBER [SVC_DATA_MSSQL];
+GRANT VIEW DEFINITION TO [SVC_DATA_MSSQL];
+
+PRINT '✓ EFTSURE_DEV2 configured';
+
+-- ============================================
+-- Setup PORTAL_UAT2
+-- ============================================
+USE [PORTAL_UAT2];
+GO
+
+IF EXISTS (SELECT 1 FROM sys.database_principals WHERE name = 'SVC_DATA_MSSQL')
+    DROP USER [SVC_DATA_MSSQL];
+
+CREATE USER [SVC_DATA_MSSQL] FOR LOGIN [SVC_DATA_MSSQL];
+ALTER ROLE [db_datareader] ADD MEMBER [SVC_DATA_MSSQL];
+GRANT VIEW DEFINITION TO [SVC_DATA_MSSQL];
+
+PRINT '✓ PORTAL_UAT2 configured';
+PRINT '✓ Setup complete!';
+
+GO

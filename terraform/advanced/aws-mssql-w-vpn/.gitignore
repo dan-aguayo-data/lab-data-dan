@@ -1,0 +1,16 @@
+# Terraform
+.terraform/
+*.tfstate*
+*.tfplan
+.terraform.lock.hcl
+
+# Sensitive
+vpn-config/
+load-env.ps1
+*.pem
+
+
+vpn-config/
+
+*.pem
+*.ovpn

@@ -1,0 +1,31 @@
+# =============================================================================
+# load-env.ps1 - Load Terraform Environment Variables (Sensitive)
+# =============================================================================
+
+# Snowflake connection
+$env:TF_VAR_snowflake_org_account_name = "BXNRJRX-XQ57619"
+$env:TF_VAR_snowflake_dbt_user = "SVC_DATA_DBT"
+$env:TF_VAR_snowflake_dbt_role = "SVC_ROLE_DBT_RW"
+$env:TF_VAR_dbt_target_database = "STAGING_DEV"
+$env:TF_VAR_dbt_default_warehouse = "EFT_DATA_DBT_DEFAULT"
+$env:TF_VAR_dbt_github_token_secret_name = "data/github/classic_token_dan_eft_data_dbt_repo"
+# Alerting
+$env:TF_VAR_dbt_email_alerts = "data.team@eftsure.com"
+$env:TF_VAR_alert_email = "data.team@eftsure.com"
+
+# AWS Secrets Manager
+$env:TF_VAR_snowflake_secret_name = "data/dwh/snowflake/svc_dbt_rsa2_private"
+
+Write-Host ""
+Write-Host "=============================================" -ForegroundColor Green
+Write-Host " Terraform Environment Variables Loaded" -ForegroundColor Green
+Write-Host "=============================================" -ForegroundColor Green
+Write-Host ""
+Write-Host "  Snowflake Account:   $env:TF_VAR_snowflake_org_account_name" -ForegroundColor Cyan
+Write-Host "  Snowflake User:      $env:TF_VAR_snowflake_dbt_user" -ForegroundColor Cyan
+Write-Host "  Snowflake Role:      $env:TF_VAR_snowflake_dbt_role" -ForegroundColor Cyan
+Write-Host "  Database:            $env:TF_VAR_dbt_target_database" -ForegroundColor Cyan
+Write-Host "  Warehouse:           $env:TF_VAR_dbt_default_warehouse" -ForegroundColor Cyan
+Write-Host "  Secret Name:         $env:TF_VAR_snowflake_secret_name" -ForegroundColor Cyan
+Write-Host "  Secret Name:         $env:TF_VAR_dbt_github_token_secret_name" -ForegroundColor Cyan
+Write-Host "  Alert Email:         $env:TF_VAR_alert_email" -ForegroundColor Green

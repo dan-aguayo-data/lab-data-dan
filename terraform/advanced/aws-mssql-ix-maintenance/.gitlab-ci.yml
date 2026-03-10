@@ -1,0 +1,125 @@
+# =============================================================================
+# GitLab CI/CD Pipeline - Index Maintenance Infrastructure
+# =============================================================================
+# Required CI/CD Variables (set in GitLab Settings > CI/CD > Variables):
+#   - TF_VAR_aws_account_id (masked)
+#   - AWS_ACCESS_KEY_ID (masked)
+#   - AWS_SECRET_ACCESS_KEY (masked)
+# =============================================================================
+
+stages:
+  - validate
+  - build
+  - plan
+  - deploy
+
+variables:
+  TF_ROOT: ${CI_PROJECT_DIR}
+  AWS_DEFAULT_REGION: ap-southeast-2
+
+image:
+  name: hashicorp/terraform:1.6
+  entrypoint: [""]
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - ${TF_ROOT}/.terraform
+
+# -----------------------------------------------------------------------------
+# Validate Stage
+# -----------------------------------------------------------------------------
+validate:
+  stage: validate
+  script:
+    - terraform init -backend=false
+    - terraform validate
+    - terraform fmt -check -recursive
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# -----------------------------------------------------------------------------
+# Build Lambda Layer
+# -----------------------------------------------------------------------------
+build-layer:
+  stage: build
+  image: docker:24
+  services:
+    - docker:24-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  script:
+    - chmod +x ./build-lambda-layer.sh
+    - ./build-lambda-layer.sh
+  artifacts:
+    paths:
+      - lambda_layer.zip
+    expire_in: 1 week
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
+        - lambda/requirements.txt
+    - if: $CI_PIPELINE_SOURCE == "web"  # Manual trigger
+
+# -----------------------------------------------------------------------------
+# Plan - Dev
+# -----------------------------------------------------------------------------
+plan:dev:
+  stage: plan
+  script:
+    - terraform init
+    - terraform plan -var-file="dev.tfvars" -out=plan.tfplan
+  artifacts:
+    paths:
+      - plan.tfplan
+    expire_in: 1 day
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# -----------------------------------------------------------------------------
+# Deploy - Dev
+# -----------------------------------------------------------------------------
+deploy:dev:
+  stage: deploy
+  script:
+    - terraform init
+    - terraform apply -auto-approve plan.tfplan
+  dependencies:
+    - plan:dev
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
+  environment:
+    name: dev
+    url: https://console.aws.amazon.com/states/home
+
+# -----------------------------------------------------------------------------
+# Plan - Prod (example for future)
+# -----------------------------------------------------------------------------
+.plan:prod:
+  stage: plan
+  script:
+    - terraform init
+    - terraform plan -var-file="prod.tfvars" -out=plan-prod.tfplan
+  artifacts:
+    paths:
+      - plan-prod.tfplan
+    expire_in: 1 day
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
+
+.deploy:prod:
+  stage: deploy
+  script:
+    - terraform init
+    - terraform apply -auto-approve plan-prod.tfplan
+  dependencies:
+    - plan:prod
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
+  environment:
+    name: prod

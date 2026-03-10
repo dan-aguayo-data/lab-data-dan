@@ -1,0 +1,14 @@
+$env:TF_VAR_snowflake_organization = "BXNRJRX"  # Check Snowflake UI
+$env:TF_VAR_snowflake_account_name = "XQ57619"        # The account locator
+$env:TF_VAR_snowflake_account = "su73143.ap-southeast-2"
+$env:TF_VAR_snowflake_user = "SVC_DATA_TERRAFORM"
+$env:TF_VAR_snowflake_role = "SVC_ROLE_TERRAFORM_RW"
+
+Write-Host "✅ Environment variables loaded successfully" -ForegroundColor Green
+Write-Host "   - Snowflake Account: $env:TF_VAR_snowflake_account" -ForegroundColor Cyan
+Write-Host "   - Snowflake User: $env:TF_VAR_snowflake_user" -ForegroundColor Cyan
+Write-Host "   - Snowflake Role: $env:TF_VAR_snowflake_role" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "You can now run:" -ForegroundColor Yellow
+Write-Host "  terraform plan -var-file='environments/dev.tfvars'" -ForegroundColor White
+Write-Host "  terraform apply -var-file='environments/dev.tfvars'" -ForegroundColor White

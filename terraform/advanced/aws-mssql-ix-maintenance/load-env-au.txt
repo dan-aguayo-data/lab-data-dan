@@ -1,0 +1,44 @@
+# =============================================================================
+# Local Environment Variables for Terraform - DEV
+# =============================================================================
+
+# AWS
+$env:TF_VAR_aws_region = "ap-southeast-2"
+$env:TF_VAR_aws_account_id = "535586744073"
+
+
+# Networking
+$env:TF_VAR_vpc_id = "vpc-093d79458ac5bce08"
+$env:TF_VAR_lambda_subnet_ids = '["subnet-05ede960c23f3fc36"]'
+
+# Secrets
+$env:TF_VAR_db_secret_arn = "arn:aws:secretsmanager:ap-southeast-2:535586744073:secret:eftsure/dev/index-maintenance-db-od6GW9"
+
+# Lambda Layer
+$env:TF_VAR_lambda_layer_arns = '["arn:aws:lambda:ap-southeast-2:535586744073:layer:pymssql-py311:2"]'
+
+# Alerting
+$env:TF_VAR_alert_email_addresses = '["data-team@eftsure.com.au"]'
+
+# =============================================================================
+# Output
+# =============================================================================
+Write-Host ""
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "  AU DEV Environment Loaded" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "Region: ap-southeast-2 (AU)" -ForegroundColor Green
+Write-Host ""
+Write-Host "Run the following commands:" -ForegroundColor Yellow
+Write-Host ""
+Write-Host "  # Initialize (run once or when switching regions)" -ForegroundColor Gray
+Write-Host "  terraform init -reconfigure -backend-config=`"key=$BACKEND_KEY`"key=mssql-ix-maintenance/us/terraform.tfstate" -ForegroundColor White
+Write-Host ""
+Write-Host "  # Plan" -ForegroundColor Gray
+Write-Host "  terraform plan -var-file=`"$TFVARS_FILE`"terraform-dev.tfvars" -ForegroundColor White
+Write-Host ""
+Write-Host "  # Apply" -ForegroundColor Gray
+Write-Host "  terraform apply -var-file=`"$TFVARS_FILE`"terraform-dev.tfvars" -ForegroundColor White
+Write-Host ""
+Write-Host "========================================" -ForegroundColor Cyan
